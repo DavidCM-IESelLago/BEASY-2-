@@ -10,6 +10,13 @@ RUN docker-php-ext-install pdo pdo_mysql mysqli && \
         /etc/apache2/apache2.conf && \
     echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
-# Configurar VirtualHost del frontend
+# --- CONFIGURAR VIRTUALHOST DEL FRONTEND ---
+
+# Añadir Listen 8081 al archivo ports.conf
+RUN echo "Listen 8081" >> /etc/apache2/ports.conf
+
+# Copiar la configuración del VirtualHost del frontend
 COPY frontend.conf /etc/apache2/sites-available/frontend.conf
+
+# Habilitar el sitio del frontend
 RUN a2ensite frontend.conf
