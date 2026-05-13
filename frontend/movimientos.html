@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
 
     <style>
-        /* --- VARIABLES Y RESET --- */
+        /* --- VARIABLES Y RESET (Manteniendo tus avances) --- */
         :root {
             --primary: #005bbf;
             --primary-container: #1a73e8;
@@ -64,305 +64,76 @@
             z-index: 20;
         }
 
-        .logo-box {
-            padding: 0 24px;
-            margin-bottom: 32px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .logo-icon {
-            background: var(--primary-container);
-            color: white;
-            padding: 8px;
-            border-radius: 8px;
-            display: flex;
-        }
-
+        .logo-box { padding: 0 24px; margin-bottom: 32px; display: flex; align-items: center; gap: 12px; }
+        .logo-icon { background: var(--primary-container); color: white; padding: 8px; border-radius: 8px; display: flex; }
         .logo-text { font-size: 18px; font-weight: 700; color: var(--primary); }
 
-        .nav-lista {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            padding: 0 12px;
-        }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            text-decoration: none;
-            color: var(--on-surface-variant);
-            font-size: 14px;
-            font-weight: 500;
-            border-radius: 8px;
-            transition: 0.2s;
-        }
-
+        .nav-lista { flex: 1; display: flex; flex-direction: column; gap: 4px; padding: 0 12px; }
+        .nav-link { display: flex; align-items: center; gap: 12px; padding: 12px 16px; text-decoration: none; color: var(--on-surface-variant); font-size: 14px; font-weight: 500; border-radius: 8px; transition: 0.2s; }
         .nav-link:hover { background: var(--surface-container-low); color: var(--on-surface); }
-
-        .nav-link.activo {
-            background: var(--secondary-fixed);
-            color: var(--primary);
-            font-weight: 600;
-            border-left: 4px solid var(--primary);
-            border-top-left-radius: 0;
-            border-bottom-left-radius: 0;
-        }
+        .nav-link.activo { background: var(--secondary-fixed); color: var(--primary); font-weight: 600; border-left: 4px solid var(--primary); border-top-left-radius: 0; border-bottom-left-radius: 0; }
 
         /* --- MAIN LAYOUT Y HEADER --- */
-        .main-wrapper {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .header {
-            height: 72px;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--borde);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 32px;
-            flex-shrink: 0;
-            z-index: 10;
-        }
-
+        .main-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .header { height: 72px; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid var(--borde); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; flex-shrink: 0; z-index: 10; }
         .header-title { font-weight: 600; }
         .header-actions { display: flex; align-items: center; gap: 16px; }
 
-        .notif-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            position: relative;
-            padding: 8px;
-            color: var(--on-surface-variant);
-        }
+        .notif-btn { background: none; border: none; cursor: pointer; position: relative; padding: 8px; color: var(--on-surface-variant); }
+        .notif-punto { position: absolute; top: 10px; right: 10px; width: 8px; height: 8px; background: var(--error); border-radius: 50%; }
 
-        .notif-punto {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 8px;
-            height: 8px;
-            background: var(--error);
-            border-radius: 50%;
-        }
-
-        .perfil-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 4px 12px;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
+        .perfil-btn { display: flex; align-items: center; gap: 8px; padding: 4px 12px; border-radius: 50px; cursor: pointer; transition: 0.2s; }
         .perfil-btn:hover { background: var(--surface-container-low); }
         .perfil-img { width: 32px; border-radius: 50%; }
         .perfil-name { font-size: 14px; font-weight: 500; }
 
         /* --- CONTENIDO Y GRID --- */
-        .content {
-            flex: 1;
-            padding: 32px;
-            overflow-y: auto;
-        }
-
+        .content { flex: 1; padding: 32px; overflow-y: auto; }
         .container-inner { max-width: 1440px; margin: 0 auto; }
-
         .seccion-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px; }
         .seccion-titulo { font-size: 24px; font-weight: 600; margin-bottom: 4px; }
         .seccion-subtitulo { color: var(--on-surface-variant); }
 
-        .grid-layout {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 24px;
-            margin-bottom: 32px;
-        }
-
-        .card {
-            background: var(--surface-container-lowest);
-            border-radius: 16px;
-            border: 1px solid var(--outline-variant);
-            box-shadow: var(--shadow);
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Ya no usamos align-self, solo mantenemos las columnas limpias */
+        .grid-layout { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; margin-bottom: 32px; }
+        .card { background: var(--surface-container-lowest); border-radius: 16px; border: 1px solid var(--outline-variant); box-shadow: var(--shadow); padding: 24px; display: flex; flex-direction: column; }
         .col-4 { grid-column: span 4; }
         .col-8 { grid-column: span 8; }
 
-        @media (max-width: 1024px) {
-            .col-4, .col-8 { grid-column: span 12; }
-        }
-
         /* --- GRÁFICO DONUT --- */
         .card-titulo { font-size: 18px; font-weight: 600; margin-bottom: 24px; }
-        
-        .chart-container {
-            position: relative;
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 200px;
-        }
-
+        .chart-container { position: relative; flex: 1; display: flex; align-items: center; justify-content: center; min-height: 200px; }
         .chart-svg { width: 192px; height: 192px; transform: rotate(-90deg); }
         .chart-circle { transition: all 0.5s ease-in-out; cursor: pointer; }
-        .chart-circle:hover { stroke-width: 16; }
-
-        .chart-overlay {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            pointer-events: none;
-        }
-        .chart-total-lbl { font-size: 14px; color: var(--on-surface-variant); }
+        .chart-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
         .chart-total-val { font-size: 24px; font-weight: 700; }
 
-        .leyenda-grafico { margin-top: 24px; display: grid; gap: 12px; }
-        .leyenda-item { display: flex; justify-content: space-between; font-size: 14px; }
-        .leyenda-nombre { display: flex; align-items: center; gap: 8px; }
-        .leyenda-punto { width: 12px; height: 12px; border-radius: 50%; }
-        .leyenda-valor { font-weight: 600; }
-
         /* --- TABLA DE TRANSACCIONES --- */
-        .table-container {
-            overflow-x: auto;
-            border: 1px solid var(--outline-variant);
-            border-radius: 16px;
-            background: var(--surface-container-lowest);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .table-header {
-            padding: 24px;
-            border-bottom: 1px solid var(--outline-variant);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--surface-bright);
-        }
-
+        .table-container { overflow-x: auto; border: 1px solid var(--outline-variant); border-radius: 16px; background: var(--surface-container-lowest); display: flex; flex-direction: column; }
+        .table-header { padding: 24px; border-bottom: 1px solid var(--outline-variant); display: flex; justify-content: space-between; align-items: center; background: var(--surface-bright); }
         table { width: 100%; border-collapse: collapse; text-align: left; }
-        th {
-            padding: 12px 24px;
-            font-size: 12px;
-            text-transform: uppercase;
-            color: var(--on-surface-variant);
-            background: rgba(243, 244, 245, 0.5);
-            border-bottom: 1px solid var(--outline-variant);
-        }
-
+        th { padding: 12px 24px; font-size: 12px; text-transform: uppercase; color: var(--on-surface-variant); background: rgba(243, 244, 245, 0.5); border-bottom: 1px solid var(--outline-variant); }
         td { padding: 16px 24px; border-bottom: 1px solid var(--outline-variant); vertical-align: middle; }
         tr:hover { background: var(--surface-bright); transition: 0.2s; }
 
         .tx-grupo { display: flex; align-items: center; gap: 12px; }
         .tx-icono { width: 40px; height: 40px; border-radius: 50%; background: var(--surface-container); display: flex; align-items: center; justify-content: center; color: var(--outline); }
         .tx-nombre { font-weight: 500; }
-        .tx-metodo { font-size: 12px; color: var(--outline); }
-        
-        .tx-fecha { font-size: 14px; }
-        .tx-hora { font-size: 12px; color: var(--outline); }
-        
+        .tx-metodo { font-size: 12px; color: var(--outline); text-transform: uppercase; }
         .tx-importe { text-align: right; font-weight: 500; }
         .tx-positivo { color: var(--tertiary-container); font-weight: 600; }
 
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-        .badge-rent { background: var(--secondary-fixed); color: var(--on-secondary-fixed); }
-        .badge-income { background: var(--surface-container-high); color: var(--on-surface); }
-        .badge-salud { background: var(--secondary-fixed-dim); color: var(--on-secondary-fixed); }
+        /* --- NUEVAS CLASES PARA BADGES (Sincronizadas con DB) --- */
+        .badge { display: inline-flex; align-items: center; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; text-transform: capitalize; }
+        .badge-ingreso { background: #e6f4ea; color: #006d2c; }
+        .badge-compra { background: #f3f4f5; color: #191c1d; }
+        .badge-transferencia { background: #d9e2ff; color: #001945; }
+        .badge-bizum { background: #d1fae5; color: #059669; }
 
-        .table-footer {
-            padding: 16px;
-            text-align: center;
-            background: var(--surface-bright);
-        }
+        .btn-text { background: none; border: none; color: var(--primary-container); font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: 0.2s; }
 
-        /* --- BOTONES TEXTO --- */
-        .btn-text {
-            background: none;
-            border: none;
-            color: var(--primary-container);
-            font-weight: 500;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            transition: 0.2s;
-        }
-        .btn-text:hover { color: var(--on-primary-fixed-variant); }
-        .btn-ver-mas { margin: 0 auto; }
-        .btn-ver-mas:disabled { opacity: 0.5; cursor: default; }
-        .btn-ver-mas:disabled:hover { color: var(--primary-container); text-decoration: none; }
-
-        /* --- MODAL DE USUARIO --- */
-        .modal-fondo {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(4px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-        }
-
-        .modal-caja {
-            background: white;
-            width: 450px;
-            border-radius: 24px;
-            overflow: hidden;
-            animation: zoom 0.3s ease;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-        }
-
-        @keyframes zoom { from { transform: scale(0.9); } to { transform: scale(1); } }
-
-        .modal-header { padding: 24px; border-bottom: 1px solid var(--borde); display: flex; justify-content: space-between; align-items: center; background: #f8f9fa; }
-        .modal-titulo { font-weight: 700; margin: 0; font-size: 18px;}
-        .modal-close { cursor: pointer; color: var(--on-surface-variant); background: none; border: none; display: flex;}
-
-        .modal-body { padding: 24px; }
-        .modal-perfil { display: flex; gap: 16px; align-items: center; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px dashed var(--borde); }
-        .modal-avatar { width: 56px; border-radius: 50%; border: 2px solid #d9e2ff; }
-        .modal-nombre { font-weight: 700; font-size: 18px; margin: 0 0 4px 0; }
-        .badge-activa { background: #e6f4ea; color: #006d2c; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; text-transform: uppercase; display: inline-block;}
-
-        .modal-datos { display: grid; gap: 16px; }
-        .dato-label { font-size: 11px; font-weight: 600; color: var(--outline); text-transform: uppercase; margin-bottom: 4px;}
-        .iban-box { display: flex; justify-content: space-between; align-items: center; background: #f3f4f5; padding: 12px; border-radius: 10px; font-family: monospace; font-size: 14px; }
-        .copy-icon { font-size: 18px; color: var(--primary-container); cursor: pointer; }
-
-        .modal-footer { padding: 16px 24px; background: #f8f9fa; border-top: 1px solid var(--borde); display: flex; justify-content: space-between; align-items: center; }
-        .btn-pdf { background: none; border: none; color: var(--error); font-weight: 600; cursor: pointer; }
-        .btn-entendido { padding: 10px 20px; background: var(--primary-container); color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.2s; }
-        .btn-entendido:hover { filter: brightness(0.9); }
+        /* --- MODAL --- */
+        .modal-fondo { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 100; }
+        .modal-caja { background: white; width: 450px; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
     </style>
 </head>
 
@@ -386,12 +157,9 @@
         <header class="header">
             <div class="header-title">Resumen de Movimientos</div>
             <div class="header-actions">
-                <button class="notif-btn">
-                    <span class="material-symbols-outlined">notifications</span>
-                    <span class="notif-punto"></span>
-                </button>
+                <button class="notif-btn"><span class="material-symbols-outlined">notifications</span><span class="notif-punto"></span></button>
                 <div class="perfil-btn" onclick="toggleModal(true)">
-                    <img src="https://ui-avatars.com/api/?name=Alex+D&background=005bbf&color=fff" class="perfil-img" alt="Perfil">
+                    <img src="https://ui-avatars.com/api/?name=Alex+D&background=005bbf&color=fff" class="perfil-img">
                     <span class="perfil-name">Alex D.</span>
                     <span class="material-symbols-outlined">keyboard_arrow_down</span>
                 </div>
@@ -403,7 +171,7 @@
                 <div class="seccion-header">
                     <div>
                         <h2 class="seccion-titulo">Movimientos</h2>
-                        <p class="seccion-subtitulo">Track and analyze your recent financial activity.</p>
+                        <p class="seccion-subtitulo">Analiza tu actividad financiera reciente en tiempo real.</p>
                     </div>
                 </div>
 
@@ -415,28 +183,8 @@
                                 <svg class="chart-svg" viewbox="0 0 100 100">
                                     <circle cx="50" cy="50" fill="transparent" r="40" stroke="#f3f4f5" stroke-width="14"></circle>
                                     <circle class="chart-circle" cx="50" cy="50" fill="transparent" r="40" stroke="#1a73e8" stroke-dasharray="251.2" stroke-dashoffset="138.16" stroke-width="14"></circle>
-                                    <circle class="chart-circle" cx="50" cy="50" fill="transparent" r="40" stroke="#89fa9b" stroke-dasharray="251.2" stroke-dashoffset="175.84" stroke-width="14" transform="rotate(162 50 50)"></circle>
-                                    <circle class="chart-circle" cx="50" cy="50" fill="transparent" r="40" stroke="#759efd" stroke-dasharray="251.2" stroke-dashoffset="213.52" stroke-width="14" transform="rotate(270 50 50)"></circle>
-                                    <circle class="chart-circle" cx="50" cy="50" fill="transparent" r="40" stroke="#c1c6d6" stroke-dasharray="251.2" stroke-dashoffset="226.08" stroke-width="14" transform="rotate(324 50 50)"></circle>
                                 </svg>
-                                <div class="chart-overlay">
-                                    <span class="chart-total-lbl">Total</span>
-                                    <span class="chart-total-val">-$4,250</span>
-                                </div>
-                            </div>
-                            <div class="leyenda-grafico">
-                                <div class="leyenda-item">
-                                    <div class="leyenda-nombre">
-                                        <div class="leyenda-punto" style="background:#1a73e8;"></div> Rent & Utilities
-                                    </div>
-                                    <span class="leyenda-valor">45%</span>
-                                </div>
-                                <div class="leyenda-item">
-                                    <div class="leyenda-nombre">
-                                        <div class="leyenda-punto" style="background:#89fa9b;"></div> Food & Dining
-                                    </div>
-                                    <span class="leyenda-valor">30%</span>
-                                </div>
+                                <div class="chart-overlay"><span class="chart-total-val" id="total-gastos">...</span></div>
                             </div>
                         </div>
                     </div>
@@ -444,61 +192,23 @@
                     <div class="col-8">
                         <div class="table-container">
                             <div class="table-header">
-                                <h3 class="card-titulo" style="margin: 0;">Recent Activity</h3>
-                                <button class="btn-text"><span class="material-symbols-outlined" style="font-size:18px;">filter_list</span> Filter</button>
+                                <h3 class="card-titulo" style="margin: 0;">Actividad Reciente</h3>
+                                <button class="btn-text"><span class="material-symbols-outlined" style="font-size:18px;">filter_list</span> Filtrar</button>
                             </div>
                             <table>
                                 <thead>
                                     <tr>
-                                        <th>Payee</th>
-                                        <th>Category</th>
-                                        <th>Date</th>
-                                        <th style="text-align: right;">Amount</th>
+                                        <th>Concepto</th>
+                                        <th>Categoría</th>
+                                        <th>Fecha</th>
+                                        <th style="text-align: right;">Importe</th>
                                     </tr>
                                 </thead>
                                 <tbody id="contenedor-transacciones">
-                                    <tr>
-                                        <td>
-                                            <div class="tx-grupo">
-                                                <div class="tx-icono">
-                                                    <span class="material-symbols-outlined">home</span>
-                                                </div>
-                                                <div>
-                                                    <p class="tx-nombre">Skyline Apartments</p>
-                                                    <p class="tx-metodo">ACH Transfer</p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td><span class="badge badge-rent">Rent & Utilities</span></td>
-                                        <td>
-                                            <p class="tx-fecha">Oct 28, 2023</p>
-                                            <p class="tx-hora">09:00 AM</p>
-                                        </td>
-                                        <td class="tx-importe">-$2,150.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="tx-grupo">
-                                                <div class="tx-icono">
-                                                    <span class="material-symbols-outlined">work</span>
-                                                </div>
-                                                <div>
-                                                    <p class="tx-nombre">TechCorp Inc.</p>
-                                                    <p class="tx-metodo">Direct Deposit</p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td><span class="badge badge-income">Income</span></td>
-                                        <td>
-                                            <p class="tx-fecha">Oct 25, 2023</p>
-                                            <p class="tx-hora">06:00 AM</p>
-                                        </td>
-                                        <td class="tx-importe tx-positivo">+$5,200.00</td>
-                                    </tr>
-                                </tbody>
+                                    </tbody>
                             </table>
                             <div class="table-footer">
-                                <button id="btn-ver-mas" onclick="cargarMasTransacciones()" class="btn-text btn-ver-mas">View All Transactions</button>
+                                <button id="btn-ver-mas" class="btn-text" style="margin:0 auto;">Cargando movimientos...</button>
                             </div>
                         </div>
                     </div>
@@ -507,150 +217,75 @@
         </main>
     </div>
 
-    <div class="modal-fondo" id="modalUser">
-        <div class="modal-caja">
-            <div class="modal-header">
-                <h3 class="modal-titulo">Detalles de la Cuenta</h3>
-                <button class="modal-close" onclick="toggleModal(false)"><span class="material-symbols-outlined">close</span></button>
-            </div>
-            <div class="modal-body">
-                <div class="modal-perfil">
-                    <img src="https://ui-avatars.com/api/?name=Alex+D&background=005bbf&color=fff" class="modal-avatar" alt="Perfil">
-                    <div>
-                        <p class="modal-nombre">Alex J. Smith</p>
-                        <span class="badge-activa">Cuenta Activa</span>
-                    </div>
-                </div>
-                <div class="modal-datos">
-                    <div>
-                        <p class="dato-label">Número de Cuenta (IBAN)</p>
-                        <div class="iban-box">
-                            <span>ES91 2100 0418 4502 0005 1234</span>
-                            <span class="material-symbols-outlined copy-icon">content_copy</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-pdf">Descargar PDF</button>
-                <button class="btn-entendido" onclick="toggleModal(false)">Entendido</button>
-            </div>
-        </div>
-    </div>
-
     <script>
-        function toggleModal(show) {
-            document.getElementById('modalUser').style.display = show ? 'flex' : 'none';
-        }
+        window.onload = function() {
+            obtenerDatosBackend();
+        };
 
-        function cargarMasTransacciones() {
-            const tabla = document.getElementById('contenedor-transacciones');
+        async function obtenerDatosBackend() {
+            const tbody = document.getElementById('contenedor-transacciones');
             const boton = document.getElementById('btn-ver-mas');
+            
+            // Simulamos que el token está guardado tras el login
+            const token = localStorage.getItem('token') || 'token_de_prueba_adri'; 
 
-            const nuevasFilas = `
-                <tr>
-                    <td>
-                        <div class="tx-grupo">
-                            <div class="tx-icono">
-                                <span class="material-symbols-outlined">fitness_center</span>
-                            </div>
-                            <div>
-                                <p class="tx-nombre">Gym Madrid DAW</p>
-                                <p class="tx-metodo">Cuota Mensual</p>
-                            </div>
-                        </div>
-                    </td>
-                    <td><span class="badge badge-salud" style="background:var(--secondary-fixed-dim); color:var(--on-secondary-fixed);">Salud</span></td>
-                    <td>
-                        <p class="tx-fecha">Oct 20, 2023</p>
-                        <p class="tx-hora">06:30 AM</p>
-                    </td>
-                    <td class="tx-importe">-$29.90</td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="tx-grupo">
-                            <div class="tx-icono">
-                                <span class="material-symbols-outlined">send_money</span>
-                            </div>
-                            <div>
-                                <p class="tx-nombre">Bizum a David</p>
-                                <p class="tx-metodo">Cena post-clases DAW</p>
-                            </div>
-                        </div>
-                    </td>
-                    <td><span class="badge" style="background:#d9e2ff; color:#001945;">Transferencia</span></td>
-                    <td>
-                        <p class="tx-fecha">Oct 18, 2023</p>
-                        <p class="tx-hora">10:15 PM</p>
-                    </td>
-                    <td class="tx-importe">-$15.50</td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="tx-grupo">
-                            <div class="tx-icono">
-                                <span class="material-symbols-outlined">sports_esports</span>
-                            </div>
-                            <div>
-                                <p class="tx-nombre">Riot Games</p>
-                                <p class="tx-metodo">Riot Points (LoL)</p>
-                            </div>
-                        </div>
-                    </td>
-                    <td><span class="badge" style="background:#e7e8e9; color:#191c1d;">Ocio</span></td>
-                    <td>
-                        <p class="tx-fecha">Oct 15, 2023</p>
-                        <p class="tx-hora">04:20 PM</p>
-                    </td>
-                    <td class="tx-importe">-$10.00</td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="tx-grupo">
-                            <div class="tx-icono" style="color: var(--tertiary-container);">
-                                <span class="material-symbols-outlined">work</span>
-                            </div>
-                            <div>
-                                <p class="tx-nombre">Nómina Camarero</p>
-                                <p class="tx-metodo">Ingreso mensual</p>
-                            </div>
-                        </div>
-                    </td>
-                    <td><span class="badge" style="background:#89fa9b; color:#002108;">Ingreso</span></td>
-                    <td>
-                        <p class="tx-fecha">Oct 05, 2023</p>
-                        <p class="tx-hora">08:00 AM</p>
-                    </td>
-                    <td class="tx-importe tx-positivo">+$650.00</td>
-                </tr>
-                <tr>
-                    <td>
-                        <div class="tx-grupo">
-                            <div class="tx-icono">
-                                <span class="material-symbols-outlined">movie</span>
-                            </div>
-                            <div>
-                                <p class="tx-nombre">Crunchyroll</p>
-                                <p class="tx-metodo">Suscripción Anime</p>
-                            </div>
-                        </div>
-                    </td>
-                    <td><span class="badge" style="background:#ffdad6; color:#ba1a1a;">Suscripciones</span></td>
-                    <td>
-                        <p class="tx-fecha">Oct 02, 2023</p>
-                        <p class="tx-hora">10:00 AM</p>
-                    </td>
-                    <td class="tx-importe">-$4.99</td>
-                </tr>
-            `;
+            try {
+                const response = await fetch('../backend/api/movimientos.php', {
+                    method: 'GET',
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                
+                const data = await response.json();
 
-            tabla.insertAdjacentHTML('beforeend', nuevasFilas);
-            boton.innerText = "No hay más transacciones";
-            boton.disabled = true;
-            boton.style.opacity = '0.5';
-            boton.style.cursor = 'default';
+                if (data.status === 'success') {
+                    pintarMovimientos(data.movimientos);
+                    boton.innerText = "No hay más transacciones";
+                    boton.disabled = true;
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:40px;">Error al cargar datos</td></tr>';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:40px;">No se pudo conectar con el servidor</td></tr>';
+            }
         }
+
+        function pintarMovimientos(movimientos) {
+            const tbody = document.getElementById('contenedor-transacciones');
+            tbody.innerHTML = '';
+
+            movimientos.forEach(mov => {
+                // Iconos dinámicos según el tipo
+                let icono = 'payments';
+                if(mov.tipo === 'compra') icono = 'shopping_cart';
+                if(mov.tipo === 'bizum') icono = 'send_money';
+                if(mov.tipo === 'transferencia') icono = 'swap_horiz';
+
+                const esPositivo = mov.cantidad > 0;
+                const claseDinero = esPositivo ? 'tx-positivo' : '';
+                const signo = esPositivo ? '+' : '';
+
+                const fila = `
+                    <tr>
+                        <td>
+                            <div class="tx-grupo">
+                                <div class="tx-icono"><span class="material-symbols-outlined">${icono}</span></div>
+                                <div><p class="tx-nombre">${mov.concepto}</p><p class="tx-metodo">${mov.tipo}</p></div>
+                            </div>
+                        </td>
+                        <td><span class="badge badge-${mov.tipo}">${mov.tipo}</span></td>
+                        <td>
+                            <p class="tx-fecha">${new Date(mov.fecha).toLocaleDateString()}</p>
+                            <p class="tx-hora">${new Date(mov.fecha).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</p>
+                        </td>
+                        <td class="tx-importe ${claseDinero}">${signo}${Math.abs(mov.cantidad).toFixed(2)}€</td>
+                    </tr>
+                `;
+                tbody.insertAdjacentHTML('beforeend', fila);
+            });
+        }
+
+        function toggleModal(show) { document.getElementById('modalUser').style.display = show ? 'flex' : 'none'; }
     </script>
 </body>
 </html>
