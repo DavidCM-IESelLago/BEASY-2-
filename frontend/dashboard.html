@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - FintechPro</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+
+    <style>
+        /* --- VARIABLES DE COLOR (Extraídas de tu config original) --- */
+        :root {
+            --primary: #005bbf;
+            --primary-container: #1a73e8;
+            --on-primary: #ffffff;
+            --secondary-container: #759efd;
+            --tertiary: #006d2c;
+            --tertiary-container: #008939;
+            --tertiary-fixed: #89fa9b;
+            --on-tertiary-fixed: #002108;
+            --error: #ba1a1a;
+            --error-container: #ffdad6;
+            --on-error-container: #93000a;
+            --background: #f8f9fa;
+            --surface: #f8f9fa;
+            --surface-container-lowest: #ffffff;
+            --surface-container-low: #f3f4f5;
+            --on-surface: #191c1d;
+            --on-surface-variant: #414754;
+            --outline: #727785;
+            --outline-variant: #c1c6d6;
+            --borde: #e1e3e4;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+        }
+
+        /* --- RESET Y GLOBALES --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--background);
+            color: var(--on-surface);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .fill {
+            font-variation-settings: 'FILL' 1;
+        }
+
+        /* --- LAYOUT --- */
+        .sidebar {
+            width: 280px;
+            background: var(--surface-container-lowest);
+            border-right: 1px solid var(--borde);
+            display: flex;
+            flex-direction: column;
+            padding: 24px 0;
+        }
+
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            height: 72px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--borde);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            flex-shrink: 0;
+        }
+
+        .content {
+            flex: 1;
+            padding: 32px;
+            overflow-y: auto;
+        }
+
+        /* --- NAVEGACIÓN --- */
+        .nav-lista {
+            padding: 0 12px;
+            list-style: none;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            text-decoration: none;
+            color: var(--on-surface-variant);
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .nav-link:hover {
+            background: var(--surface-container-low);
+            color: var(--on-surface);
+        }
+
+        .nav-link.activo {
+            background: #d9e2ff;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* --- DASHBOARD COMPONENTS --- */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--surface-container-lowest);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        .span-12 {
+            grid-column: span 12;
+        }
+
+        .span-7 {
+            grid-column: span 7;
+        }
+
+        .span-5 {
+            grid-column: span 5;
+        }
+
+        /* Balance Card */
+        .balance-card {
+            padding: 32px;
+            overflow: hidden;
+        }
+
+        .balance-blob {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 256px;
+            height: 256px;
+            background: rgba(117, 158, 253, 0.2);
+            border-radius: 50%;
+            filter: blur(48px);
+            margin: -40px -40px 0 0;
+        }
+
+        /* Quick Actions */
+        .action-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .btn-action {
+            background: var(--white);
+            border: none;
+            padding: 24px;
+            border-radius: 16px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            box-shadow: var(--shadow);
+            transition: 0.2s;
+            width: 100%;
+        }
+
+        .btn-action:hover {
+            background: var(--surface-container-low);
+            transform: translateY(-2px);
+        }
+
+        .icon-circle {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Movements */
+        .movement-list {
+            margin-top: 16px;
+        }
+
+        .movement-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            border-bottom: 1px solid var(--borde);
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .movement-item:last-child {
+            border: none;
+        }
+
+        .movement-item:hover {
+            background: var(--surface-container-low);
+        }
+
+        /* Donut Chart */
+        .chart-container {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 24px;
+            position: relative;
+            border-radius: 50%;
+            background: conic-gradient(var(--primary-container) 0% 45%, var(--primary) 45% 70%, var(--tertiary-fixed) 70% 85%, var(--borde) 85% 100%);
+        }
+
+        .chart-center {
+            position: absolute;
+            inset: 20px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* --- MODALES Y NOTIFICACIONES --- */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 450px;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .side-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100%;
+            width: 100%;
+            max-width: 380px;
+            background: white;
+            z-index: 200;
+            transform: translateX(100%);
+            transition: 0.3s ease;
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .side-panel.open {
+            transform: translateX(0);
+        }
+
+        /* --- FORMULARIOS --- */
+        .form-field {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--outline);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .input-text,
+        .input-select {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--borde);
+            background: var(--surface-container-low);
+            font-size: 15px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-blue {
+            background: var(--primary-container);
+            color: white;
+        }
+
+        .btn-green {
+            background: var(--tertiary);
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div style="padding: 0 24px; margin-bottom: 32px; display: flex; align-items: center; gap: 12px;">
+            <div style="background: var(--primary-container); color: white; padding: 8px; border-radius: 8px;"><span
+                    class="material-symbols-outlined fill">account_balance</span></div>
+            <h1 style="font-size: 18px; font-weight: 900; color: var(--primary);">FintechPro</h1>
+        </div>
+        <nav class="nav-lista">
+            <a href="#" class="nav-link activo" onclick="showSection('dashboard-content')"><span
+                    class="material-symbols-outlined fill">dashboard</span> Dashboard</a>
+            <a href="#" class="nav-link"><span class="material-symbols-outlined">account_balance</span> Accounts</a>
+            <a href="#" class="nav-link"><span class="material-symbols-outlined">credit_card</span> Cards</a>
+            <a href="#" class="nav-link"><span class="material-symbols-outlined">payments</span> Payments</a>
+            <a href="#" class="nav-link"><span class="material-symbols-outlined">verified_user</span> Security</a>
+        </nav>
+    </aside>
+
+    <div class="main-wrapper">
+        <header class="header">
+            <div style="font-weight: 600; color: var(--on-surface);">Dashboard Overview</div>
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <button onclick="toggleNotifications(true)"
+                    style="background:none; border:none; cursor:pointer; position:relative;">
+                    <span class="material-symbols-outlined" style="color:var(--on-surface-variant)">notifications</span>
+                    <span
+                        style="position:absolute; top:2px; right:2px; width:8px; height:8px; background:var(--error); border-radius:50%; border:2px solid white;"></span>
+                </button>
+                <div style="display:flex; align-items:center; gap:12px; cursor:pointer;" onclick="toggleModal(true)">
+                    <img src="https://ui-avatars.com/api/?name=Alex+D&background=005bbf&color=fff"
+                        style="width:32px; border-radius:50%;">
+                    <span style="font-size:14px; font-weight:500;">Alex D.</span>
+                    <span class="material-symbols-outlined" style="font-size:18px">keyboard_arrow_down</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="content">
+            <div id="dashboard-content" class="dashboard-grid">
+                <div class="span-12 card balance-card">
+                    <div class="balance-blob"></div>
+                    <div
+                        style="position:relative; z-index:1; display:flex; justify-content:space-between; align-items:flex-end;">
+                        <div>
+                            <p class="form-label">Total Balance</p>
+                            <h1 style="font-size: 48px; font-weight: 900;">$42,500<span
+                                    style="font-size:24px; color:var(--outline)">.80</span></h1>
+                        </div>
+                        <button onclick="toggleModal(true)"
+                            style="background:var(--primary-container); color:white; border:none; padding:10px 20px; border-radius:12px; font-weight:600; cursor:pointer; display:flex; gap:8px; align-items:center;">
+                            <span class="material-symbols-outlined" style="font-size:18px">info</span> Account Info
+                        </button>
+                    </div>
+                </div>
+
+                <div class="span-12 action-grid">
+                    <button class="btn-action" onclick="showSection('transfer-form')">
+                        <div class="icon-circle"
+                            style="background:rgba(26,115,232,0.1); color:var(--primary-container);"><span
+                                class="material-symbols-outlined fill">swap_horiz</span></div>
+                        <span style="font-weight:700;">Transfer</span>
+                    </button>
+                    <button class="btn-action" onclick="showSection('bizum-form')">
+                        <div class="icon-circle"
+                            style="background:rgba(0,137,57,0.1); color:var(--tertiary-container);"><span
+                                class="material-symbols-outlined fill">send_money</span></div>
+                        <span style="font-weight:700;">Bizum</span>
+                    </button>
+                </div>
+
+                <div class="span-7 card" style="padding:0; overflow:hidden;">
+                    <div
+                        style="padding:24px; border-bottom:1px solid var(--borde); display:flex; justify-content:space-between; align-items:center;">
+                        <h2 style="font-size:18px; font-weight:700;">Recent Movements</h2>
+                        <a href="#"
+                            style="color:var(--primary-container); font-size:12px; font-weight:700; text-decoration:none;">View
+                            all</a>
+                    </div>
+                    <div class="movement-list">
+                        <div class="movement-item">
+                            <div style="display:flex; gap:16px; align-items:center;">
+                                <div class="icon-circle"
+                                    style="background:var(--error-container); color:var(--on-error-container);"><span
+                                        class="material-symbols-outlined">shopping_cart</span></div>
+                                <div>
+                                    <p style="font-weight:700; font-size:14px;">Whole Foods Market</p>
+                                    <p style="font-size:12px; color:var(--on-surface-variant)">Today, 10:42 AM •
+                                        Groceries</p>
+                                </div>
+                            </div>
+                            <p style="font-weight:900;">-$142.50</p>
+                        </div>
+                        <div class="movement-item">
+                            <div style="display:flex; gap:16px; align-items:center;">
+                                <div class="icon-circle"
+                                    style="background:var(--tertiary-fixed); color:var(--tertiary);"><span
+                                        class="material-symbols-outlined">payments</span></div>
+                                <div>
+                                    <p style="font-weight:700; font-size:14px;">Salary Received</p>
+                                    <p style="font-size:12px; color:var(--on-surface-variant)">Yesterday, 09:00 AM •
+                                        Income</p>
+                                </div>
+                            </div>
+                            <p style="font-weight:900; color:var(--tertiary)">+$4,250.00</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="span-5 card">
+                    <h2 style="font-size:18px; font-weight:700; margin-bottom:24px;">Expenses Breakdown</h2>
+                    <div class="chart-container">
+                        <div class="chart-center">
+                            <span style="font-size:10px; color:var(--outline); font-weight:700;">OCTOBER</span>
+                            <span style="font-size:18px; font-weight:900;">$3,842</span>
+                        </div>
+                    </div>
+                    <div style="display:grid; gap:12px;">
+                        <div style="display:flex; justify-content:space-between; font-size:14px;">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <div
+                                    style="width:10px; height:10px; border-radius:50%; background:var(--primary-container)">
+                                </div>
+                                <span>Rent & Utilities</span>
+                            </div>
+                            <span style="font-weight:700">45%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="transfer-form" class="hidden" style="max-width:700px; margin:0 auto;">
+                <button onclick="showSection('dashboard-content')"
+                    style="background:none; border:none; color:var(--on-surface-variant); cursor:pointer; margin-bottom:24px; display:flex; align-items:center; gap:8px; font-weight:700;">
+                    <span class="material-symbols-outlined">arrow_back</span> Back to Dashboard
+                </button>
+                <div class="card">
+                    <div
+                        style="display:flex; gap:16px; align-items:center; margin-bottom:32px; border-bottom:1px solid var(--borde); padding-bottom:24px;">
+                        <div class="icon-circle"
+                            style="background:rgba(26,115,232,0.1); color:var(--primary-container);"><span
+                                class="material-symbols-outlined">swap_horiz</span></div>
+                        <div>
+                            <h2 style="font-size:20px; font-weight:700;">Nueva Transferencia</h2>
+                            <p style="font-size:14px; color:var(--on-surface-variant)">Envía dinero de forma segura</p>
+                        </div>
+                    </div>
+                    <form>
+                        <div class="form-field">
+                            <label class="form-label">Cuenta de origen</label>
+                            <select class="input-select">
+                                <option>ES98 1234 ... 3456 ($42,500.80)</option>
+                            </select>
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label">IBAN del destinatario</label>
+                            <input type="text" class="input-text" placeholder="ESXX XXXX XXXX XXXX XXXX">
+                        </div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                            <div class="form-field"><label class="form-label">Importe (€)</label><input type="number"
+                                    class="input-text" placeholder="0.00"></div>
+                            <div class="form-field"><label class="form-label">Concepto</label><input type="text"
+                                    class="input-text" placeholder="Ej: Alquiler"></div>
+                        </div>
+                        <button type="button" class="btn-submit btn-blue">Realizar Transferencia</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="bizum-form" class="hidden" style="max-width:700px; margin:0 auto;">
+                <button onclick="showSection('dashboard-content')"
+                    style="background:none; border:none; color:var(--on-surface-variant); cursor:pointer; margin-bottom:24px; display:flex; align-items:center; gap:8px; font-weight:700;">
+                    <span class="material-symbols-outlined">arrow_back</span> Back to Dashboard
+                </button>
+                <div class="card">
+                    <div
+                        style="display:flex; gap:16px; align-items:center; margin-bottom:32px; border-bottom:1px solid var(--borde); padding-bottom:24px;">
+                        <div class="icon-circle"
+                            style="background:rgba(0,137,57,0.1); color:var(--tertiary-container);"><span
+                                class="material-symbols-outlined fill">send_money</span></div>
+                        <div>
+                            <h2 style="font-size:20px; font-weight:700;">Enviar Bizum</h2>
+                            <p style="font-size:14px; color:var(--on-surface-variant)">Pago instantáneo por móvil</p>
+                        </div>
+                    </div>
+                    <form>
+                        <div class="form-field">
+                            <label class="form-label">Número de Teléfono</label>
+                            <input type="tel" class="input-text" placeholder="600 000 000">
+                        </div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                            <div class="form-field"><label class="form-label">Importe</label><input type="number"
+                                    class="input-text" placeholder="0.00"></div>
+                            <div class="form-field"><label class="form-label">Concepto</label><input type="text"
+                                    class="input-text" placeholder="Ej: Cena"></div>
+                        </div>
+                        <button type="button" class="btn-submit btn-green">Enviar Bizum</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal-overlay" id="modalUser">
+        <div class="modal-content">
+            <div
+                style="padding:24px; border-bottom:1px solid var(--borde); display:flex; justify-content:space-between; background:var(--background);">
+                <h3 style="font-weight:900;">Account Details</h3>
+                <span class="material-symbols-outlined" style="cursor:pointer" onclick="toggleModal(false)">close</span>
+            </div>
+            <div style="padding:24px;">
+                <div style="display:flex; gap:16px; align-items:center; margin-bottom:24px;">
+                    <img src="https://ui-avatars.com/api/?name=Alex+D&background=005bbf&color=fff"
+                        style="width:56px; border-radius:50%;">
+                    <div>
+                        <p style="font-weight:900; font-size:18px;">Alex J. Smith</p><span
+                            style="background:#e6f4ea; color:var(--tertiary); font-size:10px; font-weight:900; padding:2px 8px; border-radius:99px;">ACTIVE
+                            ACCOUNT</span>
+                    </div>
+                </div>
+                <div
+                    style="background:var(--surface-container-low); padding:16px; border-radius:12px; font-family:monospace;">
+                    <p class="form-label" style="margin-bottom:4px;">IBAN</p>
+                    <p style="font-weight:600;">ES91 2100 0418 4502 0005 1234</p>
+                </div>
+            </div>
+            <div style="padding:24px; text-align:right; border-top:1px solid var(--borde);">
+                <button onclick="toggleModal(false)" class="btn-submit btn-blue"
+                    style="width:auto; padding:10px 24px;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="side-panel" id="notifPanel">
+        <div
+            style="padding:24px; border-bottom:1px solid var(--borde); display:flex; justify-content:space-between; align-items:center;">
+            <h3 style="font-weight:900;">Notifications</h3>
+            <span class="material-symbols-outlined" style="cursor:pointer"
+                onclick="toggleNotifications(false)">close</span>
+        </div>
+        <div style="padding:16px;">
+            <div class="movement-item" style="border:none; cursor:default;">
+                <div style="display:flex; gap:12px;">
+                    <div class="icon-circle"
+                        style="background:rgba(26,115,232,0.1); color:var(--primary-container); width:32px; height:32px;">
+                        <span class="material-symbols-outlined" style="font-size:16px;">security</span></div>
+                    <div>
+                        <p style="font-weight:700; font-size:13px;">Security Update</p>
+                        <p style="font-size:11px; color:var(--on-surface-variant)">New login detected from Madrid.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSection(id) {
+            document.getElementById('dashboard-content').classList.add('hidden');
+            document.getElementById('transfer-form').classList.add('hidden');
+            document.getElementById('bizum-form').classList.add('hidden');
+            document.getElementById(id).classList.remove('hidden');
+        }
+        function toggleModal(show) { document.getElementById('modalUser').style.display = show ? 'flex' : 'none'; }
+        function toggleNotifications(show) { document.getElementById('notifPanel').classList.toggle('open', show); }
+    </script>
+</body>
+
+</html>

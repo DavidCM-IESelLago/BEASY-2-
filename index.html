@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Beasy | Plataforma para gestión de finanzas personales</title>
+    <meta name="description"
+        content="Accede a tu banca online de forma segura. Realiza transferencias, consulta tu historial de movimientos y gestiona tu saldo desde una plataforma web privada.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+
+    <link rel="stylesheet" href="frontend/css/estilos.css" />
+</head>
+
+<body class="cuerpo-pagina">
+
+    <nav class="barra-navegacion">
+        <div class="nav-izquierda">
+            <div class="logo">Beasy</div>
+            <div class="caja-buscador">
+                <span class="material-symbols-outlined icono-pequeno">search</span>
+                <input class="entrada-buscador" placeholder="Buscar..." type="text" />
+            </div>
+        </div>
+
+        <div class="nav-centro">
+            <a href="#features" class="enlace-nav">Funcionalidades</a>
+            <a href="#faq" class="enlace-nav">Preguntas Frecuentes</a>
+            <a href="#about" class="enlace-nav">Sobre Nosotros</a>
+        </div>
+
+        <div class="nav-derecha">
+            <span class="material-symbols-outlined icono-accion">notifications</span>
+            <span class="material-symbols-outlined icono-accion">help_outline</span>
+            <a href="frontend/inicio_sesion.html" style="text-decoration: none;">
+                <button class="boton-texto">Iniciar Sesión</button>
+            </a>
+            <button class="boton-primario">Abrir Cuenta</button>
+        </div>
+    </nav>
+
+    <main class="contenedor-principal">
+
+        <section class="seccion-hero">
+            <div class="etiqueta-verificado">
+                <span class="material-symbols-outlined icono-etiqueta">verified</span>
+                Institución Bancaria Autorizada
+            </div>
+
+            <h1 class="titulo-principal">
+                El futuro de tu dinero con <span class="texto-destacado">acceso rápido a finanzas personales
+                    online</span>.
+            </h1>
+
+            <p class="subtitulo-hero">
+                Experimenta el control total sin esfuerzo. Nuestro <strong>entorno web para gestión bancaria
+                    personal</strong> te permite organizar tu patrimonio con una claridad absoluta y consistencia
+                visual.
+            </p>
+
+            <div class="grupo-botones-hero">
+                <button class="boton-primario boton-grande">
+                    Comenzar a Ahorrar
+                    <span class="material-symbols-outlined">arrow_forward</span>
+                </button>
+                <button class="boton-secundario boton-grande">
+                    Ver Demo Interactiva
+                </button>
+            </div>
+
+            <div class="grafico-hero">
+                <img src="/frontend/assets/images/Imagen_home_opt_11zon.webp"
+                    alt="Interfaz de usuario 3D de Beasy para gestionar cuentas bancarias desde web"
+                    class="imagen-dashboard-hero">
+            </div>
+        </section>
+
+        <section class="seccion-caracteristicas" id="features">
+            <div class="cabecera-caracteristicas">
+                <h2 class="titulo-seccion">Diseñado para la Precisión</h2>
+                <p class="texto-seccion">Nuestra arquitectura combina lógica estructural con los más altos estándares de
+                    seguridad, asegurando que tus datos financieros se presenten con total claridad.</p>
+            </div>
+
+            <div class="cuadricula-tarjetas">
+
+                <div class="tarjeta tarjeta-ancha">
+                    <div class="icono-tarjeta fondo-azul-claro">
+                        <span class="material-symbols-outlined">security</span>
+                    </div>
+                    <h3 class="titulo-tarjeta">Plataforma de banca online privada y segura</h3>
+                    <p class="texto-tarjeta">Protegemos tus datos y activos mediante protocolos de acceso y encriptación
+                        estándar. Disfruta de la tranquilidad de gestionar tu dinero de forma segura en una interfaz
+                        moderna y accesible.</p>
+                </div>
+
+                <div class="tarjeta tarjeta-estrecha fondo-azul-fuerte texto-blanco">
+                    <div class="icono-tarjeta fondo-semitransparente">
+                        <span class="material-symbols-outlined">insights</span>
+                    </div>
+                    <h3 class="titulo-tarjeta">Aplicación web para control de saldo</h3>
+                    <p class="texto-tarjeta opacity-80">Gráficos dinámicos y flujos de datos actualizados al instante.
+                        Sin retrasos, sin esperas.</p>
+                </div>
+
+                <div class="tarjeta tarjeta-estrecha">
+                    <div class="icono-tarjeta fondo-verde">
+                        <span class="material-symbols-outlined">payments</span>
+                    </div>
+                    <h3 class="titulo-tarjeta">Realizar transferencias entre cuentas bancarias</h3>
+                    <p class="texto-tarjeta">Mueve tu capital de forma rápida y eficiente, tanto a nivel nacional como
+                        internacional, con comisiones 100% transparentes.</p>
+                </div>
+
+                <div class="tarjeta tarjeta-ancha fila-horizontal">
+                    <div class="contenido-mitad">
+                        <div class="icono-tarjeta fondo-azul-medio">
+                            <span class="material-symbols-outlined">account_balance_wallet</span>
+                        </div>
+                        <h3 class="titulo-tarjeta">Consultar historial de movimientos bancarios online</h3>
+                        <p class="texto-tarjeta">Consolida tus cuenta y tarjetas en un solo lienzo. Nuestro diseño
+                            estructurado evita la fatiga visual para que entiendas en qué gastas tu dinero.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="seccion-faq" id="faq">
+            <div class="cabecera-faq">
+                <h2 class="titulo-seccion">Respuestas Claras para tus Finanzas</h2>
+            </div>
+
+            <div class="contenedor-acordeon">
+                <details class="faq-item">
+                    <summary class="faq-pregunta">¿Es difícil <strong>gestionar cuentas bancarias desde web</strong>?
+                    </summary>
+                    <p class="faq-respuesta">En absoluto. Nuestra interfaz Beasy está diseñada bajo el principio de "un
+                        clic". Puedes administrar todas tus finanzas, bloquear tarjetas y crear huchas de ahorro de
+                        forma intuitiva desde cualquier ordenador o tablet.</p>
+                </details>
+
+                <details class="faq-item">
+                    <summary class="faq-pregunta">¿Qué requisitos necesito para <strong>abrir una cuenta?</strong>
+                    </summary>
+                    <p class="faq-respuesta">Solo necesitas ser mayor de edad, disponer de un documento de identidad
+                        válido (DNI/NIE) y un número de teléfono móvil. El proceso de registro toma menos de 3 minutos y
+                        es totalmente online.</p>
+                </details>
+
+                <details class="faq-item">
+                    <summary class="faq-pregunta">¿Están <strong>seguros</strong> mis ahorros y mis datos personales?
+                    </summary>
+                    <p class="faq-respuesta">Sí. Operamos bajo las normativas bancarias europeas más estrictas. Toda tu
+                        información viaja encriptada y los fondos están protegidos por el fondo de garantía de
+                        depósitos.</p>
+                </details>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="pie-pagina">
+        <div class="contenedor-pie">
+            <div class="columna-pie info-marca">
+                <div class="logo-texto">Beasy Fintech</div>
+                <p class="texto-pie">Empoderando a profesionales modernos con herramientas financieras sofisticadas y
+                    seguridad inigualable.</p>
+            </div>
+
+            <div class="columna-pie enlaces-legales">
+                <h4 class="titulo-pie">Legal</h4>
+                <a href="#" class="enlace-pie">Política de Privacidad</a>
+                <a href="#" class="enlace-pie">Términos del Servicio</a>
+            </div>
+
+            <div class="columna-pie enlaces-legales">
+                <h4 class="titulo-pie">Transparencia</h4>
+                <a href="#" class="enlace-pie">Política de Cookies</a>
+                <a href="#" class="enlace-pie">Aviso Legal</a>
+            </div>
+
+            <div class="columna-pie copyright">
+                <p class="texto-pie">© 2026 Beasy Global Inc. Institución Bancaria Autorizada.</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>

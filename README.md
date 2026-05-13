@@ -1,2 +1,2 @@
-# BEASY-2-
-Fintech bancaria para proyecto tfc
+# Fintech Bancaria - Proyecto Intermodular
+Plataforma bancaria digital con arquitectura Productor/Consumidor

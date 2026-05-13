@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Movimientos - FintechPro</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+    <style>
+        /* --- VARIABLES Y RESET --- */
+        :root {
+            --primary: #005bbf;
+            --primary-container: #1a73e8;
+            --on-primary-fixed-variant: #004493;
+            --secondary-fixed: #d9e2ff;
+            --on-secondary-fixed: #001945;
+            --secondary-fixed-dim: #b0c6ff;
+            --tertiary: #006d2c;
+            --tertiary-fixed: #89fa9b;
+            --on-tertiary-fixed: #002108;
+            --tertiary-fixed-dim: #6ddd81;
+            --tertiary-container: #008939;
+            --background: #f8f9fa;
+            --surface: #f8f9fa;
+            --surface-bright: #f8f9fa;
+            --surface-container-lowest: #ffffff;
+            --surface-container-low: #f3f4f5;
+            --surface-container: #edeeef;
+            --surface-container-high: #e7e8e9;
+            --on-surface: #191c1d;
+            --on-surface-variant: #414754;
+            --outline: #727785;
+            --outline-variant: #c1c6d6;
+            --error: #ba1a1a;
+            --borde: #e1e3e4;
+            --shadow: 0px 4px 20px rgba(0,0,0,0.04);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background);
+            color: var(--on-surface);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .fill { font-variation-settings: 'FILL' 1; }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 280px;
+            background: var(--surface-container-lowest);
+            border-right: 1px solid var(--borde);
+            display: flex;
+            flex-direction: column;
+            padding: 24px 0;
+            flex-shrink: 0;
+            z-index: 20;
+        }
+
+        .logo-box {
+            padding: 0 24px;
+            margin-bottom: 32px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            background: var(--primary-container);
+            color: white;
+            padding: 8px;
+            border-radius: 8px;
+            display: flex;
+        }
+
+        .nav-lista {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding: 0 12px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            text-decoration: none;
+            color: var(--on-surface-variant);
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+
+        .nav-link:hover { background: var(--surface-container-low); color: var(--on-surface); }
+
+        .nav-link.activo {
+            background: var(--secondary-fixed);
+            color: var(--primary);
+            font-weight: 600;
+            border-left: 4px solid var(--primary);
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        /* --- MAIN LAYOUT --- */
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            height: 72px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--borde);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            flex-shrink: 0;
+            z-index: 10;
+        }
+
+        .perfil-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 12px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .perfil-btn:hover { background: var(--surface-container-low); }
+
+        .content {
+            flex: 1;
+            padding: 32px;
+            overflow-y: auto;
+        }
+
+        .container-inner {
+            max-width: 1440px;
+            margin: 0 auto;
+        }
+
+        /* --- GRID Y CARDS --- */
+        .grid-layout {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .card {
+            background: var(--surface-container-lowest);
+            border-radius: 16px;
+            border: 1px solid var(--outline-variant);
+            box-shadow: var(--shadow);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .col-4 { grid-column: span 4; }
+        .col-8 { grid-column: span 8; }
+
+        @media (max-width: 1024px) {
+            .col-4, .col-8 { grid-column: span 12; }
+        }
+
+        /* --- GRÁFICO --- */
+        .chart-container {
+            position: relative;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+        }
+
+        .chart-svg { width: 192px; height: 192px; transform: rotate(-90deg); }
+        .chart-circle { transition: all 0.5s ease-in-out; cursor: pointer; }
+        .chart-circle:hover { stroke-width: 16; }
+
+        .chart-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+        }
+
+        /* --- TABLA --- */
+        .table-container {
+            overflow-x: auto;
+            border: 1px solid var(--outline-variant);
+            border-radius: 16px;
+            background: var(--surface-container-lowest);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .table-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--outline-variant);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--surface-bright);
+        }
+
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th {
+            padding: 12px 24px;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--on-surface-variant);
+            background: rgba(243, 244, 245, 0.5);
+            border-bottom: 1px solid var(--outline-variant);
+        }
+
+        td { padding: 16px 24px; border-bottom: 1px solid var(--outline-variant); }
+        tr:hover { background: var(--surface-bright); }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        /* --- BOTONES --- */
+        .btn-text {
+            background: none;
+            border: none;
+            color: var(--primary-container);
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-text:hover { color: var(--on-primary-fixed-variant); }
+
+        /* --- MODAL --- */
+        .modal-fondo {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .modal-caja {
+            background: white;
+            width: 450px;
+            border-radius: 24px;
+            overflow: hidden;
+            animation: zoom 0.3s ease;
+        }
+
+        @keyframes zoom { from { transform: scale(0.9); } to { transform: scale(1); } }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="logo-box">
+            <div class="logo-icon"><span class="material-symbols-outlined fill">account_balance</span></div>
+            <h1 style="font-size: 18px; font-weight: 700; color: var(--primary);">FintechPro</h1>
+        </div>
+        <nav class="nav-lista">
+            <a href="dashboard.html" class="nav-link"><span class="material-symbols-outlined">dashboard</span> Dashboard</a>
+            <a href="#" class="nav-link"><span class="material-symbols-outlined">account_balance</span> Accounts</a>
+            <a href="misTarjetas.html" class="nav-link"><span class="material-symbols-outlined">credit_card</span> Cards</a>
+            <a href="movimientos.html" class="nav-link activo"><span class="material-symbols-outlined fill">payments</span> Movimientos</a>
+            <a href="seguridad.html" class="nav-link"><span class="material-symbols-outlined">verified_user</span> Security</a>
+        </nav>
+    </aside>
+
+    <div class="main-wrapper">
+        <header class="header">
+            <div style="font-weight: 600;">Resumen de Movimientos</div>
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <button style="background:none; border:none; color:var(--on-surface-variant); position:relative; padding:8px; cursor:pointer;">
+                    <span class="material-symbols-outlined">notifications</span>
+                    <span style="position:absolute; top:10px; right:10px; width:8px; height:8px; background:var(--error); border-radius:50%;"></span>
+                </button>
+                <div class="perfil-btn" onclick="toggleModal(true)">
+                    <img src="https://ui-avatars.com/api/?name=Alex+D&background=005bbf&color=fff" style="width: 32px; border-radius: 50%;">
+                    <span style="font-size: 14px; font-weight: 500;">Alex D.</span>
+                    <span class="material-symbols-outlined" style="font-size: 18px;">keyboard_arrow_down</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="content">
+            <div class="container-inner">
+                <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom: 32px;">
+                    <div>
+                        <h2 style="font-size: 24px; font-weight: 600; margin-bottom: 4px;">Movimientos</h2>
+                        <p style="color: var(--on-surface-variant);">Track and analyze your recent financial activity.</p>
+                    </div>
+                </div>
+
+                <div class="grid-layout">
+                    <div class="card col-4">
+                        <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 24px;">Gastos del Mes</h3>
+                        <div class="chart-container">
+                            <svg class="chart-svg" viewbox="0 0 100 100">
+                                <circle cx="50" cy="50" fill="transparent" r="40" stroke="#f3f4f5" stroke-width="14"></circle>
+                                <circle class="chart-circle" cx="50" cy="50" fill="transparent" r="40" stroke="#1a73e8" stroke-dasharray="251.2" stroke-dashoffset="138.16" stroke-width="14"></circle>
+                                <circle class="chart-circle" cx="50" cy="50" fill="transparent" r="40" stroke="#89fa9b" stroke-dasharray="251.2" stroke-dashoffset="175.84" stroke-width="14" transform="rotate(162 50 50)"></circle>
+                                <circle class="chart-circle" cx="50" cy="50" fill="transparent" r="40" stroke="#759efd" stroke-dasharray="251.2" stroke-dashoffset="213.52" stroke-width="14" transform="rotate(270 50 50)"></circle>
+                                <circle class="chart-circle" cx="50" cy="50" fill="transparent" r="40" stroke="#c1c6d6" stroke-dasharray="251.2" stroke-dashoffset="226.08" stroke-width="14" transform="rotate(324 50 50)"></circle>
+                            </svg>
+                            <div class="chart-overlay">
+                                <span style="font-size:14px; color:var(--on-surface-variant);">Total</span>
+                                <span style="font-size:24px; font-weight:700;">-$4,250</span>
+                            </div>
+                        </div>
+                        <div style="margin-top: 24px; display: grid; gap: 12px;">
+                            <div style="display:flex; justify-content:space-between; font-size:14px;">
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <div style="width:12px; height:12px; border-radius:50%; background:#1a73e8;"></div> Rent & Utilities
+                                </div>
+                                <span style="font-weight:600;">45%</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; font-size:14px;">
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <div style="width:12px; height:12px; border-radius:50%; background:#89fa9b;"></div> Food & Dining
+                                </div>
+                                <span style="font-weight:600;">30%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-8 table-container">
+                        <div class="table-header">
+                            <h3 style="font-size: 18px; font-weight: 600;">Recent Activity</h3>
+                            <button class="btn-text"><span class="material-symbols-outlined" style="font-size:18px;">filter_list</span> Filter</button>
+                        </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Payee</th>
+                                    <th>Category</th>
+                                    <th>Date</th>
+                                    <th style="text-align: right;">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody id="contenedor-transacciones">
+                                <tr>
+                                    <td>
+                                        <div style="display:flex; align-items:center; gap:12px;">
+                                            <div style="width:40px; height:40px; border-radius:50%; background:var(--surface-container); display:flex; align-items:center; justify-content:center; color:var(--outline);">
+                                                <span class="material-symbols-outlined">home</span>
+                                            </div>
+                                            <div>
+                                                <p style="font-weight:500;">Skyline Apartments</p>
+                                                <p style="font-size:12px; color:var(--outline);">ACH Transfer</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge" style="background:var(--secondary-fixed); color:var(--on-secondary-fixed);">Rent & Utilities</span></td>
+                                    <td>
+                                        <p style="font-size:14px;">Oct 28, 2023</p>
+                                        <p style="font-size:12px; color:var(--outline);">09:00 AM</p>
+                                    </td>
+                                    <td style="text-align: right; font-weight: 500;">-$2,150.00</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div style="display:flex; align-items:center; gap:12px;">
+                                            <div style="width:40px; height:40px; border-radius:50%; background:var(--surface-container); display:flex; align-items:center; justify-content:center; color:var(--outline);">
+                                                <span class="material-symbols-outlined">work</span>
+                                            </div>
+                                            <div>
+                                                <p style="font-weight:500;">TechCorp Inc.</p>
+                                                <p style="font-size:12px; color:var(--outline);">Direct Deposit</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge" style="background:var(--surface-container-high);">Income</span></td>
+                                    <td>
+                                        <p style="font-size:14px;">Oct 25, 2023</p>
+                                        <p style="font-size:12px; color:var(--outline);">06:00 AM</p>
+                                    </td>
+                                    <td style="text-align: right; font-weight: 500; color: var(--tertiary-container);">+$5,200.00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div style="padding: 16px; text-align: center; background: var(--surface-bright); border-top: 1px solid var(--outline-variant);">
+                            <button id="btn-ver-mas" onclick="cargarMasTransacciones()" class="btn-text" style="margin: 0 auto;">View All Transactions</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal-fondo" id="modalUser">
+        <div class="modal-caja">
+            <div style="padding: 24px; border-bottom: 1px solid var(--borde); display: flex; justify-content: space-between; align-items: center; background: #f8f9fa;">
+                <h3 style="font-weight: 700; margin: 0;">Detalles de la Cuenta</h3>
+                <span class="material-symbols-outlined" style="cursor: pointer; color: var(--on-surface-variant);" onclick="toggleModal(false)">close</span>
+            </div>
+            <div style="padding: 24px;">
+                <div style="display: flex; gap: 16px; align-items: center; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px dashed var(--borde);">
+                    <img src="https://ui-avatars.com/api/?name=Alex+D&background=005bbf&color=fff" style="width: 56px; border-radius: 50%; border: 2px solid #d9e2ff;">
+                    <div>
+                        <p style="font-weight: 700; font-size: 18px; margin: 0;">Alex J. Smith</p>
+                        <span style="background: #e6f4ea; color: #006d2c; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; text-transform: uppercase;">Cuenta Activa</span>
+                    </div>
+                </div>
+                <div style="display: grid; gap: 16px;">
+                    <div>
+                        <p style="font-size: 11px; font-weight: 600; color: var(--outline); text-transform: uppercase;">Número de Cuenta (IBAN)</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center; background: #f3f4f5; padding: 12px; border-radius: 10px; font-family: monospace; font-size: 14px;">
+                            <span>ES91 2100 0418 4502 0005 1234</span>
+                            <span class="material-symbols-outlined" style="font-size: 18px; color: var(--primary-container); cursor: pointer;">content_copy</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div style="padding: 16px 24px; background: #f8f9fa; border-top: 1px solid var(--borde); display: flex; justify-content: space-between;">
+                <button style="background: none; border: none; color: var(--error); font-weight: 600; cursor: pointer;">Descargar PDF</button>
+                <button style="padding: 10px 20px; background: var(--primary-container); color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;" onclick="toggleModal(false)">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleModal(show) {
+            document.getElementById('modalUser').style.display = show ? 'flex' : 'none';
+        }
+
+        function cargarMasTransacciones() {
+            const tabla = document.getElementById('contenedor-transacciones');
+            const boton = document.getElementById('btn-ver-mas');
+
+            const nuevasFilas = `
+                <tr>
+                    <td>
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <div style="width:40px; height:40px; border-radius:50%; background:var(--surface-container); display:flex; align-items:center; justify-content:center; color:var(--outline);">
+                                <span class="material-symbols-outlined">fitness_center</span>
+                            </div>
+                            <div>
+                                <p style="font-weight:500;">Gym Madrid</p>
+                                <p style="font-size:12px; color:var(--outline);">Cuota Mensual</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="badge" style="background:var(--secondary-fixed-dim); color:var(--on-secondary-fixed);">Salud</span></td>
+                    <td>
+                        <p style="font-size:14px;">Oct 20, 2023</p>
+                        <p style="font-size:12px; color:var(--outline);">06:30 AM</p>
+                    </td>
+                    <td style="text-align: right; font-weight: 500;">-$29.90</td>
+                </tr>
+            `;
+
+            tabla.insertAdjacentHTML('beforeend', nuevasFilas);
+            boton.innerText = "No hay más transacciones";
+            boton.disabled = true;
+            boton.style.opacity = '0.5';
+            boton.style.cursor = 'default';
+        }
+    </script>
+</body>
+</html>

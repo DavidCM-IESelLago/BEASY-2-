@@ -1,0 +1,442 @@
+/* ==========================================
+   VARIABLES GLOBALES (Colores y medidas)
+========================================== */
+:root {
+    --color-fondo: #f8f9fa;
+    --color-blanco: #ffffff;
+    
+    /* Azules */
+    --color-primario: #1a73e8;
+    --color-primario-hover: #005bbf;
+    --color-primario-suave: #d8e2ff;
+    --color-primario-texto: #001a41;
+    --color-azul-logo: #1d4ed8;
+    --color-azul-fuerte: #005bbf;
+    
+    /* Grises */
+    --color-texto-principal: #191c1d;
+    --color-texto-secundario: #414754;
+    --color-texto-claro: #6b7280;
+    --color-gris-fondo: #f3f4f5;
+    --color-borde: #e1e3e4;
+    
+    /* Acentos */
+    --color-verde: #89fa9b;
+    --color-verde-oscuro: #002108;
+    
+    /* Sombras y medidas */
+    --sombra-suave: 0px 4px 20px rgba(0, 0, 0, 0.04);
+    --sombra-media: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --ancho-maximo: 1440px;
+}
+
+/* ==========================================
+   RESETEO BÁSICO
+========================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body.cuerpo-pagina {
+    background-color: var(--color-fondo);
+    color: var(--color-texto-principal);
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+a { text-decoration: none; }
+button { cursor: pointer; border: none; font-family: inherit; }
+input { outline: none; }
+strong { font-weight: 600; color: var(--color-primario); }
+
+/* ==========================================
+   1. BARRA DE NAVEGACIÓN
+========================================== */
+.barra-navegacion {
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(16px);
+    height: 72px;
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px;
+    border-bottom: 1px solid var(--color-borde);
+}
+
+.nav-izquierda, .nav-derecha { display: flex; align-items: center; gap: 16px; }
+
+.logo {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-azul-logo);
+    letter-spacing: -0.5px;
+}
+
+.caja-buscador {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--color-gris-fondo);
+    padding: 8px 16px;
+    border-radius: 99px;
+    border: 1px solid var(--color-borde);
+}
+
+.entrada-buscador {
+    background: transparent;
+    border: none;
+    font-size: 14px;
+    width: 150px;
+}
+
+.nav-centro { display: flex; gap: 32px; }
+
+.enlace-nav {
+    color: var(--color-texto-claro);
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+.enlace-nav:hover { color: var(--color-texto-principal); }
+
+.icono-accion {
+    color: var(--color-texto-claro);
+    padding: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.icono-accion:hover { background-color: var(--color-gris-fondo); }
+
+/* Botones comunes */
+.boton-texto {
+    background: transparent;
+    color: var(--color-primario);
+    font-weight: 500;
+    font-size: 14px;
+    padding: 8px 16px;
+}
+
+.boton-primario {
+    background-color: var(--color-primario);
+    color: var(--color-blanco);
+    font-weight: 500;
+    font-size: 14px;
+    padding: 10px 20px;
+    border-radius: 12px;
+    transition: background 0.2s;
+}
+.boton-primario:hover { background-color: var(--color-primario-hover); }
+
+/* ==========================================
+   2. SECCIÓN HERO
+========================================== */
+.contenedor-principal {
+    flex-grow: 1;
+    width: 100%;
+    max-width: var(--ancho-maximo);
+    margin: 0 auto;
+    padding: 0 24px 100px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.seccion-hero {
+    width: 100%;
+    padding-top: 100px;
+    padding-bottom: 80px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.etiqueta-verificado {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--color-primario-suave);
+    color: var(--color-primario-texto);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 16px;
+    border-radius: 99px;
+    margin-bottom: 24px;
+}
+.icono-etiqueta { font-size: 16px; }
+
+.titulo-principal {
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 1.1;
+    max-width: 800px;
+    margin-bottom: 24px;
+}
+.texto-destacado { color: var(--color-primario); }
+
+.subtitulo-hero {
+    font-size: 20px;
+    color: var(--color-texto-secundario);
+    max-width: 600px;
+    margin-bottom: 40px;
+    line-height: 1.5;
+}
+
+.grupo-botones-hero { display: flex; gap: 16px; justify-content: center; }
+
+.boton-grande {
+    font-size: 16px;
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.boton-secundario {
+    background-color: var(--color-blanco);
+    color: var(--color-texto-principal);
+    border: 1px solid var(--color-borde);
+    border-radius: 12px;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+.boton-secundario:hover { background-color: var(--color-gris-fondo); }
+
+/* Gráfico abstracto Hero */
+/* Gráfico abstracto Hero */
+.grafico-hero {
+    margin-top: 60px;
+    width: 100%;
+    max-width: 1000px; /* ANTES ERA 400px. Lo ensanchamos a formato panorámico */
+    height: 450px; /* Le damos más altura para que respire */
+    background-color: var(--color-blanco);
+    border-radius: 24px;
+    box-shadow: var(--sombra-suave);
+    border: 1px solid var(--color-borde);
+    padding: 8px;
+}
+
+/* Estilo para la nueva imagen del Hero */
+.imagen-dashboard-hero {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Llena el espacio sin aplastar la imagen */
+    object-position: center; /* NUEVO: Asegura que siempre se vea el centro de la imagen aunque se recorte un poco por los bordes */
+    border-radius: 16px; 
+    display: block;
+}
+.grafico-fondo {
+    width: 100%; height: 100%;
+    background-color: var(--color-fondo);
+    border-radius: 16px;
+    display: flex;
+}
+.grafico-menu-lateral {
+    width: 200px;
+    border-right: 1px solid var(--color-borde);
+    background-color: var(--color-gris-fondo);
+}
+.grafico-contenido { padding: 40px; width: 100%; }
+.fila-cajas { display: flex; gap: 24px; }
+.cajita-grafico {
+    width: 30%; height: 100px;
+    background: var(--color-blanco);
+    border-radius: 12px;
+    border: 1px solid var(--color-borde);
+    padding: 16px;
+}
+.circulo-icono { width: 30px; height: 30px; border-radius: 50%; margin-bottom: 16px; }
+.circulo-icono.azul { background-color: #d9e2ff; }
+.circulo-icono.verde { background-color: #c4faca; }
+.linea-falsa { background-color: var(--color-borde); height: 8px; border-radius: 4px; margin-bottom: 8px; }
+.linea-falsa.corta { width: 50%; }
+.linea-falsa.larga { width: 80%; background-color: var(--color-texto-secundario); }
+
+/* ==========================================
+   3. SECCIÓN CARACTERÍSTICAS
+========================================== */
+.seccion-caracteristicas { width: 100%; padding-top: 60px; padding-bottom: 60px; }
+
+.cabecera-caracteristicas { text-align: center; margin-bottom: 60px; }
+.titulo-seccion { font-size: 24px; font-weight: 600; margin-bottom: 16px; }
+.texto-seccion { color: var(--color-texto-secundario); max-width: 600px; margin: 0 auto; line-height: 1.5; }
+
+.cuadricula-tarjetas {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 24px;
+}
+
+.tarjeta {
+    background-color: var(--color-blanco);
+    border-radius: 16px;
+    padding: 32px;
+    border: 1px solid var(--color-borde);
+    box-shadow: var(--sombra-suave);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tarjeta:hover {
+    transform: scale(1.015);
+    border-color: var(--color-primario);
+    box-shadow: 0 10px 30px rgba(26, 115, 232, 0.15); 
+}
+
+.tarjeta-ancha { grid-column: span 8; }
+.tarjeta-estrecha { grid-column: span 4; }
+
+.fondo-azul-fuerte {
+    background-color: var(--color-azul-fuerte);
+    color: var(--color-blanco);
+    border: none;
+}
+.texto-blanco { color: white; }
+.texto-blanco .texto-tarjeta { color: rgba(255,255,255,0.8); }
+
+.icono-tarjeta {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 24px;
+}
+.fondo-azul-claro { background-color: var(--color-primario-suave); color: var(--color-primario-texto); }
+.fondo-verde { background-color: var(--color-verde); color: var(--color-verde-oscuro); }
+.fondo-semitransparente { background-color: rgba(255,255,255,0.2); color: white; }
+.fondo-azul-medio { background-color: #d9e2ff; color: #001945; }
+
+.titulo-tarjeta { font-size: 18px; font-weight: 600; margin-bottom: 12px; }
+.texto-tarjeta { font-size: 14px; color: var(--color-texto-secundario); line-height: 1.5; }
+
+.fila-horizontal { flex-direction: row; align-items: center; }
+.contenido-mitad { width: 60%; }
+
+/* ==========================================
+   4. SECCIÓN FAQ (Acordeón)
+========================================== */
+.seccion-faq {
+    width: 100%;
+    max-width: 800px;
+    margin: 40px auto 0 auto;
+    padding: 40px 24px;
+}
+
+.cabecera-faq {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.contenedor-acordeon {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.faq-item {
+    background-color: var(--color-blanco);
+    border: 1px solid var(--color-borde);
+    border-radius: 12px;
+    padding: 20px 24px;
+    box-shadow: var(--sombra-suave);
+    transition: box-shadow 0.2s ease;
+}
+
+.faq-item:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+}
+
+.faq-pregunta {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-texto-principal);
+    cursor: pointer;
+    list-style: none; 
+    /* Quitamos el flex y usamos posicionamiento relativo para el texto */
+    display: block; 
+    position: relative;
+    padding-right: 40px; /* Dejamos hueco a la derecha para que el texto no pise el + */
+}
+
+/* Añadir nuestro propio icono de + al acordeón */
+.faq-pregunta::after {
+    content: '+';
+    font-size: 24px;
+    color: var(--color-primario);
+    font-weight: 400;
+    transition: transform 0.3s ease;
+    /* Lo fijamos a la derecha y lo centramos verticalmente */
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Cambiar el + por una X cuando está abierto */
+.faq-item[open] .faq-pregunta::after {
+    transform: translateY(-50%) rotate(45deg);
+}
+
+/* Quitar el marcador por defecto en Chrome/Safari */
+.faq-pregunta::-webkit-details-marker {
+    display: none;
+}
+
+.faq-respuesta {
+    margin-top: 16px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--color-texto-secundario);
+    padding-top: 16px;
+    border-top: 1px solid var(--color-gris-fondo);
+}
+
+/* ==========================================
+   5. PIE DE PÁGINA
+========================================== */
+.pie-pagina {
+    background-color: var(--color-fondo);
+    border-top: 1px solid var(--color-borde);
+    padding: 48px 32px;
+    width: 100%;
+}
+
+.contenedor-pie {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 32px;
+}
+
+.logo-texto { font-weight: 700; font-size: 16px; margin-bottom: 16px; color: var(--color-azul-logo); }
+.texto-pie { font-size: 12px; color: var(--color-texto-claro); line-height: 1.6; }
+
+.titulo-pie { font-size: 12px; font-weight: 600; text-transform: uppercase; margin-bottom: 16px; }
+.enlace-pie {
+    display: block;
+    font-size: 12px;
+    color: var(--color-texto-claro);
+    margin-bottom: 12px;
+    transition: color 0.2s;
+}
+.enlace-pie:hover { color: var(--color-primario); }
+
+/* Adaptación para móviles (Responsivo) */
+@media (max-width: 768px) {
+    .nav-centro, .caja-buscador { display: none; }
+    .cuadricula-tarjetas { grid-template-columns: 1fr; }
+    .tarjeta-ancha, .tarjeta-estrecha { grid-column: span 1; }
+    .fila-horizontal { flex-direction: column; }
+    .contenido-mitad { width: 100%; }
+    .contenedor-pie { grid-template-columns: 1fr; }
+}
