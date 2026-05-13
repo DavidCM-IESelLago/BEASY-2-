@@ -1,22 +1,26 @@
 FROM php:8.2-apache
 
 # Instalar extensiones y configurar Apache
-RUN docker-php-ext-install pdo pdo_mysql mysqli && \
-    a2enmod rewrite && \
-    sed -ri -e 's!/var/www/html!/var/www/html/backend!g' \
-        /etc/apache2/sites-available/*.conf \
-        /etc/apache2/conf-available/*.conf && \
-    sed -ri -e 's!/var/www/!/var/www/html/backend!g' \
-        /etc/apache2/apache2.conf && \
-    echo "ServerName localhost" >> /etc/apache2/apache2.conf
+RUN docker-php-ext-install pdo pdo_mysql mysqli
 
-# --- CONFIGURAR VIRTUALHOST DEL FRONTEND ---
+# Habilitar módulos
+RUN a2enmod rewrite
 
-# Añadir Listen 8081 al archivo ports.conf
-RUN echo "Listen 8081" >> /etc/apache2/ports.conf
-
-# Copiar la configuración del VirtualHost del frontend
+# Copiar configuraciones personalizadas
+COPY backend.conf /etc/apache2/sites-available/backend.conf
 COPY frontend.conf /etc/apache2/sites-available/frontend.conf
 
-# Habilitar el sitio del frontend
-RUN a2ensite frontend.conf
+# Configurar puertos
+RUN echo "Listen 80" > /etc/apache2/ports.conf && \
+    echo "Listen 8081" >> /etc/apache2/ports.conf
+
+# Deshabilitar el sitio por defecto y habilitar los nuestros
+RUN a2dissite 000-default.conf && \
+    a2ensite backend.conf && \
+    a2ensite frontend.conf
+
+# Configurar ServerName para evitar warnings
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
+# Establecer permisos
+RUN chown -R www-data:www-data /var/www/html
