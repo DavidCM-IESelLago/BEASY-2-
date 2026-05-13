@@ -80,6 +80,8 @@
             display: flex;
         }
 
+        .logo-text { font-size: 18px; font-weight: 700; color: var(--primary); }
+
         .nav-lista {
             flex: 1;
             display: flex;
@@ -112,7 +114,7 @@
             border-bottom-left-radius: 0;
         }
 
-        /* --- MAIN LAYOUT --- */
+        /* --- MAIN LAYOUT Y HEADER --- */
         .main-wrapper {
             flex: 1;
             display: flex;
@@ -133,6 +135,28 @@
             z-index: 10;
         }
 
+        .header-title { font-weight: 600; }
+        .header-actions { display: flex; align-items: center; gap: 16px; }
+
+        .notif-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            padding: 8px;
+            color: var(--on-surface-variant);
+        }
+
+        .notif-punto {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 8px;
+            height: 8px;
+            background: var(--error);
+            border-radius: 50%;
+        }
+
         .perfil-btn {
             display: flex;
             align-items: center;
@@ -144,19 +168,22 @@
         }
 
         .perfil-btn:hover { background: var(--surface-container-low); }
+        .perfil-img { width: 32px; border-radius: 50%; }
+        .perfil-name { font-size: 14px; font-weight: 500; }
 
+        /* --- CONTENIDO Y GRID --- */
         .content {
             flex: 1;
             padding: 32px;
             overflow-y: auto;
         }
 
-        .container-inner {
-            max-width: 1440px;
-            margin: 0 auto;
-        }
+        .container-inner { max-width: 1440px; margin: 0 auto; }
 
-        /* --- GRID Y CARDS --- */
+        .seccion-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px; }
+        .seccion-titulo { font-size: 24px; font-weight: 600; margin-bottom: 4px; }
+        .seccion-subtitulo { color: var(--on-surface-variant); }
+
         .grid-layout {
             display: grid;
             grid-template-columns: repeat(12, 1fr);
@@ -174,6 +201,7 @@
             flex-direction: column;
         }
 
+        /* Ya no usamos align-self, solo mantenemos las columnas limpias */
         .col-4 { grid-column: span 4; }
         .col-8 { grid-column: span 8; }
 
@@ -181,7 +209,9 @@
             .col-4, .col-8 { grid-column: span 12; }
         }
 
-        /* --- GRÁFICO --- */
+        /* --- GRÁFICO DONUT --- */
+        .card-titulo { font-size: 18px; font-weight: 600; margin-bottom: 24px; }
+        
         .chart-container {
             position: relative;
             flex: 1;
@@ -204,8 +234,16 @@
             justify-content: center;
             pointer-events: none;
         }
+        .chart-total-lbl { font-size: 14px; color: var(--on-surface-variant); }
+        .chart-total-val { font-size: 24px; font-weight: 700; }
 
-        /* --- TABLA --- */
+        .leyenda-grafico { margin-top: 24px; display: grid; gap: 12px; }
+        .leyenda-item { display: flex; justify-content: space-between; font-size: 14px; }
+        .leyenda-nombre { display: flex; align-items: center; gap: 8px; }
+        .leyenda-punto { width: 12px; height: 12px; border-radius: 50%; }
+        .leyenda-valor { font-weight: 600; }
+
+        /* --- TABLA DE TRANSACCIONES --- */
         .table-container {
             overflow-x: auto;
             border: 1px solid var(--outline-variant);
@@ -234,8 +272,19 @@
             border-bottom: 1px solid var(--outline-variant);
         }
 
-        td { padding: 16px 24px; border-bottom: 1px solid var(--outline-variant); }
-        tr:hover { background: var(--surface-bright); }
+        td { padding: 16px 24px; border-bottom: 1px solid var(--outline-variant); vertical-align: middle; }
+        tr:hover { background: var(--surface-bright); transition: 0.2s; }
+
+        .tx-grupo { display: flex; align-items: center; gap: 12px; }
+        .tx-icono { width: 40px; height: 40px; border-radius: 50%; background: var(--surface-container); display: flex; align-items: center; justify-content: center; color: var(--outline); }
+        .tx-nombre { font-weight: 500; }
+        .tx-metodo { font-size: 12px; color: var(--outline); }
+        
+        .tx-fecha { font-size: 14px; }
+        .tx-hora { font-size: 12px; color: var(--outline); }
+        
+        .tx-importe { text-align: right; font-weight: 500; }
+        .tx-positivo { color: var(--tertiary-container); font-weight: 600; }
 
         .badge {
             display: inline-flex;
@@ -243,10 +292,19 @@
             padding: 4px 8px;
             border-radius: 6px;
             font-size: 11px;
-            font-weight: 500;
+            font-weight: 600;
+        }
+        .badge-rent { background: var(--secondary-fixed); color: var(--on-secondary-fixed); }
+        .badge-income { background: var(--surface-container-high); color: var(--on-surface); }
+        .badge-salud { background: var(--secondary-fixed-dim); color: var(--on-secondary-fixed); }
+
+        .table-footer {
+            padding: 16px;
+            text-align: center;
+            background: var(--surface-bright);
         }
 
-        /* --- BOTONES --- */
+        /* --- BOTONES TEXTO --- */
         .btn-text {
             background: none;
             border: none;
@@ -256,11 +314,14 @@
             display: flex;
             align-items: center;
             gap: 4px;
+            transition: 0.2s;
         }
-
         .btn-text:hover { color: var(--on-primary-fixed-variant); }
+        .btn-ver-mas { margin: 0 auto; }
+        .btn-ver-mas:disabled { opacity: 0.5; cursor: default; }
+        .btn-ver-mas:disabled:hover { color: var(--primary-container); text-decoration: none; }
 
-        /* --- MODAL --- */
+        /* --- MODAL DE USUARIO --- */
         .modal-fondo {
             position: fixed;
             inset: 0;
@@ -278,9 +339,30 @@
             border-radius: 24px;
             overflow: hidden;
             animation: zoom 0.3s ease;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
         }
 
         @keyframes zoom { from { transform: scale(0.9); } to { transform: scale(1); } }
+
+        .modal-header { padding: 24px; border-bottom: 1px solid var(--borde); display: flex; justify-content: space-between; align-items: center; background: #f8f9fa; }
+        .modal-titulo { font-weight: 700; margin: 0; font-size: 18px;}
+        .modal-close { cursor: pointer; color: var(--on-surface-variant); background: none; border: none; display: flex;}
+
+        .modal-body { padding: 24px; }
+        .modal-perfil { display: flex; gap: 16px; align-items: center; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px dashed var(--borde); }
+        .modal-avatar { width: 56px; border-radius: 50%; border: 2px solid #d9e2ff; }
+        .modal-nombre { font-weight: 700; font-size: 18px; margin: 0 0 4px 0; }
+        .badge-activa { background: #e6f4ea; color: #006d2c; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; text-transform: uppercase; display: inline-block;}
+
+        .modal-datos { display: grid; gap: 16px; }
+        .dato-label { font-size: 11px; font-weight: 600; color: var(--outline); text-transform: uppercase; margin-bottom: 4px;}
+        .iban-box { display: flex; justify-content: space-between; align-items: center; background: #f3f4f5; padding: 12px; border-radius: 10px; font-family: monospace; font-size: 14px; }
+        .copy-icon { font-size: 18px; color: var(--primary-container); cursor: pointer; }
+
+        .modal-footer { padding: 16px 24px; background: #f8f9fa; border-top: 1px solid var(--borde); display: flex; justify-content: space-between; align-items: center; }
+        .btn-pdf { background: none; border: none; color: var(--error); font-weight: 600; cursor: pointer; }
+        .btn-entendido { padding: 10px 20px; background: var(--primary-container); color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn-entendido:hover { filter: brightness(0.9); }
     </style>
 </head>
 
@@ -289,7 +371,7 @@
     <aside class="sidebar">
         <div class="logo-box">
             <div class="logo-icon"><span class="material-symbols-outlined fill">account_balance</span></div>
-            <h1 style="font-size: 18px; font-weight: 700; color: var(--primary);">FintechPro</h1>
+            <h1 class="logo-text">FintechPro</h1>
         </div>
         <nav class="nav-lista">
             <a href="dashboard.html" class="nav-link"><span class="material-symbols-outlined">dashboard</span> Dashboard</a>
@@ -302,118 +384,122 @@
 
     <div class="main-wrapper">
         <header class="header">
-            <div style="font-weight: 600;">Resumen de Movimientos</div>
-            <div style="display: flex; align-items: center; gap: 16px;">
-                <button style="background:none; border:none; color:var(--on-surface-variant); position:relative; padding:8px; cursor:pointer;">
+            <div class="header-title">Resumen de Movimientos</div>
+            <div class="header-actions">
+                <button class="notif-btn">
                     <span class="material-symbols-outlined">notifications</span>
-                    <span style="position:absolute; top:10px; right:10px; width:8px; height:8px; background:var(--error); border-radius:50%;"></span>
+                    <span class="notif-punto"></span>
                 </button>
                 <div class="perfil-btn" onclick="toggleModal(true)">
-                    <img src="https://ui-avatars.com/api/?name=Alex+D&background=005bbf&color=fff" style="width: 32px; border-radius: 50%;">
-                    <span style="font-size: 14px; font-weight: 500;">Alex D.</span>
-                    <span class="material-symbols-outlined" style="font-size: 18px;">keyboard_arrow_down</span>
+                    <img src="https://ui-avatars.com/api/?name=Alex+D&background=005bbf&color=fff" class="perfil-img" alt="Perfil">
+                    <span class="perfil-name">Alex D.</span>
+                    <span class="material-symbols-outlined">keyboard_arrow_down</span>
                 </div>
             </div>
         </header>
 
         <main class="content">
             <div class="container-inner">
-                <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom: 32px;">
+                <div class="seccion-header">
                     <div>
-                        <h2 style="font-size: 24px; font-weight: 600; margin-bottom: 4px;">Movimientos</h2>
-                        <p style="color: var(--on-surface-variant);">Track and analyze your recent financial activity.</p>
+                        <h2 class="seccion-titulo">Movimientos</h2>
+                        <p class="seccion-subtitulo">Track and analyze your recent financial activity.</p>
                     </div>
                 </div>
 
                 <div class="grid-layout">
-                    <div class="card col-4">
-                        <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 24px;">Gastos del Mes</h3>
-                        <div class="chart-container">
-                            <svg class="chart-svg" viewbox="0 0 100 100">
-                                <circle cx="50" cy="50" fill="transparent" r="40" stroke="#f3f4f5" stroke-width="14"></circle>
-                                <circle class="chart-circle" cx="50" cy="50" fill="transparent" r="40" stroke="#1a73e8" stroke-dasharray="251.2" stroke-dashoffset="138.16" stroke-width="14"></circle>
-                                <circle class="chart-circle" cx="50" cy="50" fill="transparent" r="40" stroke="#89fa9b" stroke-dasharray="251.2" stroke-dashoffset="175.84" stroke-width="14" transform="rotate(162 50 50)"></circle>
-                                <circle class="chart-circle" cx="50" cy="50" fill="transparent" r="40" stroke="#759efd" stroke-dasharray="251.2" stroke-dashoffset="213.52" stroke-width="14" transform="rotate(270 50 50)"></circle>
-                                <circle class="chart-circle" cx="50" cy="50" fill="transparent" r="40" stroke="#c1c6d6" stroke-dasharray="251.2" stroke-dashoffset="226.08" stroke-width="14" transform="rotate(324 50 50)"></circle>
-                            </svg>
-                            <div class="chart-overlay">
-                                <span style="font-size:14px; color:var(--on-surface-variant);">Total</span>
-                                <span style="font-size:24px; font-weight:700;">-$4,250</span>
-                            </div>
-                        </div>
-                        <div style="margin-top: 24px; display: grid; gap: 12px;">
-                            <div style="display:flex; justify-content:space-between; font-size:14px;">
-                                <div style="display:flex; align-items:center; gap:8px;">
-                                    <div style="width:12px; height:12px; border-radius:50%; background:#1a73e8;"></div> Rent & Utilities
+                    <div class="col-4">
+                        <div class="card">
+                            <h3 class="card-titulo">Gastos del Mes</h3>
+                            <div class="chart-container">
+                                <svg class="chart-svg" viewbox="0 0 100 100">
+                                    <circle cx="50" cy="50" fill="transparent" r="40" stroke="#f3f4f5" stroke-width="14"></circle>
+                                    <circle class="chart-circle" cx="50" cy="50" fill="transparent" r="40" stroke="#1a73e8" stroke-dasharray="251.2" stroke-dashoffset="138.16" stroke-width="14"></circle>
+                                    <circle class="chart-circle" cx="50" cy="50" fill="transparent" r="40" stroke="#89fa9b" stroke-dasharray="251.2" stroke-dashoffset="175.84" stroke-width="14" transform="rotate(162 50 50)"></circle>
+                                    <circle class="chart-circle" cx="50" cy="50" fill="transparent" r="40" stroke="#759efd" stroke-dasharray="251.2" stroke-dashoffset="213.52" stroke-width="14" transform="rotate(270 50 50)"></circle>
+                                    <circle class="chart-circle" cx="50" cy="50" fill="transparent" r="40" stroke="#c1c6d6" stroke-dasharray="251.2" stroke-dashoffset="226.08" stroke-width="14" transform="rotate(324 50 50)"></circle>
+                                </svg>
+                                <div class="chart-overlay">
+                                    <span class="chart-total-lbl">Total</span>
+                                    <span class="chart-total-val">-$4,250</span>
                                 </div>
-                                <span style="font-weight:600;">45%</span>
                             </div>
-                            <div style="display:flex; justify-content:space-between; font-size:14px;">
-                                <div style="display:flex; align-items:center; gap:8px;">
-                                    <div style="width:12px; height:12px; border-radius:50%; background:#89fa9b;"></div> Food & Dining
+                            <div class="leyenda-grafico">
+                                <div class="leyenda-item">
+                                    <div class="leyenda-nombre">
+                                        <div class="leyenda-punto" style="background:#1a73e8;"></div> Rent & Utilities
+                                    </div>
+                                    <span class="leyenda-valor">45%</span>
                                 </div>
-                                <span style="font-weight:600;">30%</span>
+                                <div class="leyenda-item">
+                                    <div class="leyenda-nombre">
+                                        <div class="leyenda-punto" style="background:#89fa9b;"></div> Food & Dining
+                                    </div>
+                                    <span class="leyenda-valor">30%</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="col-8 table-container">
-                        <div class="table-header">
-                            <h3 style="font-size: 18px; font-weight: 600;">Recent Activity</h3>
-                            <button class="btn-text"><span class="material-symbols-outlined" style="font-size:18px;">filter_list</span> Filter</button>
-                        </div>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Payee</th>
-                                    <th>Category</th>
-                                    <th>Date</th>
-                                    <th style="text-align: right;">Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody id="contenedor-transacciones">
-                                <tr>
-                                    <td>
-                                        <div style="display:flex; align-items:center; gap:12px;">
-                                            <div style="width:40px; height:40px; border-radius:50%; background:var(--surface-container); display:flex; align-items:center; justify-content:center; color:var(--outline);">
-                                                <span class="material-symbols-outlined">home</span>
+                    <div class="col-8">
+                        <div class="table-container">
+                            <div class="table-header">
+                                <h3 class="card-titulo" style="margin: 0;">Recent Activity</h3>
+                                <button class="btn-text"><span class="material-symbols-outlined" style="font-size:18px;">filter_list</span> Filter</button>
+                            </div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Payee</th>
+                                        <th>Category</th>
+                                        <th>Date</th>
+                                        <th style="text-align: right;">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="contenedor-transacciones">
+                                    <tr>
+                                        <td>
+                                            <div class="tx-grupo">
+                                                <div class="tx-icono">
+                                                    <span class="material-symbols-outlined">home</span>
+                                                </div>
+                                                <div>
+                                                    <p class="tx-nombre">Skyline Apartments</p>
+                                                    <p class="tx-metodo">ACH Transfer</p>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <p style="font-weight:500;">Skyline Apartments</p>
-                                                <p style="font-size:12px; color:var(--outline);">ACH Transfer</p>
+                                        </td>
+                                        <td><span class="badge badge-rent">Rent & Utilities</span></td>
+                                        <td>
+                                            <p class="tx-fecha">Oct 28, 2023</p>
+                                            <p class="tx-hora">09:00 AM</p>
+                                        </td>
+                                        <td class="tx-importe">-$2,150.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="tx-grupo">
+                                                <div class="tx-icono">
+                                                    <span class="material-symbols-outlined">work</span>
+                                                </div>
+                                                <div>
+                                                    <p class="tx-nombre">TechCorp Inc.</p>
+                                                    <p class="tx-metodo">Direct Deposit</p>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td><span class="badge" style="background:var(--secondary-fixed); color:var(--on-secondary-fixed);">Rent & Utilities</span></td>
-                                    <td>
-                                        <p style="font-size:14px;">Oct 28, 2023</p>
-                                        <p style="font-size:12px; color:var(--outline);">09:00 AM</p>
-                                    </td>
-                                    <td style="text-align: right; font-weight: 500;">-$2,150.00</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div style="display:flex; align-items:center; gap:12px;">
-                                            <div style="width:40px; height:40px; border-radius:50%; background:var(--surface-container); display:flex; align-items:center; justify-content:center; color:var(--outline);">
-                                                <span class="material-symbols-outlined">work</span>
-                                            </div>
-                                            <div>
-                                                <p style="font-weight:500;">TechCorp Inc.</p>
-                                                <p style="font-size:12px; color:var(--outline);">Direct Deposit</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td><span class="badge" style="background:var(--surface-container-high);">Income</span></td>
-                                    <td>
-                                        <p style="font-size:14px;">Oct 25, 2023</p>
-                                        <p style="font-size:12px; color:var(--outline);">06:00 AM</p>
-                                    </td>
-                                    <td style="text-align: right; font-weight: 500; color: var(--tertiary-container);">+$5,200.00</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div style="padding: 16px; text-align: center; background: var(--surface-bright); border-top: 1px solid var(--outline-variant);">
-                            <button id="btn-ver-mas" onclick="cargarMasTransacciones()" class="btn-text" style="margin: 0 auto;">View All Transactions</button>
+                                        </td>
+                                        <td><span class="badge badge-income">Income</span></td>
+                                        <td>
+                                            <p class="tx-fecha">Oct 25, 2023</p>
+                                            <p class="tx-hora">06:00 AM</p>
+                                        </td>
+                                        <td class="tx-importe tx-positivo">+$5,200.00</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="table-footer">
+                                <button id="btn-ver-mas" onclick="cargarMasTransacciones()" class="btn-text btn-ver-mas">View All Transactions</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -423,31 +509,31 @@
 
     <div class="modal-fondo" id="modalUser">
         <div class="modal-caja">
-            <div style="padding: 24px; border-bottom: 1px solid var(--borde); display: flex; justify-content: space-between; align-items: center; background: #f8f9fa;">
-                <h3 style="font-weight: 700; margin: 0;">Detalles de la Cuenta</h3>
-                <span class="material-symbols-outlined" style="cursor: pointer; color: var(--on-surface-variant);" onclick="toggleModal(false)">close</span>
+            <div class="modal-header">
+                <h3 class="modal-titulo">Detalles de la Cuenta</h3>
+                <button class="modal-close" onclick="toggleModal(false)"><span class="material-symbols-outlined">close</span></button>
             </div>
-            <div style="padding: 24px;">
-                <div style="display: flex; gap: 16px; align-items: center; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px dashed var(--borde);">
-                    <img src="https://ui-avatars.com/api/?name=Alex+D&background=005bbf&color=fff" style="width: 56px; border-radius: 50%; border: 2px solid #d9e2ff;">
+            <div class="modal-body">
+                <div class="modal-perfil">
+                    <img src="https://ui-avatars.com/api/?name=Alex+D&background=005bbf&color=fff" class="modal-avatar" alt="Perfil">
                     <div>
-                        <p style="font-weight: 700; font-size: 18px; margin: 0;">Alex J. Smith</p>
-                        <span style="background: #e6f4ea; color: #006d2c; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; text-transform: uppercase;">Cuenta Activa</span>
+                        <p class="modal-nombre">Alex J. Smith</p>
+                        <span class="badge-activa">Cuenta Activa</span>
                     </div>
                 </div>
-                <div style="display: grid; gap: 16px;">
+                <div class="modal-datos">
                     <div>
-                        <p style="font-size: 11px; font-weight: 600; color: var(--outline); text-transform: uppercase;">Número de Cuenta (IBAN)</p>
-                        <div style="display: flex; justify-content: space-between; align-items: center; background: #f3f4f5; padding: 12px; border-radius: 10px; font-family: monospace; font-size: 14px;">
+                        <p class="dato-label">Número de Cuenta (IBAN)</p>
+                        <div class="iban-box">
                             <span>ES91 2100 0418 4502 0005 1234</span>
-                            <span class="material-symbols-outlined" style="font-size: 18px; color: var(--primary-container); cursor: pointer;">content_copy</span>
+                            <span class="material-symbols-outlined copy-icon">content_copy</span>
                         </div>
                     </div>
                 </div>
             </div>
-            <div style="padding: 16px 24px; background: #f8f9fa; border-top: 1px solid var(--borde); display: flex; justify-content: space-between;">
-                <button style="background: none; border: none; color: var(--error); font-weight: 600; cursor: pointer;">Descargar PDF</button>
-                <button style="padding: 10px 20px; background: var(--primary-container); color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;" onclick="toggleModal(false)">Entendido</button>
+            <div class="modal-footer">
+                <button class="btn-pdf">Descargar PDF</button>
+                <button class="btn-entendido" onclick="toggleModal(false)">Entendido</button>
             </div>
         </div>
     </div>
@@ -464,22 +550,98 @@
             const nuevasFilas = `
                 <tr>
                     <td>
-                        <div style="display:flex; align-items:center; gap:12px;">
-                            <div style="width:40px; height:40px; border-radius:50%; background:var(--surface-container); display:flex; align-items:center; justify-content:center; color:var(--outline);">
+                        <div class="tx-grupo">
+                            <div class="tx-icono">
                                 <span class="material-symbols-outlined">fitness_center</span>
                             </div>
                             <div>
-                                <p style="font-weight:500;">Gym Madrid</p>
-                                <p style="font-size:12px; color:var(--outline);">Cuota Mensual</p>
+                                <p class="tx-nombre">Gym Madrid DAW</p>
+                                <p class="tx-metodo">Cuota Mensual</p>
                             </div>
                         </div>
                     </td>
-                    <td><span class="badge" style="background:var(--secondary-fixed-dim); color:var(--on-secondary-fixed);">Salud</span></td>
+                    <td><span class="badge badge-salud" style="background:var(--secondary-fixed-dim); color:var(--on-secondary-fixed);">Salud</span></td>
                     <td>
-                        <p style="font-size:14px;">Oct 20, 2023</p>
-                        <p style="font-size:12px; color:var(--outline);">06:30 AM</p>
+                        <p class="tx-fecha">Oct 20, 2023</p>
+                        <p class="tx-hora">06:30 AM</p>
                     </td>
-                    <td style="text-align: right; font-weight: 500;">-$29.90</td>
+                    <td class="tx-importe">-$29.90</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="tx-grupo">
+                            <div class="tx-icono">
+                                <span class="material-symbols-outlined">send_money</span>
+                            </div>
+                            <div>
+                                <p class="tx-nombre">Bizum a David</p>
+                                <p class="tx-metodo">Cena post-clases DAW</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="badge" style="background:#d9e2ff; color:#001945;">Transferencia</span></td>
+                    <td>
+                        <p class="tx-fecha">Oct 18, 2023</p>
+                        <p class="tx-hora">10:15 PM</p>
+                    </td>
+                    <td class="tx-importe">-$15.50</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="tx-grupo">
+                            <div class="tx-icono">
+                                <span class="material-symbols-outlined">sports_esports</span>
+                            </div>
+                            <div>
+                                <p class="tx-nombre">Riot Games</p>
+                                <p class="tx-metodo">Riot Points (LoL)</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="badge" style="background:#e7e8e9; color:#191c1d;">Ocio</span></td>
+                    <td>
+                        <p class="tx-fecha">Oct 15, 2023</p>
+                        <p class="tx-hora">04:20 PM</p>
+                    </td>
+                    <td class="tx-importe">-$10.00</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="tx-grupo">
+                            <div class="tx-icono" style="color: var(--tertiary-container);">
+                                <span class="material-symbols-outlined">work</span>
+                            </div>
+                            <div>
+                                <p class="tx-nombre">Nómina Camarero</p>
+                                <p class="tx-metodo">Ingreso mensual</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="badge" style="background:#89fa9b; color:#002108;">Ingreso</span></td>
+                    <td>
+                        <p class="tx-fecha">Oct 05, 2023</p>
+                        <p class="tx-hora">08:00 AM</p>
+                    </td>
+                    <td class="tx-importe tx-positivo">+$650.00</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="tx-grupo">
+                            <div class="tx-icono">
+                                <span class="material-symbols-outlined">movie</span>
+                            </div>
+                            <div>
+                                <p class="tx-nombre">Crunchyroll</p>
+                                <p class="tx-metodo">Suscripción Anime</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="badge" style="background:#ffdad6; color:#ba1a1a;">Suscripciones</span></td>
+                    <td>
+                        <p class="tx-fecha">Oct 02, 2023</p>
+                        <p class="tx-hora">10:00 AM</p>
+                    </td>
+                    <td class="tx-importe">-$4.99</td>
                 </tr>
             `;
 

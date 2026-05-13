@@ -60,17 +60,16 @@ CREATE TABLE tarjetas (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- -----------------------------------------------------
--- Tabla transacciones
+-- Tabla transacciones (ACTUALIZADA: 4 categorías y sin estado)
 -- -----------------------------------------------------
 CREATE TABLE transacciones (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     cuenta_origen_id INT UNSIGNED NOT NULL,
     cuenta_destino_id INT UNSIGNED NOT NULL,
     monto DECIMAL(12,2) NOT NULL,
-    tipo ENUM('transferencia', 'pago', 'recarga') NOT NULL DEFAULT 'transferencia',
+    tipo ENUM('ingreso', 'compra', 'transferencia', 'bizum') NOT NULL DEFAULT 'transferencia',
     descripcion TEXT,
     fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    estado ENUM('pendiente', 'completada', 'fallida') DEFAULT 'pendiente',
     FOREIGN KEY (cuenta_origen_id) REFERENCES cuentas(id) ON DELETE RESTRICT ON UPDATE CASCADE,
     FOREIGN KEY (cuenta_destino_id) REFERENCES cuentas(id) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
