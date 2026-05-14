@@ -1,5 +1,5 @@
 // frontend/js/api.js
-const API_BASE = 'http://localhost/api';
+const API_BASE = 'http://localhost/api/';
 
 async function apiFetch(endpoint, opciones = {}) {
     const token = localStorage.getItem('jwt_token');
@@ -14,7 +14,7 @@ async function apiFetch(endpoint, opciones = {}) {
     };
 
     try {
-        const respuesta = await fetch(`${API_BASE}/${endpoint}`, { ...opciones, headers: cabeceras });
+        const respuesta = await fetch(API_BASE + endpoint, { ...opciones, headers: cabeceras });
         
         // Aquí estaba el fallo de tu captura:
         const datos = await respuesta.json(); 
