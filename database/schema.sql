@@ -86,6 +86,19 @@ CREATE TABLE notificaciones (
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+
+CREATE TABLE incidencias (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT UNSIGNED NOT NULL,
+    tipo ENUM('Suspicious Account Activity', 'Phishing Attempt', 'Identity Theft') NOT NULL,
+    fecha_incidencia DATE NOT NULL,
+    descripcion TEXT NOT NULL,
+    estado ENUM('abierta', 'resuelta') DEFAULT 'abierta',
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
 -- -----------------------------------------------------
 -- Índices para mejorar rendimiento
 -- -----------------------------------------------------
