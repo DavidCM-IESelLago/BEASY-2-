@@ -230,7 +230,7 @@
             const token = localStorage.getItem('token') || 'token_de_prueba_adri'; 
 
             try {
-                const response = await fetch('../backend/api/movimientos.php', {
+                const response = await fetch('http://localhost/backend/api/movimientos.php', {
                     method: 'GET',
                     headers: { 'Authorization': 'Bearer ' + token }
                 });
