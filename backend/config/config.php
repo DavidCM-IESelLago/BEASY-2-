@@ -25,7 +25,19 @@ if ($_ENV['APP_ENV'] === 'development') {
 // Configuraciones específicas para web (no CLI)
 if (!IS_CLI) {
     // Configuración de CORS
-    header("Access-Control-Allow-Origin: " . $_ENV['CORS_ALLOWED_ORIGINS']);
+
+    // Permitir múltiples órigenes
+    $allowedOrigins = [
+        'http://localhost:8081',
+        'http://127.0.0.1:8081',
+        'http://localhost:5500' 
+    ];
+    /* $allowedOrigins = explode(',', getenv('CORS_ALLOWED_ORIGINS')); */
+    $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+    if (in_array($origin, $allowedOrigins)) {
+        header("Access-Control-Allow-Origin: $origin");
+        header("Access-Control-Allow-Credentials: true");
+    }
     header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
     header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
     header("Content-Type: application/json; charset=UTF-8");

@@ -1,23 +1,37 @@
 // frontend/js/api.js
-const API_BASE = 'https://beasy.fwh.is/backend/api';
+//const API_BASE = 'https://beasy.fwh.is/backend/api';
+const API_BASE = 'http://localhost/backend/api/';
 
 async function apiFetch(endpoint, opciones = {}) {
     const token = localStorage.getItem('jwt_token');
-    const cabeceras = {
+    const headers = {
         'Content-Type': 'application/json',
-        // Cambiamos esto para que InfinityFree no lo bloquee
         ...(token && { 
         'Authorization': `Bearer ${token}`,
         'X-Authorization': `Bearer ${token}` // Añade esta línea de refuerzo
-    }),
-        ...opciones.headers
+        })
+    };
+
+    // Combinar cabeceras con las que vengan en opciones
+    const config = {
+        ...opciones,
+        headers: {
+            ...headers,
+            ...(opciones.headers || {})
+        }
     };
 
     try {
-        const respuesta = await fetch(`${API_BASE}/${endpoint}`, { ...opciones, headers: cabeceras });
+        const respuesta = await fetch(API_BASE + endpoint, config);
         
-        // Aquí estaba el fallo de tu captura:
-        const datos = await respuesta.json(); 
+        // Intentar parsear JSON, pero si falla, usar texto
+        let datos;
+        const contentType = respuesta.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            datos = await respuesta.json();
+        } else {
+            datos = { message: await respuesta.text() };
+        }
 
         if (!respuesta.ok) {
             gestionarErrorHTTP(respuesta.status, datos.message);
@@ -26,9 +40,11 @@ async function apiFetch(endpoint, opciones = {}) {
         
         return datos; 
     } catch (error) {
-        // Este catch atrapa el error de la imagen 49b2db (SyntaxError)
+    
         console.error('Error detallado: ', error);
+        mostrarNotificacion('Error de red o servidor', 'error');
         return null;
+
     }
 }
 
@@ -41,7 +57,7 @@ function gestionarErrorHTTP(status, mensaje) {
         case 401:
             mostrarNotificacion('Sesión expirada.Redirigiendo...', 'error');
             localStorage.removeItem('jwt_token');
-            //setTimeout(() => window.location.href = '/index.html', 1500);
+            setTimeout(() => window.location.href = '/frontend/login.html', 1500);
             break;
 
         case 404:

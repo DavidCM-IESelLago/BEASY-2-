@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard - FintechPro</title>
+    <title>Dashboard - Beasy</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap"
         rel="stylesheet" />
@@ -388,7 +388,7 @@
                         <div>
                             <p class="form-label">Total Balance</p>
                             <h1 style="font-size: 48px; font-weight: 900;">$42,500<span
-                                    style="font-size:24px; color:var(--outline)">.80</span></h1>
+                                    style="font-size:24px; color:var(--outline)">.30</span></h1>
                         </div>
                         <button onclick="toggleModal(true)"
                             style="background:var(--primary-container); color:white; border:none; padding:10px 20px; border-radius:12px; font-weight:600; cursor:pointer; display:flex; gap:8px; align-items:center;">
@@ -606,6 +606,8 @@
         function toggleModal(show) { document.getElementById('modalUser').style.display = show ? 'flex' : 'none'; }
         function toggleNotifications(show) { document.getElementById('notifPanel').classList.toggle('open', show); }
     </script>
+    <script src="/js/api.js"></script>
+    <script src="/js/dashboard.js"></script>
 </body>
 
 </html>
