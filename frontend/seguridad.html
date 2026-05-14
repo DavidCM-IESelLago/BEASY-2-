@@ -389,9 +389,9 @@
                     <span class="notif-punto"></span>
                 </button>
                 <div class="perfil-btn" onclick="toggleModal(true)">
-                    <img src="https://ui-avatars.com/api/?name=Alex+D&background=005bbf&color=fff"
+                    <img id="header-avatar" src="https://ui-avatars.com/api/?name=...&background=005bbf&color=fff"
                         style="width: 32px; border-radius: 50%;">
-                    <span style="font-size: 14px; font-weight: 500;">Alex D.</span>
+                    <span id="header-nombre" style="font-size: 14px; font-weight: 500;">...</span>
                     <span class="material-symbols-outlined" style="font-size: 18px;">keyboard_arrow_down</span>
                 </div>
             </div>
@@ -547,16 +547,15 @@
             </div>
             <div style="padding: 24px;">
                 <div style="display: flex; gap: 16px; align-items: center; margin-bottom: 24px;">
-                    <img src="https://ui-avatars.com/api/?name=Alex+D&background=005bbf&color=fff"
+                    <img id="modal-avatar" src="https://ui-avatars.com/api/?name=...&background=005bbf&color=fff"
                         style="width: 50px; border-radius: 50%;">
                     <div>
-                        <p style="font-weight: 700;">Alex J. Smith</p>
-                        <p style="color: var(--primario-suave); font-size: 12px; font-weight: 600;">Premium Member</p>
+                        <p id="modal-nombre" style="font-weight: 700;">...</p>
                     </div>
                 </div>
                 <div style="font-size: 14px; color: var(--texto-gris); display: grid; gap: 12px;">
-                    <p><strong>Email:</strong> alex.smith@example.com</p>
-                    <p><strong>ID:</strong> 4532 8921 7042</p>
+                    <p><strong>Email:</strong> <span id="modal-email">...</span></p>
+                    <p><strong>ID:</strong> <span id="modal-id">...</span></p>
                 </div>
                 <button class="btn btn-outline" onclick="cerrarSesion()"
                     style="color: var(--error); border-color: var(--error); width: 100%; margin-top: 20px; justify-content: center;">
@@ -591,6 +590,8 @@
                     console.log("Sesión verificada correctamente en el servidor.");
                     // Mostramos el body (que estaba oculto por el CSS)
                     document.body.style.display = 'flex';
+                    // Cargamos los datos del usuario
+                    cargarPerfil();
                 } else {
                     console.error("Token inválido para el servidor.");
                     localStorage.removeItem('jwt_token');
@@ -604,6 +605,23 @@
         });
 
         // 3. FUNCIONES DE LA INTERFAZ
+        async function cargarPerfil() {
+            const datos = await apiFetch('perfil.php');
+            if (!datos || datos.status !== 'success') return;
+
+            const nombreCompleto = datos.nombre + ' ' + datos.apellidos;
+            const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(datos.iniciales)}&background=005bbf&color=fff`;
+
+            // Header
+            document.getElementById('header-avatar').src = avatarUrl;
+            document.getElementById('header-nombre').textContent = datos.nombre + ' ' + datos.apellidos.split(' ')[0] + '.';
+
+            // Modal
+            document.getElementById('modal-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(nombreCompleto)}&background=005bbf&color=fff`;
+            document.getElementById('modal-nombre').textContent = nombreCompleto;
+            document.getElementById('modal-email').textContent = datos.email;
+            document.getElementById('modal-id').textContent = '#' + String(datos.id).padStart(6, '0');
+        }
         function irAlPaso(n) {
             document.querySelectorAll('.seccion-paso').forEach(sec => sec.classList.add('hidden'));
             const paso = document.getElementById('paso-' + n);
