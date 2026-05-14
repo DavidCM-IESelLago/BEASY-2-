@@ -5,12 +5,10 @@ require_once __DIR__ . '/../src/AuthController.php';
 require_once __DIR__ . '/../src/ResponseHelper.php';
 
 use Fintech\Backend\AuthController;
-use Fintech\Backend\Cuenta;
 use Fintech\Backend\ResponseHelper;
-use Fintech\Backend\Transaccion;
 
 try {
-    // 2. Extraer y Validar el Token
+    // Validar el Token
     $headers = getallheaders();
     $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? '';
     $token = str_replace('Bearer ', '', $authHeader);
@@ -27,37 +25,108 @@ try {
         ResponseHelper::error("Método no permitido", 405);
     }
 
-    $saldoTotal = Cuenta::getSaldoTotalByUsuario($usuarioId);
+    $pdo = new PDO(
+        "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4",
+        DB_USER,
+        DB_PASS
+    );
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $ultimosMovimientos = [
-        ["fecha" => "2024-03-28", "concepto" => "Suscripción Netflix", "monto" => -15.99],
-        ["fecha" => "2024-03-27", "concepto" => "Transferencia Recibida", "monto" => 200.00],
-        ["fecha" => "2024-03-26", "concepto" => "Cena Restaurante", "monto" => -45.50],
-        ["fecha" => "2024-03-25", "concepto" => "Compra Amazon", "monto" => -120.00],
-        ["fecha" => "2024-03-24", "concepto" => "Gasolinera", "monto" => -60.00]
-    ];
+    // Saldo total: suma de todas las cuentas activas del usuario
+    $stmtSaldo = $pdo->prepare("
+        SELECT COALESCE(SUM(saldo), 0) AS saldo_total
+        FROM cuentas
+        WHERE usuario_id = :usuario_id AND activa = TRUE
+    ");
+    $stmtSaldo->execute([':usuario_id' => $usuarioId]);
+    $saldoTotal = (float) $stmtSaldo->fetchColumn();
 
-    $graficoGastos = [
-        "Ocio" => 61.49,
-        "Vivienda" => 450.00,
-        "Transporte" => 60.00,
-        "Compras" => 120.00
-    ];
+    // IDs de cuentas del usuario (para filtrar transacciones)
+    $stmtCuentas = $pdo->prepare("
+        SELECT id FROM cuentas
+        WHERE usuario_id = :usuario_id AND activa = TRUE
+    ");
+    $stmtCuentas->execute([':usuario_id' => $usuarioId]);
+    $idsCuentas = $stmtCuentas->fetchAll(PDO::FETCH_COLUMN);
 
-    // 4. Respuesta de Éxito con el Helper
+    if (empty($idsCuentas)) {
+        ResponseHelper::jsonResponse([
+            "status" => "success",
+            "usuario_id" => $usuarioId,
+            "dashboard" => [
+                "saldo_total" => 0,
+                "ultimos_movimientos" => [],
+                "estadisticas_gastos" => []
+            ]
+        ]);
+        exit;
+    }
+
+    $placeholders = implode(',', array_fill(0, count($idsCuentas), '?'));
+
+    // Últimos 5 movimientos del usuario:
+    // Si la cuenta del usuario es origen → gasto (negativo)
+    // Si la cuenta del usuario es destino → ingreso (positivo)
+    $stmtMovimientos = $pdo->prepare("
+        SELECT
+            DATE(t.fecha) AS fecha,
+            t.descripcion AS concepto,
+            t.tipo,
+            CASE
+                WHEN t.cuenta_origen_id IN ($placeholders) AND t.tipo != 'ingreso' THEN -ABS(t.monto)
+                ELSE ABS(t.monto)
+            END AS monto
+        FROM transacciones t
+        WHERE t.cuenta_origen_id IN ($placeholders)
+           OR t.cuenta_destino_id IN ($placeholders)
+        ORDER BY t.fecha DESC
+        LIMIT 5
+    ");
+
+    // Los placeholders se repiten 3 veces en la query
+    $params = array_merge($idsCuentas, $idsCuentas, $idsCuentas);
+    $stmtMovimientos->execute($params);
+    $ultimosMovimientos = $stmtMovimientos->fetchAll(PDO::FETCH_ASSOC);
+
+    // Convertir monto a float
+    foreach ($ultimosMovimientos as &$mov) {
+        $mov['monto'] = (float) $mov['monto'];
+    }
+
+    // 5. Estadísticas de gastos del mes actual agrupadas por tipo
+    $stmtStats = $pdo->prepare("
+        SELECT
+            t.tipo AS categoria,
+            SUM(ABS(t.monto)) AS total
+        FROM transacciones t
+        WHERE t.cuenta_origen_id IN ($placeholders)
+          AND t.tipo != 'ingreso'
+          AND MONTH(t.fecha) = MONTH(CURRENT_DATE())
+          AND YEAR(t.fecha) = YEAR(CURRENT_DATE())
+        GROUP BY t.tipo
+        ORDER BY total DESC
+    ");
+    $stmtStats->execute($idsCuentas);
+    $statsRaw = $stmtStats->fetchAll(PDO::FETCH_ASSOC);
+
+    // Convertir a formato { "categoria": importe }
+    $estadisticasGastos = [];
+    foreach ($statsRaw as $stat) {
+        $estadisticasGastos[ucfirst($stat['categoria'])] = (float) $stat['total'];
+    }
+
+    // 6. Respuesta final
     ResponseHelper::jsonResponse([
         "status" => "success",
         "usuario_id" => $usuarioId,
         "dashboard" => [
             "saldo_total" => $saldoTotal,
             "ultimos_movimientos" => $ultimosMovimientos,
-            "estadisticas_gastos" => $graficoGastos
+            "estadisticas_gastos" => $estadisticasGastos
         ]
     ]);
 } catch (\PDOException $e) {
-    // Captura errores de DB (Punto 2.6)
     ResponseHelper::error("Error de base de datos: " . $e->getMessage(), 500);
 } catch (\Exception $e) {
-    // Captura cualquier otro error
     ResponseHelper::error("Error interno del servidor", 500);
 }
