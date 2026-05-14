@@ -27,13 +27,13 @@ if (!isset($data['dni'], $data['nombre'], $data['apellidos'], $data['email'], $d
 try {
     // 6. Crear el usuario (Punto 2.1)
     // El modelo Usuario::create ya gestiona el hash de la contraseña y si el email existe
-    $nuevoUsuario = Usuario::create(
-        $data['dni'],
-        $data['email'],
-        $data['password'],
-        $data['nombre'],
-        $data['apellidos']
-    );
+$nuevoUsuario = Usuario::create(
+    $data['dni'],       
+    $data['email'],     
+    $data['password'],  
+    $data['nombre'],    
+    $data['apellidos']  
+);
 
     if ($nuevoUsuario) {
         // 7. Crear cuenta corriente por defecto (Requisito 2.1)

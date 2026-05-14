@@ -123,37 +123,39 @@ class Usuario extends Model
     /**
      * Crea un nuevo usuario
      */
-    public static function create(string $email, string $password, string $dni, string $nombre, string $apellidos): ?self
-    {
-        $db = Database::getInstance()->getConnection();
+public static function create(string $dni, string $email, string $password, string $nombre, string $apellidos): ?self
+{
+    $db = Database::getInstance()->getConnection();
 
-        // Comprobar si ya existe
-        if (self::findByEmail($email)) {
-            throw new Exception("El email ya está registrado");
-        }
-
-        $password_hash = password_hash($password, PASSWORD_DEFAULT);
-
-        $stmt = $db->prepare("
-            INSERT INTO usuarios (email, password_hash, dni, nombre, apellidos, activo, rol)
-            VALUES (:email, :password_hash, :dni, :nombre, :apellidos, 1, 'usuario')
-        ");
-
-        $result = $stmt->execute([
-            'email' => $email,
-            'password_hash' => $password_hash,
-            'dni' => $dni,
-            'nombre' => $nombre,
-            'apellidos' => $apellidos
-        ]);
-
-        if (!$result) {
-            return null;
-        }
-
-        $id = $db->lastInsertId();
-        return self::findById($id);
+    // 1. Comprobar si ya existe por email
+    if (self::findByEmail($email)) {
+        throw new Exception("El email ya está registrado");
     }
+
+    $password_hash = password_hash($password, PASSWORD_DEFAULT);
+
+    // 2. Preparamos la sentencia
+    $stmt = $db->prepare("
+        INSERT INTO usuarios (dni, email, password_hash, nombre, apellidos, activo, rol)
+        VALUES (:dni, :email, :password_hash, :nombre, :apellidos, 1, 'usuario')
+    ");
+
+    // 3. Ejecutamos pasando los datos en el nuevo orden
+    $result = $stmt->execute([
+        'dni'           => $dni,
+        'email'         => $email,
+        'password_hash' => $password_hash,
+        'nombre'        => $nombre,
+        'apellidos'     => $apellidos
+    ]);
+
+    if (!$result) {
+        return null;
+    }
+
+    $id = $db->lastInsertId();
+    return self::findById($id);
+}
 
     /**
      * Actualiza los datos del usuario

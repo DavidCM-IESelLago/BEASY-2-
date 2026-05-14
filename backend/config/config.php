@@ -1,7 +1,7 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+//ini_set('display_errors', 1);
+//ini_set('display_startup_errors', 1);
+//error_reporting(E_ALL);
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Dotenv\Dotenv;
@@ -24,31 +24,17 @@ if ($_ENV['APP_ENV'] === 'development') {
 
 // Configuraciones específicas para web (no CLI)
 if (!IS_CLI) {
-    // Configuración de CORS
-
-    // Permitir múltiples órigenes
-    $allowedOrigins = [
-        'http://localhost:8081',
-        'http://127.0.0.1:8081',
-        'http://localhost:5500' 
-    ];
-    /* $allowedOrigins = explode(',', getenv('CORS_ALLOWED_ORIGINS')); */
-    $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-    if (in_array($origin, $allowedOrigins)) {
-        header("Access-Control-Allow-Origin: $origin");
-        header("Access-Control-Allow-Credentials: true");
-    }
+    // Configuración de CORS dinámica desde el .env
+    header("Access-Control-Allow-Origin: " . ($_ENV['CORS_ALLOWED_ORIGINS'] ?? 'http://localhost:8081'));
     header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
-    header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
+    header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, X-Beasy-Token");
     header("Content-Type: application/json; charset=UTF-8");
 
-    // Responder a preflight requests
     if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
         http_response_code(200);
         exit();
     }
 }
-
 
 
 // Configuración de zona horaria
@@ -59,5 +45,6 @@ define('DB_HOST', $_ENV['DB_HOST']);
 define('DB_NAME', $_ENV['DB_NAME']);
 define('DB_USER', $_ENV['DB_USER']);
 define('DB_PASS', $_ENV['DB_PASS']);
-define('JWT_SECRET', $_ENV['JWT_SECRET_KEY']);
+// Usa la variable del .env para que coincida con el Login y el Validador
+define('JWT_SECRET', $_ENV['JWT_SECRET_KEY']); 
 define('JWT_EXPIRATION', (int)$_ENV['JWT_EXPIRATION']);

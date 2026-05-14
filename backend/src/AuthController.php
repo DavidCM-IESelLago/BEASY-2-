@@ -6,6 +6,7 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Exception;
 
+require_once __DIR__ . '/Usuario.php';
 //require_once __DIR__ . '/Usuario.php'; // No es necesario porque el autoload de Composer ya lo carga
 class AuthController
 {
@@ -36,13 +37,15 @@ class AuthController
         return JWT::encode($payload, $this->key, $this->alg);
     }
 
-    public function verifyToken(string $token): ?int
-    {
-        try {
-            $decoded = JWT::decode($token, new Key($this->key, $this->alg));
-            return (int)$decoded->sub;
-        } catch (Exception $e) {
-            return null;
-        }
+public function verifyToken(string $token): ?int
+{
+    try {
+        $decoded = JWT::decode($token, new Key($this->key, $this->alg));
+        return (int)$decoded->sub;
+    } catch (Exception $e) {
+        // Esto imprimirá el error real en el log/respuesta para que lo veamos
+        error_log("Error de JWT: " . $e->getMessage()); 
+        return null;
     }
+}
 }

@@ -51,6 +51,7 @@
             display: flex;
             height: 100vh;
             overflow: hidden;
+            display: none;
         }
 
         .hidden {
@@ -104,6 +105,15 @@
         .nav-lista {
             padding: 0 12px;
             list-style: none;
+        }
+
+        .btn-outline {
+            background: white;
+            border-color: var(--outline-variant);
+        }
+
+        .btn-outline:hover {
+            background: var(--surface-low);
         }
 
         .nav-link {
@@ -356,7 +366,7 @@
             <a href="#" class="nav-link"><span class="material-symbols-outlined">account_balance</span> Accounts</a>
             <a href="#" class="nav-link"><span class="material-symbols-outlined">credit_card</span> Cards</a>
             <a href="#" class="nav-link"><span class="material-symbols-outlined">payments</span> Payments</a>
-            <a href="#" class="nav-link"><span class="material-symbols-outlined">verified_user</span> Security</a>
+            <a href="seguridad.html" class="nav-link"><span class="material-symbols-outlined">verified_user</span> Seguridad*</a>
         </nav>
     </aside>
 
@@ -566,6 +576,10 @@
                     <p class="form-label" style="margin-bottom:4px;">IBAN</p>
                     <p style="font-weight:600;">ES91 2100 0418 4502 0005 1234</p>
                 </div>
+                <button class="btn btn-outline" onclick="cerrarSesion()"
+                    style="color: var(--error); border-color: var(--error); width: 100%; margin-top: 20px; justify-content: center;">
+                    <span class="material-symbols-outlined">logout</span> Sign Out
+                </button>
             </div>
             <div style="padding:24px; text-align:right; border-top:1px solid var(--borde);">
                 <button onclick="toggleModal(false)" class="btn-submit btn-blue"
@@ -586,7 +600,8 @@
                 <div style="display:flex; gap:12px;">
                     <div class="icon-circle"
                         style="background:rgba(26,115,232,0.1); color:var(--primary-container); width:32px; height:32px;">
-                        <span class="material-symbols-outlined" style="font-size:16px;">security</span></div>
+                        <span class="material-symbols-outlined" style="font-size:16px;">security</span>
+                    </div>
                     <div>
                         <p style="font-weight:700; font-size:13px;">Security Update</p>
                         <p style="font-size:11px; color:var(--on-surface-variant)">New login detected from Madrid.</p>
@@ -597,6 +612,38 @@
     </div>
 
     <script>
+        // 1. DEFINICIÓN DEL TOKEN
+        const token = localStorage.getItem('jwt_token');
+
+        // 2. VALIDACIÓN DE SESIÓN AL CARGAR
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Si no hay rastro del token, fuera inmediatamente
+            if (!token) {
+                window.location.href = 'inicio_sesion.html';
+                return;
+            }
+
+            try {
+                // Llamamos a tu helper de validación a través de api.js
+                const respuesta = await apiFetch('validate_helper.php');
+
+                if (respuesta && respuesta.status === 'success') {
+                    console.log("Acceso autorizado");
+                    // Hacemos visible el body ahora que sabemos que es un usuario real
+                    document.body.style.display = 'flex';
+                } else {
+                    // Token manipulado o caducado
+                    localStorage.removeItem('jwt_token');
+                    window.location.href = 'inicio_sesion.html';
+                }
+            } catch (e) {
+                console.error("Error en la validación:", e);
+                // Si el servidor falla (ej. error 500), por seguridad es mejor redirigir
+                window.location.href = 'inicio_sesion.html';
+            }
+        });
+
+        // --- TUS FUNCIONES EXISTENTES DEL DASHBOARD ---
         function showSection(id) {
             document.getElementById('dashboard-content').classList.add('hidden');
             document.getElementById('transfer-form').classList.add('hidden');
@@ -605,6 +652,12 @@
         }
         function toggleModal(show) { document.getElementById('modalUser').style.display = show ? 'flex' : 'none'; }
         function toggleNotifications(show) { document.getElementById('notifPanel').classList.toggle('open', show); }
+
+        // Función para el botón de cerrar sesión que te faltaba
+        function cerrarSesion() {
+            localStorage.removeItem('jwt_token');
+            window.location.href = 'inicio_sesion.html';
+        }
     </script>
     <script src="/js/api.js"></script>
     <script src="/js/dashboard.js"></script>
