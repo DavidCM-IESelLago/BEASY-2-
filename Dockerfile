@@ -4,7 +4,7 @@ FROM php:8.2-apache
 RUN docker-php-ext-install pdo pdo_mysql mysqli
 
 # Habilitar módulos
-RUN a2enmod rewrite
+RUN a2enmod rewrite headers
 
 # Copiar configuraciones personalizadas
 COPY backend.conf /etc/apache2/sites-available/backend.conf
