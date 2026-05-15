@@ -21,13 +21,81 @@ try {
         ResponseHelper::error("No tienes permiso. Token inválido o inexistente.", 401);
     }
 
-    // 3. Lógica del Endpoint 2.3
-    $method = $_SERVER['REQUEST_METHOD'];
+    // 3. Lógica del Endpoint
+    if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+        ResponseHelper::error('Método no permitido, 405');
+    }
 
-    if ($method === 'GET') {
-        if (isset($_GET['id'])) {
-            $cuentaId = $_GET['id'];
+    $pdo = new PDO(
+        "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4", DB_USER, DB_PASS
+    );
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+    // Cuenta específica por ID
+    if (isset($_GET['id'])) {
+        $cuentaId = (int) $_GET['id'];
+
+        $stmt = $pdo->prepare("
+            SELECT id, numero_cuenta, saldo, tipo, fecha_creacion 
+            FROM cuentas
+            WHERE id = :id AND usuario_id = :usuario_id AND activa = TRUE
+        ");
+        $stmt->execute([
+            ':id' => $cuentaId,
+            ':usuario_id' => $usuarioId
+        ]);
+        $cuenta = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$cuenta) {
+            ResponseHelper::error('Cuenta no encontrada', 404);
+        }
+
+        // Tarjeta asociada a la cuenta si existe
+        $stmtTarjeta = $pdo->prepare("
+            SELECT numero, fecha_expiracion, estado
+            FROM tarjetas
+            WHERE cuenta_id = :cuenta_id
+            LIMIT 1
+        ");
+        $stmtTarjeta->execute(['cuenta_id' => $cuentaId]);
+        $tarjeta = $stmtTarjeta->fetch(PDO::FETCH_ASSOC);
+
+        ResponseHelper::jsonResponse([
+            'status' => 'success',
+            'cuenta' => [
+                'id' => (int) $cuenta['id'],
+                'numero-cuenta' => $cuenta['numero_cuenta'],
+                'saldo' => (float) $cuenta['saldo'],
+                'tipo' => $cuenta['tipo'],
+                'fecha_creacion' => $cuenta['fecha_creacion'],
+                'tarjeta' => $tarjeta ?: null
+            ]
+        ]);
+    
+    // Listado de todas las cuentas del usuario
+    } else {
+        $stmt = $pdo->prepare("
+            SELECT id, numero_cuenta, saldo, tipo, fecha_creacion
+            FROM cuentas
+            WHERE usuario_id = :usuario_id AND activa = TRUE
+            ORDER BY fecha_creacion ASC
+        ");
+        $stmt->execute(['usuario_id' => $usuarioId]);
+        $cuentas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // COnvertir tipos
+        foreach ($cuentas as $c) {
+            $c['id'] = (int) $c['id'];
+            $c['saldo'] = (float) $c['saldo'];
+        }
+
+        ResponseHelper::jsonResponse([
+            'status' => 'success',
+            'total' => count($cuentas),
+            'cuentas' => $cuentas
+        ]);
+    }
+        /* 
             // ÉXITO: Saldo de una cuenta
             ResponseHelper::jsonResponse([
                 "status" => "success",
@@ -44,14 +112,9 @@ try {
                     ["id" => "ES222", "nombre" => "Ahorro", "saldo" => 500.00]
                 ]
             ]);
-        }
-    } else {
-        ResponseHelper::error("Método no permitido", 405);
-    }
+        }*/
 } catch (\PDOException $e) {
-    // CAPTURA 2.6: Errores de base de datos (Error 500)
     ResponseHelper::error("Error de base de datos: " . $e->getMessage(), 500);
 } catch (\Exception $e) {
-    // CAPTURA 2.6: Otros errores inesperados
     ResponseHelper::error("Error interno del servidor", 500);
 }
