@@ -1,85 +1,87 @@
 <?php
-
-// 1. Cargamos la configuración global
 require_once __DIR__ . '/../config/config.php';
-
-// 2. Cargamos la clase de Auth antes que el portero
-require_once __DIR__ . '/../src/AuthController.php'; 
-
-// 3. Llamamos al portero para validar el Token
-require_once __DIR__ . '/../middleware/validateToken.php';
-
-// 4. Cargamos el ayudante de respuestas
+require_once __DIR__ . '/../src/AuthController.php';
 require_once __DIR__ . '/../src/ResponseHelper.php';
 
-// ¡AQUÍ ESTABA LA CLAVE! Usamos el namespace correcto:
+use Fintech\Backend\AuthController;
 use Fintech\Backend\ResponseHelper;
 
-$metodo = $_SERVER['REQUEST_METHOD'];
-
 try {
-    // --- CASO GET: Listar tarjetas (SIMULADO "A PELO") ---
+    $headers = getallheaders();
+    $token   = $headers['X-Beasy-Token'] ?? '';
+    if (empty($token)) {
+        $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? '';
+        $token = str_replace('Bearer ', '', $authHeader);
+    }
+
+    $auth       = new AuthController();
+    $usuario_id = $auth->verifyToken($token);
+    if (!$usuario_id) ResponseHelper::error("Token inválido", 401);
+
+    $pdo = new PDO(
+        "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4",
+        DB_USER, DB_PASS
+    );
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $metodo = $_SERVER['REQUEST_METHOD'];
+
     if ($metodo === 'GET') {
-        $tarjetasSimuladas = [
-            [
-                "id" => 101,
-                "numero" => "4532 8765 1234 5678",
-                "cvv" => "123",
-                "expiracion" => "04/29", // 3 años vista desde 2026
-                "estado" => "activa"
-            ]
-        ];
+        $stmt = $pdo->prepare("
+            SELECT t.id, t.cuenta_id, t.numero, t.cvv, t.fecha_expiracion, t.estado, t.fecha_creacion,
+                   c.saldo
+            FROM tarjetas t
+            JOIN cuentas c ON t.cuenta_id = c.id
+            WHERE c.usuario_id = :usuario_id
+            ORDER BY t.id DESC
+        ");
+        $stmt->execute(['usuario_id' => $usuario_id]);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        ResponseHelper::jsonResponse([
-            'status' => 'success',
-            'data' => $tarjetasSimuladas
-        ], 200);
+        $data = array_map(function($t) {
+            $num = $t['numero'];
+            return [
+                'id'             => (int)$t['id'],
+                'cuenta_id'      => (int)$t['cuenta_id'],
+                'numero'         => $num,
+                'numero_oculto'  => '•••• •••• •••• ' . substr($num, -4),
+                'cvv'            => $t['cvv'],
+                'expiracion'     => date('m/y', strtotime($t['fecha_expiracion'])),
+                'estado'         => $t['estado'],
+                'saldo'          => number_format((float)$t['saldo'], 2, '.', ','),
+                'fecha_creacion' => $t['fecha_creacion'],
+            ];
+        }, $rows);
+
+        ResponseHelper::jsonResponse(['status' => 'success', 'data' => $data]);
     }
 
-    // --- CASO POST: Generar tarjeta (SIMULADO "A PELO") ---
-    elseif ($metodo === 'POST') {
-        $data = json_decode(file_get_contents("php://input"), true);
-
-        if (!isset($data['cuenta_id'])) {
-            ResponseHelper::error("Falta 'cuenta_id'", 400);
-        }
-
-        // Generación aleatoria simulada
-        $nuevoNumero = "4532 " . rand(1000, 9999) . " " . rand(1000, 9999) . " " . rand(1000, 9999);
-        $nuevoCvv = (string)rand(100, 999);
-        $nuevaExp = date('m') . "/29";
-
-        ResponseHelper::jsonResponse([
-            'status' => 'success',
-            'message' => 'Tarjeta virtual generada',
-            'data' => [
-                "id" => rand(200, 300),
-                "numero" => $nuevoNumero,
-                "cvv" => $nuevoCvv,
-                "expiracion" => $nuevaExp,
-                "estado" => "activa"
-            ]
-        ], 201);
-    }
-
-    // --- CASO PUT: Bloquear (SIMULADO "A PELO") ---
     elseif ($metodo === 'PUT') {
-        $data = json_decode(file_get_contents("php://input"), true);
+        $input        = json_decode(file_get_contents('php://input'), true);
+        $tarjeta_id   = $input['tarjeta_id'] ?? null;
+        $nuevo_estado = $input['estado']      ?? null;
 
-        if (!isset($data['tarjeta_id']) || !isset($data['estado'])) {
-            ResponseHelper::error("Faltan parámetros", 400);
-        }
+        if (!$tarjeta_id || !$nuevo_estado) ResponseHelper::error("Faltan parámetros", 400);
+        if (!in_array($nuevo_estado, ['activa', 'bloqueada', 'cancelada'])) ResponseHelper::error("Estado inválido", 400);
 
-        ResponseHelper::jsonResponse([
-            'status' => 'success',
-            'message' => "Tarjeta " . $data['tarjeta_id'] . " actualizada a " . $data['estado']
-        ], 200);
+        $stmt = $pdo->prepare("
+            SELECT t.id FROM tarjetas t
+            JOIN cuentas c ON t.cuenta_id = c.id
+            WHERE t.id = :tarjeta_id AND c.usuario_id = :usuario_id
+        ");
+        $stmt->execute(['tarjeta_id' => $tarjeta_id, 'usuario_id' => $usuario_id]);
+        if (!$stmt->fetch()) ResponseHelper::error("Tarjeta no encontrada", 404);
+
+        $stmt = $pdo->prepare("UPDATE tarjetas SET estado = :estado WHERE id = :id");
+        $stmt->execute(['estado' => $nuevo_estado, 'id' => $tarjeta_id]);
+
+        ResponseHelper::jsonResponse(['status' => 'success', 'message' => 'Estado actualizado', 'estado' => $nuevo_estado]);
     }
 
-    else {
-        ResponseHelper::error("Método no permitido", 405);
-    }
+    else { ResponseHelper::error("Método no permitido", 405); }
 
+} catch (\PDOException $e) {
+    ResponseHelper::error("Error de BD: " . $e->getMessage(), 500);
 } catch (\Exception $e) {
     ResponseHelper::error("Error: " . $e->getMessage(), 500);
 }

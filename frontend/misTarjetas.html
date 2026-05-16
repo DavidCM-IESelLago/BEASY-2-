@@ -6,10 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tarjetas - FintechPro</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap"
-        rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
 
     <style>
         :root {
@@ -25,22 +23,17 @@
             --shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--fondo);
             color: var(--negro-tarjeta);
-            display: flex;
+            display: none;
             height: 100vh;
             overflow: hidden;
         }
 
-        /* --- SIDEBAR --- */
         .sidebar {
             width: 280px;
             background: var(--blanco);
@@ -88,10 +81,7 @@
             transition: 0.2s;
         }
 
-        .nav-enlace:hover {
-            background: #f3f4f5;
-            color: var(--negro-tarjeta);
-        }
+        .nav-enlace:hover { background: #f3f4f5; color: var(--negro-tarjeta); }
 
         .nav-enlace.activo {
             background: #d9e2ff;
@@ -102,23 +92,11 @@
             border-bottom-left-radius: 0;
         }
 
-        .sidebar-footer {
-            padding: 16px;
-            border-top: 1px solid var(--borde);
-            margin-top: auto;
-        }
-
-        /* --- HEADER ESTILO DASHBOARD --- */
-        .main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
+        .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
 
         .header {
             height: 72px;
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255,255,255,0.8);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--borde);
             display: flex;
@@ -126,25 +104,6 @@
             justify-content: space-between;
             padding: 0 32px;
             flex-shrink: 0;
-        }
-
-        .notif-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            position: relative;
-            padding: 8px;
-            color: var(--texto-gris);
-        }
-
-        .notif-punto {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 8px;
-            height: 8px;
-            background: var(--error);
-            border-radius: 50%;
         }
 
         .perfil-btn {
@@ -157,11 +116,8 @@
             transition: 0.2s;
         }
 
-        .perfil-btn:hover {
-            background: #f3f4f5;
-        }
+        .perfil-btn:hover { background: #f3f4f5; }
 
-        /* --- CONTENIDO --- */
         .content {
             flex: 1;
             padding: 32px;
@@ -171,7 +127,7 @@
 
         .tarjeta-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 24px;
             margin-top: 32px;
         }
@@ -190,28 +146,43 @@
             box-shadow: var(--shadow);
         }
 
-        .tarjeta-azul {
-            background: linear-gradient(135deg, #005bbf 0%, #1a73e8 100%);
-            outline: 3px solid var(--primario);
-            outline-offset: 4px;
+        .tarjeta-visual:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.15); }
+        .tarjeta-visual.seleccionada { outline: 3px solid var(--primario); outline-offset: 4px; }
+
+        .tarjeta-azul { background: linear-gradient(135deg, #005bbf 0%, #1a73e8 100%); }
+        .tarjeta-negra { background: linear-gradient(135deg, #191c1d 0%, #2e3132 100%); }
+        .tarjeta-bloqueada { filter: grayscale(0.6); opacity: 0.7; }
+        .tarjeta-cancelada { filter: grayscale(1); opacity: 0.5; }
+
+        .badge-estado {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .tarjeta-negra {
-            background: linear-gradient(135deg, #191c1d 0%, #2e3132 100%);
-        }
+        .badge-activa { background: rgba(0,200,100,0.25); color: #00ff88; }
+        .badge-bloqueada { background: rgba(255,100,0,0.25); color: #ffaa44; }
+        .badge-cancelada { background: rgba(200,0,0,0.25); color: #ff6666; }
 
-        /* --- PANEL DERECHO --- */
+        /* Panel derecho */
         .panel-glass {
             width: 400px;
             position: fixed;
             right: 0;
             top: 72px;
             bottom: 0;
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255,255,255,0.7);
             backdrop-filter: blur(24px);
-            border-left: 1px solid rgba(0, 0, 0, 0.05);
+            border-left: 1px solid rgba(0,0,0,0.05);
             padding: 24px;
             z-index: 10;
+            overflow-y: auto;
         }
 
         .btn-accion {
@@ -226,13 +197,28 @@
             gap: 8px;
             cursor: pointer;
             transition: 0.2s;
+            font-family: 'Inter', sans-serif;
         }
 
-        /* --- MODAL --- */
+        .btn-accion:hover { background: #f3f4f5; transform: translateY(-2px); }
+        .btn-accion:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+        .panel-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            gap: 12px;
+            color: var(--texto-gris);
+            text-align: center;
+        }
+
+        /* Modal datos */
         .modal-fondo {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0,0,0,0.4);
             backdrop-filter: blur(4px);
             display: none;
             align-items: center;
@@ -242,42 +228,81 @@
 
         .modal-caja {
             background: white;
-            width: 400px;
+            width: 420px;
             border-radius: 24px;
             overflow: hidden;
-            animation: zoom 0.3s ease;
+            animation: zoom 0.25s ease;
         }
 
         @keyframes zoom {
-            from {
-                transform: scale(0.9);
-            }
-
-            to {
-                transform: scale(1);
-            }
+            from { transform: scale(0.9); opacity: 0; }
+            to   { transform: scale(1);   opacity: 1; }
         }
+
+        .dato-fila {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--borde);
+            font-size: 14px;
+        }
+
+        .dato-fila:last-child { border-bottom: none; }
+
+        .chip-estado {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .chip-activa   { background: #e6f4ea; color: var(--verde); }
+        .chip-bloqueada { background: #fff3e0; color: #e65100; }
+        .chip-cancelada { background: #fdecea; color: var(--error); }
+
+        .btn-danger {
+            width: 100%;
+            padding: 12px;
+            background: #fdecea;
+            color: var(--error);
+            border: 1px solid #f5c6c6;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: 0.2s;
+        }
+
+        .btn-danger:hover { background: #fad7d7; }
+
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 20px;
+        }
+
+        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
     </style>
 </head>
 
 <body>
-
     <aside class="sidebar">
         <div class="logo-area">
             <div class="logo-box">
-                <span class="material-symbols-outlined"
-                    style="font-variation-settings: 'FILL' 1;">account_balance</span>
+                <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">account_balance</span>
             </div>
             <h1 style="font-size: 18px; font-weight: 700; color: var(--primario);">FintechPro</h1>
         </div>
 
         <nav class="nav-grupo">
-            <a href="#" class="nav-enlace"><span class="material-symbols-outlined">dashboard</span> Dashboard</a>
+            <a href="dashboard.html" class="nav-enlace"><span class="material-symbols-outlined">dashboard</span> Dashboard</a>
             <a href="#" class="nav-enlace"><span class="material-symbols-outlined">account_balance</span> Accounts</a>
-            <a href="#" class="nav-enlace activo"><span class="material-symbols-outlined"
-                    style="font-variation-settings: 'FILL' 1;">credit_card</span> Cards</a>
-            <a href="#" class="nav-enlace"><span class="material-symbols-outlined">payments</span> Payments</a>
-            <a href="#" class="nav-enlace"><span class="material-symbols-outlined">verified_user</span> Security</a>
+            <a href="misTarjetas.html" class="nav-enlace activo"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">credit_card</span> Cards</a>
+            <a href="movimientos.html" class="nav-enlace"><span class="material-symbols-outlined">payments</span> Payments</a>
+            <a href="seguridad.html" class="nav-enlace"><span class="material-symbols-outlined">verified_user</span> Security</a>
         </nav>
     </aside>
 
@@ -285,14 +310,9 @@
         <header class="header">
             <div style="font-weight: 600;">Cards Overview</div>
             <div style="display: flex; align-items: center; gap: 16px;">
-                <button class="notif-btn">
-                    <span class="material-symbols-outlined">notifications</span>
-                    <span class="notif-punto"></span>
-                </button>
-                <div class="perfil-btn" onclick="toggleModal(true)">
-                    <img src="https://ui-avatars.com/api/?name=Alex+D&background=005bbf&color=fff"
-                        style="width: 32px; border-radius: 50%;">
-                    <span style="font-size: 14px; font-weight: 500;">Alex D.</span>
+                <div class="perfil-btn">
+                    <img id="header-avatar" src="https://ui-avatars.com/api/?name=...&background=005bbf&color=fff" style="width: 32px; border-radius: 50%;">
+                    <span id="header-nombre" style="font-size: 14px; font-weight: 500;">...</span>
                     <span class="material-symbols-outlined" style="font-size: 18px;">keyboard_arrow_down</span>
                 </div>
             </div>
@@ -302,138 +322,362 @@
             <div style="display: flex; justify-content: space-between; align-items: flex-end;">
                 <div>
                     <h2 style="font-size: 44px; font-weight: 700; letter-spacing: -1.5px;">My Cards</h2>
-                    <p style="color: var(--texto-gris); margin-top: 4px;">Manage your physical and virtual cards and
-                        settings.</p>
+                    <p style="color: var(--texto-gris); margin-top: 4px;">Manage your virtual cards and settings.</p>
                 </div>
-                <button
-                    style="display: flex; align-items: center; gap: 8px; padding: 10px 18px; background: white; border: 1px solid var(--borde); border-radius: 10px; font-weight: 600; cursor: pointer;">
-                    <span class="material-symbols-outlined" style="font-size: 20px;">add</span> New Card
-                </button>
             </div>
 
-            <div class="tarjeta-grid">
-                <div class="tarjeta-visual tarjeta-azul">
-                    <div style="display: flex; justify-content: space-between;">
-                        <span class="material-symbols-outlined" style="font-size: 32px;">contactless</span>
-                        <span style="font-weight: 900; font-style: italic; font-size: 20px;">VISA</span>
-                    </div>
-                    <div>
-                        <p style="font-size: 11px; opacity: 0.8; font-weight: 600; text-transform: uppercase;">Available
-                            Balance</p>
-                        <h3 style="font-size: 32px; font-weight: 700; margin: 4px 0 20px;">$12,450.00</h3>
-                        <div
-                            style="display: flex; justify-content: space-between; font-family: monospace; letter-spacing: 2px;">
-                            <span>•••• •••• •••• 4289</span>
-                            <span style="font-size: 12px;">08/28</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="tarjeta-visual tarjeta-negra">
-                    <div style="display: flex; justify-content: space-between;">
-                        <span class="material-symbols-outlined" style="font-size: 32px;">contactless</span>
-                        <div style="display: flex;">
-                            <div
-                                style="width: 24px; height: 24px; background: #eb001b; border-radius: 50%; opacity: 0.9;">
-                            </div>
-                            <div
-                                style="width: 24px; height: 24px; background: #f79e1b; border-radius: 50%; margin-left: -12px; opacity: 0.9;">
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <p style="font-size: 11px; opacity: 0.6; font-weight: 600; text-transform: uppercase;">Available
-                            Balance</p>
-                        <h3 style="font-size: 32px; font-weight: 700; margin: 4px 0 20px;">$3,200.50</h3>
-                        <div
-                            style="display: flex; justify-content: space-between; font-family: monospace; letter-spacing: 2px;">
-                            <span>•••• •••• •••• 1032</span>
-                            <span style="font-size: 12px;">11/26</span>
-                        </div>
-                    </div>
-                </div>
+            <div class="tarjeta-grid" id="tarjeta-grid">
+                <!-- Skeleton mientras carga -->
+                <div class="skeleton" style="aspect-ratio: 1.58/1;"></div>
             </div>
         </main>
 
-        <aside class="panel-glass">
-            <div style="display: flex; justify-content: space-between; margin-bottom: 24px;">
-                <h3 style="font-size: 18px; font-weight: 700;">Card Details</h3>
-                <span class="material-symbols-outlined" style="cursor: pointer; color: var(--texto-gris);">close</span>
+        <!-- Panel derecho -->
+        <aside class="panel-glass" id="panel">
+            <div class="panel-placeholder" id="panel-placeholder">
+                <span class="material-symbols-outlined" style="font-size: 48px; opacity: 0.3;">credit_card</span>
+                <p style="font-weight: 600;">Select a card</p>
+                <p style="font-size: 13px; opacity: 0.6;">Click on any card to see its details</p>
             </div>
 
-            <div class="tarjeta-visual tarjeta-azul"
-                style="aspect-ratio: 1.8 / 1; transform: scale(0.9); margin-bottom: 24px;">
-                <div style="display: flex; justify-content: space-between;">
-                    <span class="material-symbols-outlined">contactless</span>
-                    <span style="font-weight: 900; font-style: italic;">VISA</span>
+            <div id="panel-contenido" style="display: none;">
+                <!-- Mini tarjeta en panel -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 style="font-size: 18px; font-weight: 700;">Card Details</h3>
+                    <button onclick="cerrarPanel()" style="background:none;border:none;cursor:pointer;">
+                        <span class="material-symbols-outlined" style="color: var(--texto-gris);">close</span>
+                    </button>
                 </div>
-                <div style="font-family: monospace; font-size: 15px;">4532 8921 7042 4289</div>
-            </div>
 
-            <div style="display: flex; gap: 12px; margin-bottom: 32px;">
-                <button class="btn-accion">
-                    <div
-                        style="width: 40px; height: 40px; border-radius: 50%; background: #e8f0fe; color: var(--primario); display: flex; align-items: center; justify-content: center;">
-                        <span class="material-symbols-outlined">visibility</span></div>
-                    <span style="font-size: 11px; font-weight: 700;">View Data</span>
-                </button>
-                <button class="btn-accion">
-                    <div
-                        style="width: 40px; height: 40px; border-radius: 50%; background: #ffdad6; color: var(--error); display: flex; align-items: center; justify-content: center;">
-                        <span class="material-symbols-outlined">block</span></div>
-                    <span style="font-size: 11px; font-weight: 700;">Freeze</span>
-                </button>
-            </div>
-
-            <h4 style="font-size: 16px; margin-bottom: 16px;">Recent Activity</h4>
-            <div style="display: flex; flex-direction: column; gap: 16px;">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <div
-                        style="width: 40px; height: 40px; border-radius: 50%; background: #f3f4f5; display: flex; align-items: center; justify-content: center;">
-                        <span class="material-symbols-outlined">shopping_cart</span></div>
-                    <div style="flex: 1;">
-                        <p style="font-size: 14px; font-weight: 600;">Whole Foods</p>
-                        <p style="font-size: 11px; color: var(--texto-gris);">Today, 2:45 PM</p>
+                <div class="tarjeta-visual tarjeta-azul" id="panel-tarjeta-visual" style="aspect-ratio: 1.8/1; margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span class="material-symbols-outlined">contactless</span>
+                        <span style="font-weight: 900; font-style: italic;">VISA</span>
                     </div>
-                    <span style="font-weight: 700;">-$142.50</span>
+                    <div>
+                        <p id="panel-numero" style="font-family: monospace; font-size: 15px; letter-spacing: 2px;">•••• •••• •••• ••••</p>
+                        <p id="panel-expiracion" style="font-size: 12px; opacity: 0.7; margin-top: 6px;"></p>
+                    </div>
                 </div>
+
+                <!-- Botones acción -->
+                <div style="display: flex; gap: 12px; margin-bottom: 28px;">
+                    <button class="btn-accion" id="btn-view" onclick="abrirModalDatos()">
+                        <div style="width:40px;height:40px;border-radius:50%;background:#e8f0fe;color:var(--primario);display:flex;align-items:center;justify-content:center;">
+                            <span class="material-symbols-outlined">visibility</span>
+                        </div>
+                        <span style="font-size: 11px; font-weight: 700;">View Data</span>
+                    </button>
+                    <button class="btn-accion" id="btn-freeze" onclick="toggleFreeze()">
+                        <div id="freeze-icon-wrap" style="width:40px;height:40px;border-radius:50%;background:#ffdad6;color:var(--error);display:flex;align-items:center;justify-content:center;">
+                            <span class="material-symbols-outlined" id="freeze-icon">block</span>
+                        </div>
+                        <span style="font-size: 11px; font-weight: 700;" id="freeze-label">Freeze</span>
+                    </button>
+                </div>
+
+                <!-- Datos rápidos -->
+                <div style="background: #f8f9fa; border-radius: 16px; padding: 16px; margin-bottom: 20px;">
+                    <div class="dato-fila">
+                        <span style="color: var(--texto-gris);">Status</span>
+                        <span class="chip-estado" id="panel-estado-chip">activa</span>
+                    </div>
+                    <div class="dato-fila">
+                        <span style="color: var(--texto-gris);">Card number</span>
+                        <span id="panel-numero-corto" style="font-family: monospace; font-weight: 600;"></span>
+                    </div>
+                    <div class="dato-fila" style="border-bottom: none;">
+                        <span style="color: var(--texto-gris);">Expires</span>
+                        <span id="panel-exp-dato" style="font-weight: 600;"></span>
+                    </div>
+                </div>
+
+                <!-- Cancelar tarjeta -->
+                <button class="btn-danger" id="btn-cancelar" onclick="cancelarTarjeta()">
+                    <span class="material-symbols-outlined" style="vertical-align: middle; font-size: 18px;">cancel</span>
+                    Cancel card permanently
+                </button>
             </div>
         </aside>
     </div>
 
-    <div class="modal-fondo" id="modalUser">
+    <!-- Modal: Ver datos completos -->
+    <div class="modal-fondo" id="modalDatos">
         <div class="modal-caja">
-            <div
-                style="padding: 24px; border-bottom: 1px solid var(--borde); display: flex; justify-content: space-between; align-items: center;">
-                <h3 style="font-weight: 700;">Account Details</h3>
-                <span class="material-symbols-outlined" style="cursor: pointer;"
-                    onclick="toggleModal(false)">close</span>
+            <div style="padding: 20px 24px; border-bottom: 1px solid var(--borde); display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="font-weight: 700;">Card Data</h3>
+                <span class="material-symbols-outlined" style="cursor: pointer;" onclick="cerrarModalDatos()">close</span>
             </div>
             <div style="padding: 24px;">
-                <div style="display: flex; gap: 16px; align-items: center; margin-bottom: 24px;">
-                    <img src="https://ui-avatars.com/api/?name=Alex+D&background=005bbf&color=fff"
-                        style="width: 50px; border-radius: 50%;">
-                    <div>
-                        <p style="font-weight: 700;">Alex J. Smith</p>
-                        <p style="color: var(--primario-brillante); font-size: 12px; font-weight: 600;">Premium Member
-                        </p>
+                <div class="tarjeta-visual tarjeta-azul" id="modal-tarjeta-visual" style="aspect-ratio: 1.8/1; margin-bottom: 24px;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span class="material-symbols-outlined">contactless</span>
+                        <span style="font-weight: 900; font-style: italic;">VISA</span>
                     </div>
+                    <div>
+                        <p id="modal-numero-completo" style="font-family: monospace; font-size: 16px; letter-spacing: 3px;"></p>
+                        <p id="modal-expiracion" style="font-size: 12px; opacity: 0.7; margin-top: 4px;"></p>
+                    </div>
+                </div>
+                <div class="dato-fila">
+                    <span style="color: var(--texto-gris);">Full number</span>
+                    <span id="modal-num" style="font-family: monospace; font-weight: 700; font-size: 15px;"></span>
+                </div>
+                <div class="dato-fila">
+                    <span style="color: var(--texto-gris);">CVV</span>
+                    <span id="modal-cvv" style="font-family: monospace; font-weight: 700; font-size: 18px; letter-spacing: 4px;"></span>
+                </div>
+                <div class="dato-fila">
+                    <span style="color: var(--texto-gris);">Expiry date</span>
+                    <span id="modal-exp" style="font-weight: 600;"></span>
+                </div>
+                <div class="dato-fila">
+                    <span style="color: var(--texto-gris);">Status</span>
+                    <span class="chip-estado" id="modal-estado"></span>
                 </div>
             </div>
             <div style="padding: 16px 24px; background: #f3f4f5; text-align: right;">
-                <button
-                    style="padding: 8px 16px; background: var(--primario-brillante); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;"
-                    onclick="toggleModal(false)">Close</button>
+                <button onclick="cerrarModalDatos()" style="padding: 8px 20px; background: var(--primario-brillante); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif;">Close</button>
             </div>
         </div>
     </div>
 
+    <!-- Modal confirmación cancelar -->
+    <div class="modal-fondo" id="modalCancelar">
+        <div class="modal-caja" style="width: 380px;">
+            <div style="padding: 28px 24px; text-align: center;">
+                <div style="width: 56px; height: 56px; border-radius: 50%; background: #fdecea; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+                    <span class="material-symbols-outlined" style="color: var(--error); font-size: 28px;">warning</span>
+                </div>
+                <h3 style="font-weight: 700; margin-bottom: 8px;">Cancel this card?</h3>
+                <p style="color: var(--texto-gris); font-size: 14px;">This action is permanent and cannot be undone. The card will be deactivated immediately.</p>
+            </div>
+            <div style="padding: 16px 24px; display: flex; gap: 12px; border-top: 1px solid var(--borde);">
+                <button onclick="cerrarModalCancelar()" style="flex:1; padding: 10px; border: 1px solid var(--borde); background: white; border-radius: 10px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif;">Keep card</button>
+                <button onclick="confirmarCancelacion()" style="flex:1; padding: 10px; background: var(--error); color: white; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif;">Yes, cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
     <script>
-        function toggleModal(show) {
-            document.getElementById('modalUser').style.display = show ? 'flex' : 'none';
+        const token = localStorage.getItem('jwt_token');
+        let tarjetaSeleccionada = null;
+        let todasLasTarjetas = [];
+
+        // ─── INICIO ───────────────────────────────────────────────
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!token) { window.location.href = 'inicio_sesion.html'; return; }
+
+            const sesion = await apiFetch('validate_helper.php');
+            if (!sesion || sesion.status !== 'success') {
+                localStorage.removeItem('jwt_token');
+                window.location.href = 'inicio_sesion.html';
+                return;
+            }
+
+            document.body.style.display = 'flex';
+            await Promise.all([cargarPerfil(), cargarTarjetas()]);
+        });
+
+        // ─── PERFIL ───────────────────────────────────────────────
+        async function cargarPerfil() {
+            const datos = await apiFetch('perfil.php');
+            if (!datos || datos.status !== 'success') return;
+            const nombreCompleto = datos.nombre + ' ' + datos.apellidos;
+            document.getElementById('header-avatar').src =
+                `https://ui-avatars.com/api/?name=${encodeURIComponent(datos.iniciales)}&background=005bbf&color=fff`;
+            document.getElementById('header-nombre').textContent =
+                datos.nombre + ' ' + datos.apellidos.split(' ')[0] + '.';
+        }
+
+        // ─── TARJETAS ─────────────────────────────────────────────
+        async function cargarTarjetas() {
+            const res = await apiFetch('tarjeta.php');
+            const grid = document.getElementById('tarjeta-grid');
+
+            if (!res || res.status !== 'success' || res.data.length === 0) {
+                grid.innerHTML = `
+                    <div style="grid-column:1/-1; text-align:center; padding:60px; color:var(--texto-gris);">
+                        <span class="material-symbols-outlined" style="font-size:48px;opacity:0.3;">credit_card_off</span>
+                        <p style="margin-top:12px;font-weight:600;">No cards found</p>
+                    </div>`;
+                return;
+            }
+
+            todasLasTarjetas = res.data;
+            grid.innerHTML = '';
+
+            res.data.forEach((t, i) => {
+                const clase = i % 2 === 0 ? 'tarjeta-azul' : 'tarjeta-negra';
+                const estadoClass = t.estado !== 'activa' ? `tarjeta-${t.estado}` : '';
+                const badgeClass = `badge-${t.estado}`;
+                const logo = i % 2 === 0
+                    ? `<span style="font-weight:900;font-style:italic;font-size:20px;">VISA</span>`
+                    : `<div style="display:flex;"><div style="width:24px;height:24px;background:#eb001b;border-radius:50%;opacity:0.9;"></div><div style="width:24px;height:24px;background:#f79e1b;border-radius:50%;margin-left:-12px;opacity:0.9;"></div></div>`;
+
+                const el = document.createElement('div');
+                el.className = `tarjeta-visual ${clase} ${estadoClass}`;
+                el.dataset.id = t.id;
+                el.innerHTML = `
+                    <span class="badge-estado ${badgeClass}">${t.estado}</span>
+                    <div style="display:flex;justify-content:space-between;">
+                        <span class="material-symbols-outlined" style="font-size:32px;">contactless</span>
+                        ${logo}
+                    </div>
+                    <div>
+                        <p style="font-size:11px;opacity:0.8;font-weight:600;text-transform:uppercase;">Available Balance</p>
+                        <h3 style="font-size:26px;font-weight:700;margin:4px 0 10px;">$${t.saldo}</h3>
+                        <div style="display:flex;justify-content:space-between;font-family:monospace;letter-spacing:2px;margin-top:8px;">
+                            <span>${t.numero_oculto}</span>
+                            <span style="font-size:12px;">${t.expiracion}</span>
+                        </div>
+                    </div>`;
+                el.addEventListener('click', () => seleccionarTarjeta(t, el, clase));
+                grid.appendChild(el);
+            });
+        }
+
+        // ─── SELECCIÓN ────────────────────────────────────────────
+        function seleccionarTarjeta(t, el, clase) {
+            document.querySelectorAll('.tarjeta-visual').forEach(c => c.classList.remove('seleccionada'));
+            el.classList.add('seleccionada');
+            tarjetaSeleccionada = t;
+
+            // Actualizar panel
+            document.getElementById('panel-placeholder').style.display = 'none';
+            document.getElementById('panel-contenido').style.display = 'block';
+
+            // Mini tarjeta en panel
+            const visual = document.getElementById('panel-tarjeta-visual');
+            visual.className = `tarjeta-visual ${clase}`;
+            document.getElementById('panel-numero').textContent = t.numero_oculto;
+            document.getElementById('panel-expiracion').textContent = 'Expires ' + t.expiracion;
+
+            // Datos rápidos
+            document.getElementById('panel-numero-corto').textContent = t.numero_oculto;
+            document.getElementById('panel-exp-dato').textContent = t.expiracion;
+            actualizarChipEstado('panel-estado-chip', t.estado);
+
+            // Botón freeze
+            actualizarBotonesEstado(t.estado);
+        }
+
+        function actualizarChipEstado(id, estado) {
+            const chip = document.getElementById(id);
+            chip.className = `chip-estado chip-${estado}`;
+            chip.textContent = estado.charAt(0).toUpperCase() + estado.slice(1);
+        }
+
+        function actualizarBotonesEstado(estado) {
+            const btnFreeze = document.getElementById('btn-freeze');
+            const btnCancelar = document.getElementById('btn-cancelar');
+            const wrap = document.getElementById('freeze-icon-wrap');
+            const icon = document.getElementById('freeze-icon');
+            const label = document.getElementById('freeze-label');
+
+            const cancelada = estado === 'cancelada';
+            btnCancelar.disabled = cancelada;
+
+            if (estado === 'bloqueada') {
+                wrap.style.background = '#e8f0fe';
+                wrap.style.color = 'var(--primario)';
+                icon.textContent = 'lock_open';
+                label.textContent = 'Unfreeze';
+            } else {
+                wrap.style.background = '#ffdad6';
+                wrap.style.color = 'var(--error)';
+                icon.textContent = 'block';
+                label.textContent = 'Freeze';
+            }
+
+            btnFreeze.disabled = cancelada;
+        }
+
+        function cerrarPanel() {
+            document.getElementById('panel-placeholder').style.display = 'flex';
+            document.getElementById('panel-contenido').style.display = 'none';
+            document.querySelectorAll('.tarjeta-visual').forEach(c => c.classList.remove('seleccionada'));
+            tarjetaSeleccionada = null;
+        }
+
+        // ─── VIEW DATA ────────────────────────────────────────────
+        function abrirModalDatos() {
+            if (!tarjetaSeleccionada) return;
+            const t = tarjetaSeleccionada;
+            const numeroFormateado = t.numero.replace(/\s+/g, '').replace(/(.{4})/g, '$1 ').trim();
+
+            document.getElementById('modal-numero-completo').textContent = numeroFormateado;
+            document.getElementById('modal-expiracion').textContent = 'Expires ' + t.expiracion;
+            document.getElementById('modal-num').textContent = numeroFormateado;
+            document.getElementById('modal-cvv').textContent = t.cvv;
+            document.getElementById('modal-exp').textContent = t.expiracion;
+            actualizarChipEstado('modal-estado', t.estado);
+
+            document.getElementById('modalDatos').style.display = 'flex';
+        }
+
+        function cerrarModalDatos() {
+            document.getElementById('modalDatos').style.display = 'none';
+        }
+
+        // ─── FREEZE / UNFREEZE ────────────────────────────────────
+        async function toggleFreeze() {
+            if (!tarjetaSeleccionada) return;
+            const nuevoEstado = tarjetaSeleccionada.estado === 'bloqueada' ? 'activa' : 'bloqueada';
+            await cambiarEstado(nuevoEstado);
+        }
+
+        // ─── CANCELAR ─────────────────────────────────────────────
+        function cancelarTarjeta() {
+            if (!tarjetaSeleccionada || tarjetaSeleccionada.estado === 'cancelada') return;
+            document.getElementById('modalCancelar').style.display = 'flex';
+        }
+
+        function cerrarModalCancelar() {
+            document.getElementById('modalCancelar').style.display = 'none';
+        }
+
+        async function confirmarCancelacion() {
+            cerrarModalCancelar();
+            await cambiarEstado('cancelada');
+        }
+
+        // ─── CAMBIAR ESTADO (shared) ──────────────────────────────
+        async function cambiarEstado(nuevoEstado) {
+            const res = await apiFetch('tarjeta.php', {
+                method: 'PUT',
+                body: JSON.stringify({
+                    tarjeta_id: tarjetaSeleccionada.id,
+                    estado: nuevoEstado
+                })
+            });
+
+            if (!res || res.status !== 'success') {
+                alert('Error al actualizar la tarjeta');
+                return;
+            }
+
+            // Actualizar estado local
+            tarjetaSeleccionada.estado = nuevoEstado;
+            const idx = todasLasTarjetas.findIndex(t => t.id === tarjetaSeleccionada.id);
+            if (idx !== -1) todasLasTarjetas[idx].estado = nuevoEstado;
+
+            // Actualizar badge en la tarjeta del grid
+            const cardEl = document.querySelector(`.tarjeta-visual[data-id="${tarjetaSeleccionada.id}"]`);
+            if (cardEl) {
+                const badge = cardEl.querySelector('.badge-estado');
+                badge.className = `badge-estado badge-${nuevoEstado}`;
+                badge.textContent = nuevoEstado;
+                cardEl.classList.toggle('tarjeta-bloqueada', nuevoEstado === 'bloqueada');
+                cardEl.classList.toggle('tarjeta-cancelada', nuevoEstado === 'cancelada');
+            }
+
+            // Actualizar panel
+            actualizarChipEstado('panel-estado-chip', nuevoEstado);
+            actualizarBotonesEstado(nuevoEstado);
         }
     </script>
-
 </body>
 
 </html>
