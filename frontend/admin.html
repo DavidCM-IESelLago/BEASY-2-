@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Admin Panel - Beasy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <style>
+        :root {
+            --primary: #005bbf;
+            --primary-container: #1a73e8;
+            --on-primary: #ffffff;
+            --secondary-container: #759efd;
+            --error: #ba1a1a;
+            --error-container: #ffdad6;
+            --background: #f8f9fa;
+            --surface: #f8f9fa;
+            --surface-container-lowest: #ffffff;
+            --surface-container-low: #f3f4f5;
+            --on-surface: #191c1d;
+            --on-surface-variant: #414754;
+            --outline: #727785;
+            --outline-variant: #c1c6d6;
+            --borde: #e1e3e4;
+            --shadow: 0 4px 20px rgba(0,0,0,0.04);
+            --admin: #6200ea;
+            --admin-claro: #ede7f6;
+            --verde: #006d2c;
+            --verde-claro: #e8f5e9;
+            --amarillo: #e65100;
+            --amarillo-claro: #fff8e1;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--background);
+            color: var(--on-surface);
+            display: none;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .fill { font-variation-settings: 'FILL' 1; }
+
+        /* LAYOUT */
+        .layout { display: flex; height: 100vh; overflow: hidden; }
+
+        .sidebar {
+            width: 280px;
+            background: var(--surface-container-lowest);
+            border-right: 1px solid var(--borde);
+            display: flex;
+            flex-direction: column;
+            padding: 24px 0;
+            flex-shrink: 0;
+        }
+
+        .main-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+        .header {
+            height: 72px;
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--borde);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            flex-shrink: 0;
+        }
+
+        .content { flex: 1; padding: 32px; overflow-y: auto; }
+
+        /* NAV */
+        .nav-lista { padding: 0 12px; list-style: none; display: flex; flex-direction: column; gap: 2px; }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            text-decoration: none;
+            color: var(--on-surface-variant);
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: 0.2s;
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .nav-link:hover { background: var(--surface-container-low); color: var(--on-surface); }
+        .nav-link.activo { background: #d9e2ff; color: var(--primary); font-weight: 600; }
+        .nav-link.admin-link.activo { background: var(--admin-claro); color: var(--admin); }
+
+        .nav-divider {
+            height: 1px;
+            background: var(--borde);
+            margin: 12px 16px;
+        }
+
+        /* CARDS */
+        .card {
+            background: var(--surface-container-lowest);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        /* OPTION CARDS */
+        .option-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px; }
+
+        .option-card {
+            background: var(--surface-container-lowest);
+            border-radius: 16px;
+            padding: 28px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: 0.2s;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-card:hover { border-color: var(--outline-variant); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+        .option-card.activa { border-color: var(--primary); }
+        .option-card.activa.admin-card { border-color: var(--admin); }
+
+        .option-icon {
+            width: 48px; height: 48px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* TABS */
+        .tabs {
+            display: flex; gap: 4px;
+            background: var(--surface-container-low);
+            border-radius: 10px; padding: 4px;
+            margin-bottom: 20px;
+            width: fit-content;
+            border: 1px solid var(--borde);
+        }
+
+        .tab-btn {
+            padding: 7px 18px;
+            border-radius: 7px; border: none;
+            background: transparent;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600; font-size: 13px;
+            color: var(--on-surface-variant);
+            cursor: pointer; transition: 0.2s;
+        }
+
+        .tab-btn.activo { background: white; color: var(--on-surface); box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+
+        /* TABLA */
+        .tabla-wrapper {
+            background: var(--surface-container-lowest);
+            border-radius: 16px;
+            border: 1px solid var(--borde);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .tabla-header {
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--borde);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+
+        thead th {
+            background: var(--surface-container-low);
+            padding: 11px 16px;
+            text-align: left;
+            font-weight: 700;
+            color: var(--on-surface-variant);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--borde);
+        }
+
+        tbody tr { border-bottom: 1px solid #f5f5f5; transition: 0.15s; }
+        tbody tr:last-child { border-bottom: none; }
+        tbody tr:hover { background: var(--surface-container-low); }
+        td { padding: 11px 16px; vertical-align: middle; }
+
+        /* BADGES */
+        .badge {
+            padding: 3px 10px; border-radius: 20px;
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
+        }
+
+        .badge-activa, .badge-activo  { background: var(--verde-claro); color: var(--verde); }
+        .badge-bloqueada               { background: var(--amarillo-claro); color: var(--amarillo); }
+        .badge-cancelada, .badge-inactivo { background: var(--error-container); color: var(--error); }
+        .badge-resuelta                { background: #e3f2fd; color: #0d47a1; }
+        .badge-abierta                 { background: var(--error-container); color: var(--error); }
+        .badge-admin                   { background: var(--admin-claro); color: var(--admin); }
+        .badge-usuario                 { background: #e8f0fe; color: var(--primary); }
+        .badge-corriente, .badge-ahorros { background: #e8f0fe; color: var(--primary); }
+
+        .count-pill {
+            background: var(--surface-container-low);
+            color: var(--on-surface-variant);
+            padding: 2px 8px; border-radius: 20px;
+            font-size: 12px; font-weight: 700;
+            border: 1px solid var(--borde);
+        }
+
+        /* BOTONES */
+        .btn-cerrar {
+            padding: 5px 14px;
+            background: var(--error-container);
+            color: var(--error);
+            border: 1px solid #ffcdd2;
+            border-radius: 8px;
+            font-size: 12px; font-weight: 700;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: 0.2s;
+        }
+
+        .btn-cerrar:hover { opacity: 0.85; }
+        .btn-cerrar:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .btn-icon {
+            background: none; border: 1px solid var(--borde);
+            padding: 6px 12px; border-radius: 8px;
+            cursor: pointer; font-family: 'Inter', sans-serif;
+            font-size: 13px; font-weight: 600;
+            color: var(--on-surface-variant);
+            display: flex; align-items: center; gap: 4px;
+            transition: 0.2s;
+        }
+
+        .btn-icon:hover { background: var(--surface-container-low); }
+
+        .loading {
+            padding: 48px; text-align: center;
+            color: var(--on-surface-variant); font-size: 14px;
+        }
+
+        .empty-state {
+            padding: 60px; text-align: center; color: var(--on-surface-variant);
+        }
+
+        /* PERFIL BTN */
+        .perfil-btn {
+            display: flex; align-items: center; gap: 8px;
+            padding: 4px 12px; border-radius: 50px;
+            cursor: pointer; transition: 0.2s;
+        }
+        .perfil-btn:hover { background: var(--surface-container-low); }
+
+        /* MODAL USUARIO */
+        .modal-fondo {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+        }
+
+        .modal-caja {
+            background: white;
+            width: 400px;
+            border-radius: 24px;
+            overflow: hidden;
+            animation: zoom 0.25s ease;
+        }
+
+        @keyframes zoom {
+            from { transform: scale(0.9); opacity: 0; }
+            to   { transform: scale(1);   opacity: 1; }
+        }
+
+        .dato-fila {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--borde);
+            font-size: 14px;
+        }
+
+        .dato-fila:last-child { border-bottom: none; }
+    </style>
+</head>
+<body>
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div style="padding: 0 24px; margin-bottom: 32px; display: flex; align-items: center; gap: 12px;">
+            <div style="background: var(--primary-container); color: white; padding: 8px; border-radius: 8px;">
+                <span class="material-symbols-outlined fill">account_balance</span>
+            </div>
+            <h1 style="font-size: 18px; font-weight: 900; color: var(--primary);">Beasy</h1>
+        </div>
+
+        <nav class="nav-lista">
+            <!-- Sección admin -->
+            <p style="font-size: 11px; font-weight: 700; color: var(--on-surface-variant); text-transform: uppercase; letter-spacing: 0.8px; padding: 0 16px; margin-bottom: 6px;">Admin</p>
+            <button class="nav-link admin-link activo" id="nav-datos" onclick="seleccionar('datos')">
+                <span class="material-symbols-outlined">database</span> Base de datos
+            </button>
+            <button class="nav-link admin-link" id="nav-incidencias" onclick="seleccionar('incidencias')">
+                <span class="material-symbols-outlined">bug_report</span> Incidencias
+                <span id="badge-nav-abiertas" style="margin-left:auto; background:var(--error-container); color:var(--error); padding:1px 7px; border-radius:20px; font-size:11px; font-weight:700;"></span>
+            </button>
+
+            <div class="nav-divider"></div>
+
+            <!-- Accesos rápidos -->
+            <p style="font-size: 11px; font-weight: 700; color: var(--on-surface-variant); text-transform: uppercase; letter-spacing: 0.8px; padding: 0 16px; margin-bottom: 6px;">App</p>
+            <a href="dashboard.html" class="nav-link"><span class="material-symbols-outlined">dashboard</span> Dashboard</a>
+            <a href="misTarjetas.html" class="nav-link"><span class="material-symbols-outlined">credit_card</span> Tarjetas</a>
+            <a href="seguridad.html" class="nav-link"><span class="material-symbols-outlined">verified_user</span> Seguridad</a>
+
+            <div class="nav-divider"></div>
+
+            <button class="nav-link" onclick="cerrarSesion()" style="color: var(--error);">
+                <span class="material-symbols-outlined">logout</span> Cerrar sesión
+            </button>
+        </nav>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main-wrapper">
+
+        <!-- HEADER -->
+        <header class="header">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span class="material-symbols-outlined" style="color: var(--admin);">admin_panel_settings</span>
+                <span style="font-weight: 700; color: var(--on-surface);" id="header-titulo">Base de datos</span>
+                <span style="background: var(--admin-claro); color: var(--admin); padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;">ADMIN</span>
+            </div>
+            <div class="perfil-btn" onclick="toggleModal(true)">
+                <img id="header-avatar" src="https://ui-avatars.com/api/?name=A&background=005bbf&color=fff" style="width:32px; border-radius:50%;">
+                <span id="header-nombre" style="font-size:14px; font-weight:500;">...</span>
+                <span class="material-symbols-outlined" style="font-size:18px;">keyboard_arrow_down</span>
+            </div>
+        </header>
+
+        <!-- CONTENT -->
+        <main class="content">
+
+            <!-- Título página -->
+            <div style="margin-bottom: 28px;">
+                <h2 style="font-size: 32px; font-weight: 900; letter-spacing: -1px;" id="page-title">Panel de Administración</h2>
+                <p style="color: var(--on-surface-variant); margin-top: 4px;" id="page-subtitle">Selecciona una sección para gestionar la plataforma.</p>
+            </div>
+
+            <!-- TARJETAS OPCIÓN -->
+            <div class="option-grid">
+                <div class="option-card activa admin-card" id="card-datos" onclick="seleccionar('datos')">
+                    <div class="option-icon" style="background: #e8f0fe; color: var(--primary);">
+                        <span class="material-symbols-outlined fill">database</span>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 4px;">Base de datos</h3>
+                        <p style="font-size: 13px; color: var(--on-surface-variant);">Usuarios, cuentas y tarjetas registradas.</p>
+                    </div>
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                        <span class="badge badge-usuario">Usuarios</span>
+                        <span class="badge badge-usuario">Cuentas</span>
+                        <span class="badge badge-usuario">Tarjetas</span>
+                    </div>
+                </div>
+
+                <div class="option-card" id="card-incidencias" onclick="seleccionar('incidencias')">
+                    <div class="option-icon" style="background: var(--error-container); color: var(--error);">
+                        <span class="material-symbols-outlined fill">bug_report</span>
+                    </div>
+                    <div>
+                        <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 4px;">Incidencias</h3>
+                        <p style="font-size: 13px; color: var(--on-surface-variant);">Incidencias reportadas por los usuarios.</p>
+                    </div>
+                    <div style="display:flex; gap:8px;">
+                        <span class="badge badge-abierta" id="badge-abiertas">Abiertas: —</span>
+                        <span class="badge badge-resuelta" id="badge-resueltas">Resueltas: —</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL BASE DE DATOS -->
+            <div id="panel-datos">
+                <div class="tabs">
+                    <button class="tab-btn activo" onclick="mostrarTab('usuarios')">Usuarios</button>
+                    <button class="tab-btn" onclick="mostrarTab('cuentas')">Cuentas</button>
+                    <button class="tab-btn" onclick="mostrarTab('tarjetas')">Tarjetas</button>
+                </div>
+
+                <div id="tab-usuarios" class="tabla-wrapper">
+                    <div class="tabla-header">
+                        <h3 style="font-weight:700; font-size:15px;">Usuarios <span class="count-pill" id="count-usuarios">—</span></h3>
+                    </div>
+                    <div class="loading" id="loading-usuarios">
+                        <span class="material-symbols-outlined" style="font-size:32px; opacity:0.3;">hourglass_empty</span>
+                        <p style="margin-top:8px;">Cargando datos...</p>
+                    </div>
+                    <table id="tabla-usuarios" style="display:none;">
+                        <thead><tr>
+                            <th>ID</th><th>Nombre</th><th>Email</th><th>DNI</th>
+                            <th>Rol</th><th>Estado</th><th>Registro</th><th>Último acceso</th>
+                        </tr></thead>
+                        <tbody id="body-usuarios"></tbody>
+                    </table>
+                </div>
+
+                <div id="tab-cuentas" class="tabla-wrapper" style="display:none;">
+                    <div class="tabla-header">
+                        <h3 style="font-weight:700; font-size:15px;">Cuentas <span class="count-pill" id="count-cuentas">—</span></h3>
+                    </div>
+                    <table>
+                        <thead><tr>
+                            <th>ID</th><th>Usuario</th><th>Número cuenta</th>
+                            <th>Saldo</th><th>Tipo</th><th>Estado</th><th>Creación</th>
+                        </tr></thead>
+                        <tbody id="body-cuentas"></tbody>
+                    </table>
+                </div>
+
+                <div id="tab-tarjetas" class="tabla-wrapper" style="display:none;">
+                    <div class="tabla-header">
+                        <h3 style="font-weight:700; font-size:15px;">Tarjetas <span class="count-pill" id="count-tarjetas">—</span></h3>
+                    </div>
+                    <table>
+                        <thead><tr>
+                            <th>ID</th><th>Usuario</th><th>Número</th><th>CVV</th>
+                            <th>Expira</th><th>Estado</th><th>Creación</th>
+                        </tr></thead>
+                        <tbody id="body-tarjetas"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- PANEL INCIDENCIAS -->
+            <div id="panel-incidencias" style="display:none;">
+                <div class="tabla-wrapper">
+                    <div class="tabla-header">
+                        <h3 style="font-weight:700; font-size:15px;">Incidencias <span class="count-pill" id="count-incidencias">—</span></h3>
+                        <button class="btn-icon" onclick="cargarIncidencias()">
+                            <span class="material-symbols-outlined" style="font-size:16px;">refresh</span> Actualizar
+                        </button>
+                    </div>
+                    <div class="loading" id="loading-incidencias">
+                        <span class="material-symbols-outlined" style="font-size:32px; opacity:0.3;">hourglass_empty</span>
+                        <p style="margin-top:8px;">Cargando incidencias...</p>
+                    </div>
+                    <table id="tabla-incidencias" style="display:none;">
+                        <thead><tr>
+                            <th>ID</th><th>Usuario</th><th>Email</th><th>Tipo</th>
+                            <th>Descripción</th><th>Fecha</th><th>Estado</th><th>Acción</th>
+                        </tr></thead>
+                        <tbody id="body-incidencias"></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+
+    <!-- MODAL USUARIO -->
+    <div class="modal-fondo" id="modalUser">
+        <div class="modal-caja">
+            <div style="padding: 20px 24px; border-bottom: 1px solid var(--borde); display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="font-weight: 700;">Account Details</h3>
+                <span class="material-symbols-outlined" style="cursor:pointer; color:var(--on-surface-variant);" onclick="toggleModal(false)">close</span>
+            </div>
+            <div style="padding: 24px;">
+                <div style="display:flex; gap:16px; align-items:center; margin-bottom:24px;">
+                    <img id="modal-avatar" src="https://ui-avatars.com/api/?name=A&background=005bbf&color=fff" style="width:50px; border-radius:50%;">
+                    <div>
+                        <p id="modal-nombre" style="font-weight:700; font-size:16px;">...</p>
+                        <p style="color:var(--admin); font-size:12px; font-weight:700; margin-top:2px;">Administrador</p>
+                    </div>
+                </div>
+                <div style="display:grid; gap:0;">
+                    <div class="dato-fila">
+                        <span style="color:var(--on-surface-variant); font-weight:600;">Email</span>
+                        <span id="modal-email">...</span>
+                    </div>
+                    <div class="dato-fila">
+                        <span style="color:var(--on-surface-variant); font-weight:600;">ID</span>
+                        <span id="modal-id" style="font-family:monospace; font-weight:700;">...</span>
+                    </div>
+                </div>
+                <button onclick="cerrarSesion()" style="width:100%; margin-top:20px; padding:10px; background:var(--error-container); color:var(--error); border:1px solid #ffcdd2; border-radius:10px; font-weight:700; cursor:pointer; font-family:'Inter',sans-serif; font-size:14px; display:flex; align-items:center; justify-content:center; gap:8px;">
+                    <span class="material-symbols-outlined" style="font-size:18px;">logout</span> Cerrar sesión
+                </button>
+            </div>
+            <div style="padding:14px 24px; background:var(--surface-container-low); text-align:right; border-top:1px solid var(--borde);">
+                <button onclick="toggleModal(false)" style="padding:8px 20px; background:var(--primary); color:white; border:none; border-radius:8px; font-weight:600; cursor:pointer; font-family:'Inter',sans-serif;">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+<script src="js/api.js"></script>
+<script>
+    let datosCargados = false;
+
+    // ── INICIO ────────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', async () => {
+        const token = localStorage.getItem('jwt_token');
+        if (!token) { window.location.href = 'inicio_sesion.html'; return; }
+
+        const perfil = await apiFetch('perfil.php');
+        if (!perfil || perfil.status !== 'success') {
+            window.location.href = 'inicio_sesion.html'; return;
+        }
+
+        const check = await apiFetch('admin.php?accion=incidencias');
+        if (!check) {
+            alert('Acceso denegado. Solo administradores.');
+            window.location.href = 'dashboard.html'; return;
+        }
+
+        document.body.style.display = 'flex';
+
+        // Perfil en header y modal
+        const nombreCompleto = perfil.nombre + ' ' + perfil.apellidos;
+        const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(perfil.iniciales)}&background=005bbf&color=fff`;
+        document.getElementById('header-avatar').src = avatarUrl;
+        document.getElementById('header-nombre').textContent = perfil.nombre + ' ' + perfil.apellidos.split(' ')[0] + '.';
+        document.getElementById('modal-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(nombreCompleto)}&background=005bbf&color=fff`;
+        document.getElementById('modal-nombre').textContent = nombreCompleto;
+        document.getElementById('modal-email').textContent = perfil.email;
+        document.getElementById('modal-id').textContent = '#' + String(perfil.id).padStart(6, '0');
+
+        contarIncidencias(check.incidencias);
+        await cargarDatos();
+        datosCargados = true;
+    });
+
+    // ── SELECCIONAR SECCIÓN ───────────────────────────────────────
+    async function seleccionar(opcion) {
+        ['datos', 'incidencias'].forEach(o => {
+            document.getElementById(`card-${o}`).classList.toggle('activa', o === opcion);
+            document.getElementById(`card-${o}`).classList.toggle('admin-card', o === opcion);
+            document.getElementById(`nav-${o}`).classList.toggle('activo', o === opcion);
+        });
+
+        document.getElementById('panel-datos').style.display        = opcion === 'datos' ? 'block' : 'none';
+        document.getElementById('panel-incidencias').style.display  = opcion === 'incidencias' ? 'block' : 'none';
+
+        const titulos = { datos: 'Base de datos', incidencias: 'Incidencias' };
+        document.getElementById('header-titulo').textContent = titulos[opcion];
+        document.getElementById('page-title').textContent   = titulos[opcion];
+
+        if (opcion === 'incidencias') await cargarIncidencias();
+    }
+
+    // ── TABS ──────────────────────────────────────────────────────
+    function mostrarTab(tab) {
+        ['usuarios', 'cuentas', 'tarjetas'].forEach((t, i) => {
+            document.getElementById(`tab-${t}`).style.display = t === tab ? 'block' : 'none';
+            document.querySelectorAll('.tab-btn')[i].classList.toggle('activo', t === tab);
+        });
+    }
+
+    // ── CARGAR DATOS ──────────────────────────────────────────────
+    async function cargarDatos() {
+        const res = await apiFetch('admin.php?accion=datos');
+        if (!res || res.status !== 'success') return;
+
+        // Usuarios
+        document.getElementById('count-usuarios').textContent = res.usuarios.length;
+        document.getElementById('loading-usuarios').style.display = 'none';
+        document.getElementById('tabla-usuarios').style.display = 'table';
+        document.getElementById('body-usuarios').innerHTML = res.usuarios.map(u => `
+            <tr>
+                <td style="font-weight:700; color:var(--on-surface-variant); font-size:12px;">#${u.id}</td>
+                <td><strong>${u.nombre} ${u.apellidos}</strong></td>
+                <td style="color:var(--on-surface-variant); font-size:12px;">${u.email}</td>
+                <td style="font-family:monospace; font-size:12px;">${u.dni}</td>
+                <td><span class="badge badge-${u.rol}">${u.rol}</span></td>
+                <td><span class="badge ${u.activo == 1 ? 'badge-activa' : 'badge-cancelada'}">${u.activo == 1 ? 'Activo' : 'Inactivo'}</span></td>
+                <td style="color:var(--on-surface-variant); font-size:12px;">${u.fecha_registro}</td>
+                <td style="color:var(--on-surface-variant); font-size:12px;">${u.ultimo_acceso ?? '—'}</td>
+            </tr>
+        `).join('');
+
+        // Cuentas
+        document.getElementById('count-cuentas').textContent = res.cuentas.length;
+        document.getElementById('body-cuentas').innerHTML = res.cuentas.map(c => `
+            <tr>
+                <td style="font-weight:700; color:var(--on-surface-variant); font-size:12px;">#${c.id}</td>
+                <td><strong>${c.nombre} ${c.apellidos}</strong></td>
+                <td style="font-family:monospace; font-size:12px;">${c.numero_cuenta}</td>
+                <td><strong>$${parseFloat(c.saldo).toLocaleString('en-US', {minimumFractionDigits:2})}</strong></td>
+                <td><span class="badge badge-${c.tipo}">${c.tipo}</span></td>
+                <td><span class="badge ${c.activa == 1 ? 'badge-activa' : 'badge-cancelada'}">${c.activa == 1 ? 'Activa' : 'Inactiva'}</span></td>
+                <td style="color:var(--on-surface-variant); font-size:12px;">${c.fecha_creacion}</td>
+            </tr>
+        `).join('');
+
+        // Tarjetas
+        document.getElementById('count-tarjetas').textContent = res.tarjetas.length;
+        document.getElementById('body-tarjetas').innerHTML = res.tarjetas.map(t => `
+            <tr>
+                <td style="font-weight:700; color:var(--on-surface-variant); font-size:12px;">#${t.id}</td>
+                <td><strong>${t.nombre} ${t.apellidos}</strong></td>
+                <td style="font-family:monospace; font-size:12px;">•••• •••• •••• ${t.numero.slice(-4)}</td>
+                <td style="font-family:monospace;">${t.cvv}</td>
+                <td style="font-weight:600;">${t.expiracion}</td>
+                <td><span class="badge badge-${t.estado}">${t.estado}</span></td>
+                <td style="color:var(--on-surface-variant); font-size:12px;">${t.fecha_creacion}</td>
+            </tr>
+        `).join('');
+    }
+
+    // ── INCIDENCIAS ───────────────────────────────────────────────
+    async function cargarIncidencias() {
+        document.getElementById('loading-incidencias').style.display = 'block';
+        document.getElementById('tabla-incidencias').style.display = 'none';
+
+        const res = await apiFetch('admin.php?accion=incidencias');
+        if (!res || res.status !== 'success') return;
+
+        contarIncidencias(res.incidencias);
+        document.getElementById('count-incidencias').textContent = res.incidencias.length;
+        document.getElementById('loading-incidencias').style.display = 'none';
+        document.getElementById('tabla-incidencias').style.display = 'table';
+
+        document.getElementById('body-incidencias').innerHTML = res.incidencias.map(i => `
+            <tr id="fila-${i.id}">
+                <td style="font-weight:700; color:var(--on-surface-variant); font-size:12px;">#${i.id}</td>
+                <td><strong>${i.nombre} ${i.apellidos}</strong></td>
+                <td style="font-size:12px; color:var(--on-surface-variant);">${i.email}</td>
+                <td style="font-size:12px; max-width:130px;">${i.tipo}</td>
+                <td style="font-size:12px; color:var(--on-surface-variant); max-width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${i.descripcion}">${i.descripcion}</td>
+                <td style="font-size:12px; color:var(--on-surface-variant);">${i.fecha_incidencia}</td>
+                <td><span class="badge badge-${i.estado}" id="badge-${i.id}">${i.estado}</span></td>
+                <td>
+                    <button class="btn-cerrar" id="btn-${i.id}"
+                        ${i.estado === 'resuelta' ? 'disabled' : ''}
+                        onclick="cerrarIncidencia(${i.id})">
+                        ${i.estado === 'resuelta' ? 'Cerrada' : 'Cerrar'}
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    function contarIncidencias(incidencias) {
+        const abiertas  = incidencias.filter(i => i.estado === 'abierta').length;
+        const resueltas = incidencias.filter(i => i.estado === 'resuelta').length;
+        document.getElementById('badge-abiertas').textContent  = `Abiertas: ${abiertas}`;
+        document.getElementById('badge-resueltas').textContent = `Resueltas: ${resueltas}`;
+        document.getElementById('badge-nav-abiertas').textContent = abiertas > 0 ? abiertas : '';
+    }
+
+    // ── CERRAR INCIDENCIA ─────────────────────────────────────────
+    async function cerrarIncidencia(id) {
+        const btn = document.getElementById(`btn-${id}`);
+        btn.disabled = true;
+        btn.textContent = 'Cerrando...';
+
+        const res = await apiFetch('admin.php', {
+            method: 'PUT',
+            body: JSON.stringify({ incidencia_id: id })
+        });
+
+        if (res && res.status === 'success') {
+            const badge = document.getElementById(`badge-${id}`);
+            badge.className = 'badge badge-resuelta';
+            badge.textContent = 'resuelta';
+            btn.textContent = 'Cerrada';
+
+            // Actualizar contadores
+            const abiertas  = document.querySelectorAll('.badge-abierta').length;
+            const resueltas = document.querySelectorAll('.badge-resuelta').length;
+            document.getElementById('badge-abiertas').textContent  = `Abiertas: ${abiertas}`;
+            document.getElementById('badge-resueltas').textContent = `Resueltas: ${resueltas}`;
+            document.getElementById('badge-nav-abiertas').textContent = abiertas > 0 ? abiertas : '';
+        } else {
+            btn.disabled = false;
+            btn.textContent = 'Cerrar';
+        }
+    }
+
+
+    // ── MODAL USUARIO ─────────────────────────────────────────────
+    function toggleModal(show) {
+        document.getElementById('modalUser').style.display = show ? 'flex' : 'none';
+    }
+
+    // ── LOGOUT ────────────────────────────────────────────────────
+    function cerrarSesion() {
+        localStorage.removeItem('jwt_token');
+        window.location.href = 'inicio_sesion.html';
+    }
+</script>
+</body>
+</html>
