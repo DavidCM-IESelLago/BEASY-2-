@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tarjetas - FintechPro</title>
+    <title>Tarjetas - Beasy</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
@@ -294,7 +294,7 @@
             <div class="logo-box">
                 <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">account_balance</span>
             </div>
-            <h1 style="font-size: 18px; font-weight: 700; color: var(--primario);">FintechPro</h1>
+            <h1 style="font-size: 18px; font-weight: 700; color: var(--primario);">Beasy</h1>
         </div>
 
         <nav class="nav-grupo">
@@ -310,7 +310,7 @@
         <header class="header">
             <div style="font-weight: 600;">Cards Overview</div>
             <div style="display: flex; align-items: center; gap: 16px;">
-                <div class="perfil-btn">
+                <div class="perfil-btn" onclick="toggleModal(true)">
                     <img id="header-avatar" src="https://ui-avatars.com/api/?name=...&background=005bbf&color=fff" style="width: 32px; border-radius: 50%;">
                     <span id="header-nombre" style="font-size: 14px; font-weight: 500;">...</span>
                     <span class="material-symbols-outlined" style="font-size: 18px;">keyboard_arrow_down</span>
@@ -459,6 +459,31 @@
         </div>
     </div>
 
+    <div id="modalUser" style="position:fixed;inset:0;background:rgba(0,0,0,0.4);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:999;">
+        <div style="background:white;width:400px;border-radius:24px;overflow:hidden;">
+            <div style="padding:24px;border-bottom:1px solid #e1e3e4;display:flex;justify-content:space-between;align-items:center;">
+                <h3 style="font-weight:700;">Detalles de cuenta</h3>
+                <span class="material-symbols-outlined" style="cursor:pointer;color:#414754;" onclick="toggleModal(false)">close</span>
+            </div>
+            <div style="padding:24px;">
+                <div style="display:flex;gap:16px;align-items:center;margin-bottom:24px;">
+                    <img id="modal-avatar" src="https://ui-avatars.com/api/?name=...&background=005bbf&color=fff" style="width:50px;height:50px;border-radius:50%;">
+                    <div><p id="modal-nombre" style="font-weight:700;font-size:16px;">...</p></div>
+                </div>
+                <div style="font-size:14px;color:#414754;display:grid;gap:12px;">
+                    <p><strong>Email:</strong> <span id="modal-email">...</span></p>
+                    <p><strong>ID:</strong> <span id="modal-id">...</span></p>
+                </div>
+                <button onclick="cerrarSesion()" style="color:#ba1a1a;border:1px solid #ba1a1a;width:100%;margin-top:20px;display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;background:white;font-family:inherit;">
+                    <span class="material-symbols-outlined">logout</span> Cerrar Sesión
+                </button>
+            </div>
+            <div style="padding:16px 24px;background:#f3f4f5;text-align:right;">
+                <button onclick="toggleModal(false)" style="padding:8px 20px;background:#1a73e8;color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-family:inherit;">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
     <script src="js/api.js"></script>
     <script>
         const token = localStorage.getItem('jwt_token');
@@ -485,10 +510,18 @@
             const datos = await apiFetch('perfil.php');
             if (!datos || datos.status !== 'success') return;
             const nombreCompleto = datos.nombre + ' ' + datos.apellidos;
-            document.getElementById('header-avatar').src =
-                `https://ui-avatars.com/api/?name=${encodeURIComponent(datos.iniciales)}&background=005bbf&color=fff`;
-            document.getElementById('header-nombre').textContent =
-                datos.nombre + ' ' + datos.apellidos.split(' ')[0] + '.';
+            const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(datos.iniciales)}&background=005bbf&color=fff`;
+            document.getElementById('header-avatar').src = avatarUrl;
+            document.getElementById('header-nombre').textContent = datos.nombre + ' ' + datos.apellidos.split(' ')[0] + '.';
+            document.getElementById('modal-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(nombreCompleto)}&background=005bbf&color=fff`;
+            document.getElementById('modal-nombre').textContent = nombreCompleto;
+            document.getElementById('modal-email').textContent = datos.email;
+            document.getElementById('modal-id').textContent = '#' + String(datos.id).padStart(6, '0');
+        }
+        function toggleModal(show) { document.getElementById('modalUser').style.display = show ? 'flex' : 'none'; }
+        function cerrarSesion() {
+            localStorage.removeItem('jwt_token');
+            window.location.href = 'inicio_sesion.html';
         }
 
         // ─── TARJETAS ─────────────────────────────────────────────

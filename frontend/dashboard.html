@@ -421,9 +421,9 @@
                         style="position:absolute; top:2px; right:2px; width:8px; height:8px; background:var(--error); border-radius:50%; border:2px solid white;"></span>
                 </button>
                 <div style="display:flex; align-items:center; gap:12px; cursor:pointer;" onclick="toggleModal(true)">
-                    <img src="https://ui-avatars.com/api/?name=Alex+D&background=005bbf&color=fff"
+                    <img id="header-avatar" src="https://ui-avatars.com/api/?name=...&background=005bbf&color=fff"
                         style="width:32px; border-radius:50%;">
-                    <span style="font-size:14px; font-weight:500;">Alex D.</span>
+                    <span id="header-nombre" style="font-size:14px; font-weight:500;">...</span>
                     <span class="material-symbols-outlined" style="font-size:18px">keyboard_arrow_down</span>
                 </div>
             </div>
@@ -574,36 +574,29 @@
         </main>
     </div>
 
-    <div class="modal-overlay" id="modalUser">
-        <div class="modal-content">
-            <div
-                style="padding:24px; border-bottom:1px solid var(--borde); display:flex; justify-content:space-between; background:var(--background);">
-                <h3 style="font-weight:900;">Account Details</h3>
-                <span class="material-symbols-outlined" style="cursor:pointer" onclick="toggleModal(false)">close</span>
+    <div id="modalUser" style="position:fixed;inset:0;background:rgba(0,0,0,0.4);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:999;">
+        <div style="background:white;width:400px;border-radius:24px;overflow:hidden;">
+            <div style="padding:24px;border-bottom:1px solid #e1e3e4;display:flex;justify-content:space-between;align-items:center;">
+                <h3 style="font-weight:700;">Detalles de cuenta</h3>
+                <span class="material-symbols-outlined" style="cursor:pointer;color:#414754;" onclick="toggleModal(false)">close</span>
             </div>
             <div style="padding:24px;">
-                <div style="display:flex; gap:16px; align-items:center; margin-bottom:24px;">
-                    <img src="https://ui-avatars.com/api/?name=Alex+D&background=005bbf&color=fff"
-                        style="width:56px; border-radius:50%;">
+                <div style="display:flex;gap:16px;align-items:center;margin-bottom:24px;">
+                    <img id="modal-avatar" src="https://ui-avatars.com/api/?name=...&background=005bbf&color=fff" style="width:50px;height:50px;border-radius:50%;">
                     <div>
-                        <p style="font-weight:900; font-size:18px;">Alex J. Smith</p><span
-                            style="background:#e6f4ea; color:var(--tertiary); font-size:10px; font-weight:900; padding:2px 8px; border-radius:99px;">ACTIVE
-                            ACCOUNT</span>
+                        <p id="modal-nombre" style="font-weight:700;font-size:16px;">...</p>
                     </div>
                 </div>
-                <div
-                    style="background:var(--surface-container-low); padding:16px; border-radius:12px; font-family:monospace;">
-                    <p class="form-label" style="margin-bottom:4px;">IBAN</p>
-                    <p style="font-weight:600;">ES91 2100 0418 4502 0005 1234</p>
+                <div style="font-size:14px;color:#414754;display:grid;gap:12px;">
+                    <p><strong>Email:</strong> <span id="modal-email">...</span></p>
+                    <p><strong>ID:</strong> <span id="modal-id">...</span></p>
                 </div>
-                <button class="btn btn-outline" onclick="cerrarSesion()"
-                    style="color: var(--error); border-color: var(--error); width: 100%; margin-top: 20px; justify-content: center;">
-                    <span class="material-symbols-outlined">logout</span> Sign Out
+                <button onclick="cerrarSesion()" style="color:#ba1a1a;border:1px solid #ba1a1a;width:100%;margin-top:20px;display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;background:white;font-family:inherit;">
+                    <span class="material-symbols-outlined">logout</span> Cerrar Sesión
                 </button>
             </div>
-            <div style="padding:24px; text-align:right; border-top:1px solid var(--borde);">
-                <button onclick="toggleModal(false)" class="btn-submit btn-blue"
-                    style="width:auto; padding:10px 24px;">Close</button>
+            <div style="padding:16px 24px;background:#f3f4f5;text-align:right;">
+                <button onclick="toggleModal(false)" style="padding:8px 20px;background:#1a73e8;color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-family:inherit;">Cerrar</button>
             </div>
         </div>
     </div>
@@ -649,8 +642,8 @@
 
                 if (respuesta && respuesta.status === 'success') {
                     console.log("Acceso autorizado");
-                    // Hacemos visible el body ahora que sabemos que es un usuario real
                     document.body.style.display = 'flex';
+                    cargarPerfil();
                 } else {
                     // Token manipulado o caducado
                     localStorage.removeItem('jwt_token');
@@ -883,11 +876,21 @@
         });
         function toggleModal(show) { document.getElementById('modalUser').style.display = show ? 'flex' : 'none'; }
         function toggleNotifications(show) { document.getElementById('notifPanel').classList.toggle('open', show); }
-
-        // Función para el botón de cerrar sesión que te faltaba
         function cerrarSesion() {
             localStorage.removeItem('jwt_token');
             window.location.href = 'inicio_sesion.html';
+        }
+        async function cargarPerfil() {
+            const datos = await apiFetch('perfil.php');
+            if (!datos || datos.status !== 'success') return;
+            const nombreCompleto = datos.nombre + ' ' + datos.apellidos;
+            const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(datos.iniciales)}&background=005bbf&color=fff`;
+            document.getElementById('header-avatar').src = avatarUrl;
+            document.getElementById('header-nombre').textContent = datos.nombre + ' ' + datos.apellidos.split(' ')[0] + '.';
+            document.getElementById('modal-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(nombreCompleto)}&background=005bbf&color=fff`;
+            document.getElementById('modal-nombre').textContent = nombreCompleto;
+            document.getElementById('modal-email').textContent = datos.email;
+            document.getElementById('modal-id').textContent = '#' + String(datos.id).padStart(6, '0');
         }
     </script>
     <script src="/js/api.js"></script>
