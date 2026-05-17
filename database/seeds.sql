@@ -2,15 +2,19 @@
 -- Datos de prueba para fintech_db
 -- =====================================================
 
+-- Forzar charset UTF-8 en la conexión del cliente
+SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci;
+SET CHARACTER SET utf8mb4;
+
 USE fintech_db;
 
 -- Insertar usuarios (las contraseñas serán '123456' hasheadas con password_hash)
 -- Para este ejemplo, usamos contraseñas sin hash (después las actualizaremos con PHP)
 
-INSERT INTO usuarios (email, password_hash, dni, nombre, apellidos, activo, rol) VALUES
-('ana@fintech.com', '$2y$10$jeV0r6oXlo2GSvJT/2Wt..EAvuo3a3eHoVCe8oCB.ekLdl3SXOHcy', '12345678A', 'Ana', 'García López', TRUE, 'usuario'),
-('carlos@fintech.com', '$2y$10$jeV0r6oXlo2GSvJT/2Wt..EAvuo3a3eHoVCe8oCB.ekLdl3SXOHcy', '87654321B', 'Carlos', 'Martín Ruiz', TRUE, 'usuario'),
-('admin@fintech.com', '$2y$10$jeV0r6oXlo2GSvJT/2Wt..EAvuo3a3eHoVCe8oCB.ekLdl3SXOHcy', '11111111C', 'Admin', 'Sistema', TRUE, 'admin');
+INSERT INTO usuarios (email, password_hash, dni, nombre, apellidos, telefono, activo, rol) VALUES
+('ana@fintech.com', '$2y$10$jeV0r6oXlo2GSvJT/2Wt..EAvuo3a3eHoVCe8oCB.ekLdl3SXOHcy', '12345678A', 'Ana', 'García López', '600111111', TRUE, 'usuario'),
+('carlos@fintech.com', '$2y$10$jeV0r6oXlo2GSvJT/2Wt..EAvuo3a3eHoVCe8oCB.ekLdl3SXOHcy', '87654321B', 'Carlos', 'Martín Ruiz', '600222222', TRUE, 'usuario'),
+('admin@fintech.com', '$2y$10$jeV0r6oXlo2GSvJT/2Wt..EAvuo3a3eHoVCe8oCB.ekLdl3SXOHcy', '11111111C', 'Admin', 'Sistema', '600333333', TRUE, 'admin');
 
 -- Insertar cuentas (Añadimos un par de cuentas falsas para los "comercios")
 INSERT INTO cuentas (id, usuario_id, numero_cuenta, saldo, tipo) VALUES

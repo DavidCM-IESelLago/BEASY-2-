@@ -281,7 +281,7 @@
                         <label>Teléfono</label>
                         <div class="phone-input">
                             <span class="prefix">+34</span>
-                            <input type="tel" placeholder="600 000 000" required>
+                            <input type="tel" id="input_telefono" placeholder="600 000 000" required>
                         </div>
                     </div>
                     <button type="button" class="btn-next" onclick="validateAndNext(1)">Siguiente Paso</button>
@@ -421,7 +421,8 @@
                 apellidos: document.getElementById('input_apellidos').value,
                 dni: document.getElementById('input_dni').value,
                 email: document.getElementById('input_email').value,
-                password: document.getElementById('input_password').value
+                password: document.getElementById('input_password').value,
+                telefono: document.getElementById('input_telefono').value.replace(/\s+/g, '')
             };
 
             try {

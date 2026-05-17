@@ -530,18 +530,19 @@
                             <p style="font-size:14px; color:var(--on-surface-variant)">Pago instantáneo por móvil</p>
                         </div>
                     </div>
-                    <form>
+                    <form id="form-bizum" novalidate>
                         <div class="form-field">
-                            <label class="form-label">Número de Teléfono</label>
-                            <input type="tel" class="input-text" placeholder="600 000 000">
+                            <label class="form-label" for="bizum-tel">Número de Teléfono</label>
+                            <input type="tel" id="bizum-tel" class="input-text" placeholder="600 000 000" required autocomplete="off">
+                            <small id="bizum-tel-error" style="display:none; color: var(--error); font-size:12px; margin-top:4px;">Ese número no corresponde a ninguna cuenta</small>
                         </div>
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-                            <div class="form-field"><label class="form-label">Importe</label><input type="number"
-                                    class="input-text" placeholder="0.00"></div>
-                            <div class="form-field"><label class="form-label">Concepto</label><input type="text"
-                                    class="input-text" placeholder="Ej: Cena"></div>
+                            <div class="form-field"><label class="form-label" for="bizum-importe">Importe</label><input type="number" id="bizum-importe"
+                                    class="input-text" placeholder="0.00" min="0.01" step="0.01" required></div>
+                            <div class="form-field"><label class="form-label" for="bizum-concepto">Concepto</label><input type="text" id="bizum-concepto"
+                                    class="input-text" placeholder="Ej: Cena" required></div>
                         </div>
-                        <button type="button" class="btn-submit btn-green">Enviar Bizum</button>
+                        <button type="submit" id="btn-enviar-bizum" class="btn-submit btn-green">Enviar Bizum</button>
                     </form>
                 </div>
             </div>
@@ -768,6 +769,90 @@
                         showSection('dashboard-content');
                     }
                     // Si respuesta == null, apiFetch ya ha mostrado la notificación
+                });
+            }
+
+            // BIZUM
+            const inputTel = document.getElementById('bizum-tel');
+            const errorTel = document.getElementById('bizum-tel-error');
+            const formBz   = document.getElementById('form-bizum');
+            let _telCache  = { tel: '', existe: false };
+            let _timerTel  = null;
+
+            if (inputTel) {
+                inputTel.addEventListener('input', () => {
+                    const valor = inputTel.value.trim();
+                    errorTel.style.display = 'none';
+                    _telCache = { tel: '', existe: false };
+
+                    clearTimeout(_timerTel);
+                    if (valor.length < 4) return;
+
+                    _timerTel = setTimeout(async () => {
+                        const telLimpio = encodeURIComponent(valor.replace(/\s+/g, ''));
+                        const data = await apiFetch(`verificarTelefono.php?telefono=${telLimpio}`);
+                        if (!data || data.status !== 'success') return;
+
+                        _telCache = { tel: valor, existe: !!data.existe };
+                        if (!data.existe) {
+                            errorTel.style.display = 'block';
+                        } else {
+                            errorTel.style.display = 'none';
+                        }
+                    }, 400);
+                });
+            }
+
+            if (formBz) {
+                formBz.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+
+                    const telefono = document.getElementById('bizum-tel').value.trim();
+                    const importe  = parseFloat(document.getElementById('bizum-importe').value);
+                    const concepto = document.getElementById('bizum-concepto').value.trim();
+
+                    if (!telefono) {
+                        mostrarNotificacion('Introduce el número de teléfono', 'advertencia');
+                        return;
+                    }
+                    if (!importe || importe <= 0) {
+                        mostrarNotificacion('Introduce un importe válido', 'advertencia');
+                        return;
+                    }
+                    if (!concepto) {
+                        mostrarNotificacion('El concepto es obligatorio', 'advertencia');
+                        return;
+                    }
+                    if (_telCache.tel === telefono && _telCache.existe === false) {
+                        errorTel.style.display = 'block';
+                        mostrarNotificacion('Ese número no corresponde a ninguna cuenta', 'error');
+                        return;
+                    }
+
+                    const btnBz = document.getElementById('btn-enviar-bizum');
+                    btnBz.disabled = true;
+                    const txtBz = btnBz.textContent;
+                    btnBz.textContent = 'Enviando...';
+
+                    const respuesta = await apiFetch('bizum.php', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            telefono: telefono.replace(/\s+/g, ''),
+                            importe: importe,
+                            concepto: concepto
+                        })
+                    });
+
+                    btnBz.disabled = false;
+                    btnBz.textContent = txtBz;
+
+                    if (respuesta && respuesta.status === 'success') {
+                        mostrarNotificacion('Bizum enviado con éxito', 'exito');
+                        formBz.reset();
+                        errorTel.style.display = 'none';
+                        if (typeof cargarDashboard === 'function') cargarDashboard();
+                        showSection('dashboard-content');
+                    }
                 });
             }
         });

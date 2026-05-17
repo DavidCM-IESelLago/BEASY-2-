@@ -15,6 +15,7 @@ class Usuario extends Model
     private string $dni;
     private string $nombre;
     private string $apellidos;
+    private ?string $telefono = null;
     private string $fecha_registro;
     private ?string $ultimo_acceso = null;
     private bool $activo;
@@ -40,6 +41,10 @@ class Usuario extends Model
     public function getApellidos(): string
     {
         return $this->apellidos;
+    }
+    public function getTelefono(): ?string
+    {
+        return $this->telefono;
     }
     public function getFechaRegistro(): string
     {
@@ -123,7 +128,7 @@ class Usuario extends Model
     /**
      * Crea un nuevo usuario
      */
-public static function create(string $dni, string $email, string $password, string $nombre, string $apellidos): ?self
+public static function create(string $dni, string $email, string $password, string $nombre, string $apellidos, ?string $telefono = null): ?self
 {
     $db = Database::getInstance()->getConnection();
 
@@ -132,12 +137,21 @@ public static function create(string $dni, string $email, string $password, stri
         throw new Exception("El email ya está registrado");
     }
 
+    // 1b. Comprobar si el teléfono ya está registrado
+    if ($telefono !== null && $telefono !== '') {
+        $stmtTel = $db->prepare("SELECT id FROM usuarios WHERE telefono = :tel LIMIT 1");
+        $stmtTel->execute(['tel' => $telefono]);
+        if ($stmtTel->fetch()) {
+            throw new Exception("El teléfono ya está registrado");
+        }
+    }
+
     $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
     // 2. Preparamos la sentencia
     $stmt = $db->prepare("
-        INSERT INTO usuarios (dni, email, password_hash, nombre, apellidos, activo, rol)
-        VALUES (:dni, :email, :password_hash, :nombre, :apellidos, 1, 'usuario')
+        INSERT INTO usuarios (dni, email, password_hash, nombre, apellidos, telefono, activo, rol)
+        VALUES (:dni, :email, :password_hash, :nombre, :apellidos, :telefono, 1, 'usuario')
     ");
 
     // 3. Ejecutamos pasando los datos en el nuevo orden
@@ -146,7 +160,8 @@ public static function create(string $dni, string $email, string $password, stri
         'email'         => $email,
         'password_hash' => $password_hash,
         'nombre'        => $nombre,
-        'apellidos'     => $apellidos
+        'apellidos'     => $apellidos,
+        'telefono'      => $telefono
     ]);
 
     if (!$result) {
@@ -213,6 +228,7 @@ public static function create(string $dni, string $email, string $password, stri
         $this->dni = $data['dni'];
         $this->nombre = $data['nombre'];
         $this->apellidos = $data['apellidos'];
+        $this->telefono = $data['telefono'] ?? null;
         $this->fecha_registro = $data['fecha_registro'];
         $this->ultimo_acceso = $data['ultimo_acceso'];
         $this->activo = (bool)$data['activo'];

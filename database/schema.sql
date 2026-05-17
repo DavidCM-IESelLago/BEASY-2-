@@ -3,6 +3,10 @@
 -- Esquema para plataforma fintech bancaria
 -- =====================================================
 
+-- Forzar charset UTF-8 en la conexión del cliente
+SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci;
+SET CHARACTER SET utf8mb4;
+
 -- Usar la base de datos
 USE fintech_db;
 
@@ -25,6 +29,7 @@ CREATE TABLE usuarios (
     dni VARCHAR(20) NOT NULL UNIQUE,
     nombre VARCHAR(50) NOT NULL,
     apellidos VARCHAR(100) NOT NULL,
+    telefono VARCHAR(20) NULL UNIQUE,
     fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     ultimo_acceso TIMESTAMP NULL,
     activo BOOLEAN DEFAULT TRUE,
@@ -103,6 +108,7 @@ CREATE TABLE incidencias (
 -- Índices para mejorar rendimiento
 -- -----------------------------------------------------
 CREATE INDEX idx_usuarios_email ON usuarios(email);
+CREATE INDEX idx_usuarios_telefono ON usuarios(telefono);
 CREATE INDEX idx_cuentas_usuario_id ON cuentas(usuario_id);
 CREATE INDEX idx_cuentas_numero ON cuentas(numero_cuenta);
 CREATE INDEX idx_transacciones_fecha ON transacciones(fecha);

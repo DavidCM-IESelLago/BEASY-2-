@@ -17,11 +17,15 @@ if (!isset($data['dni'], $data['nombre'], $data['apellidos'], $data['email'], $d
     ResponseHelper::error("Faltan datos obligatorios: dni, nombre, apellidos, email, password", 400);
 }
 
+// Telefono: opcional pero recomendado (necesario para Bizum)
+$telefono = isset($data['telefono']) ? trim(preg_replace('/\s+/', '', $data['telefono'])) : null;
+if ($telefono === '') $telefono = null;
+
 try {
     // 1. Crear usuario
     $nuevoUsuario = Usuario::create(
         $data['dni'], $data['email'], $data['password'],
-        $data['nombre'], $data['apellidos']
+        $data['nombre'], $data['apellidos'], $telefono
     );
 
     if (!$nuevoUsuario) ResponseHelper::error("No se pudo crear el usuario", 500);
