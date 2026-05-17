@@ -42,7 +42,7 @@ CREATE TABLE usuarios (
 CREATE TABLE cuentas (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT UNSIGNED NOT NULL,
-    numero_cuenta VARCHAR(20) NOT NULL UNIQUE,
+    numero_cuenta VARCHAR(24) NOT NULL UNIQUE,
     saldo DECIMAL(12,2) NOT NULL DEFAULT 0.00,
     tipo ENUM('corriente', 'ahorros') NOT NULL DEFAULT 'corriente',
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

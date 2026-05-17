@@ -88,6 +88,7 @@
         .balance-trend { font-size: 12px; font-weight: 700; color: var(--tertiary); display: flex; align-items: center; }
         .card-skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 8px; height: 36px; }
         @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
         /* --- VISTA 2: FORMULARIO --- */
         .form-wrapper { max-width: 760px; }
@@ -325,21 +326,6 @@
                                 <p style="font-size:12px;color:var(--on-surface-variant);margin-top:8px;">Depósito mínimo requerido: €0.00</p>
                             </div>
 
-                            <div class="huchas-box">
-                                <div class="huchas-icon"><span class="material-symbols-outlined">savings</span></div>
-                                <div style="flex:1;">
-                                    <h4 style="font-weight:700;font-size:15px;margin-bottom:4px;">Activar Redondeo Automático</h4>
-                                    <p style="font-size:13px;color:var(--on-surface-variant);margin-bottom:12px;">Redondea cada gasto al euro superior y ahorra la diferencia automáticamente.</p>
-                                    <label style="display:flex;align-items:center;gap:12px;cursor:pointer;">
-                                        <label class="toggle-switch">
-                                            <input type="checkbox" id="toggle-roundup">
-                                            <span class="toggle-slider"></span>
-                                        </label>
-                                        <span style="font-size:13px;font-weight:600;">Activar auto-redondeo</span>
-                                    </label>
-                                </div>
-                            </div>
-
                             <div class="form-actions">
                                 <button type="button" id="btn-cancel-step1" class="btn-cancel">Cancelar</button>
                                 <button type="submit" class="btn-primary">
@@ -383,15 +369,6 @@
                         </div>
 
                         <form id="form-step2">
-                            <div class="form-group">
-                                <label class="form-label">Importe de Financiación Inicial</label>
-                                <div class="input-money-wrapper">
-                                    <span>€</span>
-                                    <input id="input-fondos" type="number" class="form-input" value="0.00" min="0" step="0.01">
-                                </div>
-                                <p style="font-size:12px;color:var(--on-surface-variant);margin-top:8px;">Depósito mínimo de apertura: €0.00. Puedes añadir fondos después.</p>
-                            </div>
-
                             <div class="checkbox-legal">
                                 <input type="checkbox" id="chk-legal" required>
                                 <label for="chk-legal">
@@ -661,8 +638,8 @@
         // ── PASO 1 → PASO 2 ────────────────────────────────────────
         document.getElementById('form-step1').addEventListener('submit', function(e) {
             e.preventDefault();
-            const tipo   = document.querySelector('input[name="acc_type"]:checked').value;
-            const alias  = document.getElementById('input-alias').value.trim();
+            const tipo     = document.querySelector('input[name="acc_type"]:checked').value;
+            const alias    = document.getElementById('input-alias').value.trim();
             const deposito = parseFloat(document.getElementById('input-deposito').value) || 0;
 
             nuevaCuenta = { tipo, alias, deposito };
@@ -672,7 +649,6 @@
             document.getElementById('resumen-nombre').textContent = esHucha ? 'Hucha (Ahorro)' : 'Cuenta Corriente';
             document.getElementById('resumen-desc').textContent   = esHucha ? 'Meta de ahorro personalizada' : 'Sin comisiones de mantenimiento';
             document.getElementById('resumen-icon').innerHTML     = `<span class="material-symbols-outlined icon-fill">${esHucha ? 'savings' : 'account_balance_wallet'}</span>`;
-            document.getElementById('input-fondos').value         = deposito > 0 ? deposito.toFixed(2) : '';
 
             mostrarVista('section-form-step2');
         });
@@ -687,27 +663,40 @@
             }
 
             const btn = document.getElementById('btn-submit-final');
-            btn.disabled = true;
-            btn.textContent = 'Creando cuenta...';
+            btn.disabled    = true;
+            btn.innerHTML   = 'Creando cuenta... <span class="material-symbols-outlined" style="font-size:18px;animation:spin 1s linear infinite;">sync</span>';
 
-            // Aquí iría la llamada real al backend cuando esté listo:
-            // const data = await apiFetch('crearCuenta.php', { method:'POST', body: JSON.stringify(nuevaCuenta) });
+            const respuesta = await apiFetch('crearCuenta.php', {
+                method: 'POST',
+                body: JSON.stringify({
+                    tipo:     nuevaCuenta.tipo,
+                    deposito: nuevaCuenta.deposito
+                })
+            });
 
-            // Simulación de respuesta exitosa mientras el endpoint no existe
-            await new Promise(r => setTimeout(r, 800));
-            const numeroFicticio = 'ES' + Math.floor(Math.random() * 90 + 10) + '•••• •••• ' + Math.floor(Math.random() * 9000 + 1000);
+            btn.disabled  = false;
+            btn.innerHTML = 'Completar Apertura <span class="material-symbols-outlined" style="font-size:18px;">check</span>';
+
+            if (!respuesta || respuesta.status !== 'success') {
+                // apiFetch ya muestra la notificación de error
+                return;
+            }
+
+            const cuenta = respuesta.cuenta;
             cuentaCreada = {
-                tipo:   nuevaCuenta.tipo === 'ahorros' ? 'Hucha (Ahorro)' : 'Cuenta Corriente',
-                numero: numeroFicticio,
-                saldo:  parseFloat(document.getElementById('input-fondos').value) || 0
+                tipo:   cuenta.tipo === 'ahorros' ? 'Hucha (Ahorro)' : 'Cuenta Corriente',
+                numero: cuenta.numero_cuenta,
+                saldo:  cuenta.saldo
             };
 
             document.getElementById('success-tipo').textContent   = cuentaCreada.tipo;
             document.getElementById('success-numero').textContent = cuentaCreada.numero;
             document.getElementById('success-saldo').textContent  = formatearEuros(cuentaCreada.saldo);
 
-            btn.disabled = false;
-            btn.textContent = 'Completar Apertura';
+            // Limpiar formulario para una posible próxima apertura
+            document.getElementById('form-step1').reset();
+            document.getElementById('chk-legal').checked = false;
+
             mostrarVista('section-success');
         });
 

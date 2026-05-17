@@ -18,11 +18,11 @@ INSERT INTO usuarios (email, password_hash, dni, nombre, apellidos, telefono, ac
 
 -- Insertar cuentas (Añadimos un par de cuentas falsas para los "comercios")
 INSERT INTO cuentas (id, usuario_id, numero_cuenta, saldo, tipo) VALUES
-(1, 1, 'ES001234567890123450', 1250.75, 'corriente'),
-(2, 1, 'ES001234567890123451', 500.00, 'ahorros'),
-(3, 2, 'ES001234567890123452', 3200.00, 'corriente'),
-(4, 3, 'ES001234567890123453', 10000.00, 'corriente'),
-(99, 3, 'ES990000000000000099', 99999.00, 'corriente'); -- Cuenta ficticia para tiendas (ej. Mercadona)
+(1, 1, 'ES0012345678901234567890', 1250.75, 'corriente'),
+(2, 1, 'ES0012345678901234567891', 500.00, 'ahorros'),
+(3, 2, 'ES0012345678901234567892', 3200.00, 'corriente'),
+(4, 3, 'ES0012345678901234567893', 10000.00, 'corriente'),
+(99, 3, 'ES9900000000000000991234', 99999.00, 'corriente'); -- Cuenta ficticia para tiendas (ej. Mercadona)
 
 -- Insertar tarjetas virtuales
 INSERT INTO tarjetas (cuenta_id, numero, cvv, fecha_expiracion, estado) VALUES
