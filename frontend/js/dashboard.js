@@ -1,52 +1,264 @@
 // js/dashboard.js
 
+// ── Estado ────────────────────────────────────────────────────────────────────
+let _cuentasUsuario   = [];
+let _ibanValidoCache  = { iban: '', existe: false };
+let _timerIban        = null;
+
+// ── Inicialización ────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', async () => {
+    const token = localStorage.getItem('jwt_token');
+    if (!token) { window.location.href = 'inicio_sesion.html'; return; }
+
+    try {
+        const respuesta = await apiFetch('validate_helper.php');
+        if (respuesta && respuesta.status === 'success') {
+            document.body.style.display = 'flex';
+            await cargarPerfil();
+            await cargarDashboard();
+        } else {
+            localStorage.removeItem('jwt_token');
+            window.location.href = 'inicio_sesion.html';
+        }
+    } catch (e) {
+        window.location.href = 'inicio_sesion.html';
+    }
+
+    _initTransferForm();
+    _initBizumForm();
+});
+
+// ── Navegación de secciones ───────────────────────────────────────────────────
+function showSection(id) {
+    ['dashboard-content', 'transfer-form', 'bizum-form'].forEach(s =>
+        document.getElementById(s).classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
+    if (id === 'transfer-form') cargarCuentasOrigen();
+}
+
+// ── Perfil ────────────────────────────────────────────────────────────────────
+async function cargarPerfil() {
+    const datos = await apiFetch('perfil.php');
+    if (!datos || datos.status !== 'success') return;
+
+    const nombreCompleto = datos.nombre + ' ' + datos.apellidos;
+    const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(datos.iniciales)}&background=005bbf&color=fff`;
+
+    document.getElementById('header-avatar').src   = avatarUrl;
+    document.getElementById('header-nombre').textContent = datos.nombre + ' ' + datos.apellidos.split(' ')[0] + '.';
+    document.getElementById('modal-avatar').src    = `https://ui-avatars.com/api/?name=${encodeURIComponent(nombreCompleto)}&background=005bbf&color=fff`;
+    document.getElementById('modal-nombre').textContent  = nombreCompleto;
+    document.getElementById('modal-email').textContent   = datos.email;
+    document.getElementById('modal-id').textContent      = '#' + String(datos.id).padStart(6, '0');
+}
+
+// ── Modal usuario ─────────────────────────────────────────────────────────────
+function toggleModal(show) {
+    document.getElementById('modalUser').style.display = show ? 'flex' : 'none';
+}
+
+function cerrarSesion() {
+    localStorage.removeItem('jwt_token');
+    window.location.href = 'inicio_sesion.html';
+}
+
+// ── Dashboard principal ───────────────────────────────────────────────────────
 async function cargarDashboard() {
     const datos = await apiFetch('dashboard.php');
     if (!datos) return;
 
     const dash = datos.dashboard;
 
-    // 1. Actualizar saldo total en el DOM
-    document.getElementById('saldo-total').textContent = dash.saldo_total.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
+    document.getElementById('saldo-total').textContent =
+        dash.saldo_total.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
 
-    // 2. Renderizar tabla de últimos movimientos
     const tbody = document.querySelector('#tabla-movimientos tbody');
-    if (!tbody) {
-        console.error('[Beasy] No se encontró #tabla-movimientos tbody en el DOM');
-        return;
-    }
+    if (!tbody) return;
 
-    while (tbody.firstChild) {
-        tbody.removeChild(tbody.firstChild);
-    }
-
+    tbody.innerHTML = '';
     dash.ultimos_movimientos.forEach(mov => {
         const fila = document.createElement('tr');
         fila.className = mov.monto < 0 ? 'gasto' : 'ingreso';
 
-        const celdaFecha = document.createElement('td');
+        const celdaFecha    = document.createElement('td');
         celdaFecha.textContent = mov.fecha;
 
         const celdaConcepto = document.createElement('td');
         celdaConcepto.textContent = mov.concepto;
 
-        const celdaMonto = document.createElement('td');
+        const celdaMonto    = document.createElement('td');
         celdaMonto.textContent = mov.monto.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
 
-        fila.appendChild(celdaFecha);
-        fila.appendChild(celdaConcepto);
-        fila.appendChild(celdaMonto);
-
+        fila.append(celdaFecha, celdaConcepto, celdaMonto);
         tbody.appendChild(fila);
     });
 
-    // 3. Renderizar gráfico de gastos del mes con los datos ya disponibles
     actualizarGrafico(dash.estadisticas_gastos);
 }
 
-// ── DONUT CHART ───────────────────────────────────────────────────────────
-// porTipo: objeto { "compra": 150.00, "transferencia": 200.00, ... }
-// Viene directamente de dash.estadisticas_gastos (ya filtrado por mes en el backend)
+// ── Formulario de transferencia ───────────────────────────────────────────────
+async function cargarCuentasOrigen() {
+    const select = document.getElementById('trans-origen');
+    if (!select) return;
+
+    select.innerHTML = '<option value="">Cargando cuentas...</option>';
+    const data = await apiFetch('cuentas.php');
+
+    if (!data || data.status !== 'success' || !Array.isArray(data.cuentas) || data.cuentas.length === 0) {
+        select.innerHTML = '<option value="">No tienes cuentas disponibles</option>';
+        return;
+    }
+
+    _cuentasUsuario = data.cuentas;
+    select.innerHTML = '<option value="">Selecciona una cuenta...</option>';
+    _cuentasUsuario.forEach(c => {
+        const saldo = Number(c.saldo).toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
+        const opt   = document.createElement('option');
+        opt.value   = c.id;
+        opt.textContent = `${c.numero_cuenta} (${saldo})`;
+        select.appendChild(opt);
+    });
+}
+
+function _initTransferForm() {
+    const inputIban = document.getElementById('trans-iban');
+    const errorIban = document.getElementById('trans-iban-error');
+    const form      = document.getElementById('form-transferencia');
+
+    if (inputIban) {
+        inputIban.addEventListener('input', () => {
+            const valor = inputIban.value.trim();
+            errorIban.style.display = 'none';
+            _ibanValidoCache = { iban: '', existe: false };
+            clearTimeout(_timerIban);
+            if (valor.length < 4) return;
+
+            _timerIban = setTimeout(async () => {
+                const ibanLimpio = encodeURIComponent(valor.replace(/\s+/g, ''));
+                const data = await apiFetch(`verificarCuenta.php?iban=${ibanLimpio}`);
+                if (!data || data.status !== 'success') return;
+                _ibanValidoCache = { iban: valor, existe: !!data.existe, cuenta_id: data.cuenta_id || null };
+                errorIban.style.display = data.existe ? 'none' : 'block';
+            }, 400);
+        });
+    }
+
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const cuentaOrigenId = document.getElementById('trans-origen').value;
+            const ibanDestino    = document.getElementById('trans-iban').value.trim();
+            const importe        = parseFloat(document.getElementById('trans-importe').value);
+            const concepto       = document.getElementById('trans-concepto').value.trim();
+
+            if (!cuentaOrigenId) { mostrarNotificacion('Selecciona una cuenta de origen', 'advertencia'); return; }
+            if (!ibanDestino)    { mostrarNotificacion('Introduce el IBAN del destinatario', 'advertencia'); return; }
+            if (!importe || importe <= 0) { mostrarNotificacion('Introduce un importe válido', 'advertencia'); return; }
+            if (!concepto)       { mostrarNotificacion('El concepto es obligatorio', 'advertencia'); return; }
+
+            if (_ibanValidoCache.iban === ibanDestino && _ibanValidoCache.existe === false) {
+                errorIban.style.display = 'block';
+                mostrarNotificacion('La cuenta de destino no existe', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('btn-realizar-transferencia');
+            btn.disabled = true;
+            const txtOriginal = btn.textContent;
+            btn.textContent = 'Procesando...';
+
+            const respuesta = await apiFetch('transferencia.php', {
+                method: 'POST',
+                body: JSON.stringify({
+                    cuenta_origen_id: parseInt(cuentaOrigenId, 10),
+                    iban_destino: ibanDestino,
+                    importe,
+                    concepto
+                })
+            });
+
+            btn.disabled = false;
+            btn.textContent = txtOriginal;
+
+            if (respuesta && respuesta.status === 'success') {
+                mostrarNotificacion('Transferencia realizada con éxito', 'exito');
+                form.reset();
+                errorIban.style.display = 'none';
+                await cargarDashboard();
+                showSection('dashboard-content');
+            }
+        });
+    }
+}
+
+// ── Formulario de Bizum ───────────────────────────────────────────────────────
+function _initBizumForm() {
+    const inputTel = document.getElementById('bizum-tel');
+    const errorTel = document.getElementById('bizum-tel-error');
+    const formBz   = document.getElementById('form-bizum');
+    let _telCache  = { tel: '', existe: false };
+    let _timerTel  = null;
+
+    if (inputTel) {
+        inputTel.addEventListener('input', () => {
+            const valor = inputTel.value.trim();
+            errorTel.style.display = 'none';
+            _telCache = { tel: '', existe: false };
+            clearTimeout(_timerTel);
+            if (valor.length < 4) return;
+
+            _timerTel = setTimeout(async () => {
+                const telLimpio = encodeURIComponent(valor.replace(/\s+/g, ''));
+                const data = await apiFetch(`verificarTelefono.php?telefono=${telLimpio}`);
+                if (!data || data.status !== 'success') return;
+                _telCache = { tel: valor, existe: !!data.existe };
+                errorTel.style.display = data.existe ? 'none' : 'block';
+            }, 400);
+        });
+    }
+
+    if (formBz) {
+        formBz.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const telefono = document.getElementById('bizum-tel').value.trim();
+            const importe  = parseFloat(document.getElementById('bizum-importe').value);
+            const concepto = document.getElementById('bizum-concepto').value.trim();
+
+            if (!telefono) { mostrarNotificacion('Introduce el número de teléfono', 'advertencia'); return; }
+            if (!importe || importe <= 0) { mostrarNotificacion('Introduce un importe válido', 'advertencia'); return; }
+            if (!concepto) { mostrarNotificacion('El concepto es obligatorio', 'advertencia'); return; }
+
+            if (_telCache.tel === telefono && _telCache.existe === false) {
+                errorTel.style.display = 'block';
+                mostrarNotificacion('Ese número no corresponde a ninguna cuenta', 'error');
+                return;
+            }
+
+            const btnBz = document.getElementById('btn-enviar-bizum');
+            btnBz.disabled = true;
+            const txtBz = btnBz.textContent;
+            btnBz.textContent = 'Enviando...';
+
+            const respuesta = await apiFetch('bizum.php', {
+                method: 'POST',
+                body: JSON.stringify({ telefono: telefono.replace(/\s+/g, ''), importe, concepto })
+            });
+
+            btnBz.disabled = false;
+            btnBz.textContent = txtBz;
+
+            if (respuesta && respuesta.status === 'success') {
+                mostrarNotificacion('Bizum enviado con éxito', 'exito');
+                formBz.reset();
+                errorTel.style.display = 'none';
+                await cargarDashboard();
+                showSection('dashboard-content');
+            }
+        });
+    }
+}
+
+// ── Donut Chart ───────────────────────────────────────────────────────────────
 function actualizarGrafico(porTipo) {
     const CIRCUNFERENCIA = 251.2;
     const COLORES = {
@@ -56,7 +268,6 @@ function actualizarGrafico(porTipo) {
         ingreso:       '#89fa9b'
     };
 
-    // Las claves de estadisticas_gastos vienen con ucfirst desde el backend → normalizar
     const porTipoNorm = {};
     Object.entries(porTipo || {}).forEach(([tipo, importe]) => {
         porTipoNorm[tipo.toLowerCase()] = importe;
@@ -85,10 +296,8 @@ function actualizarGrafico(porTipo) {
         acumulado += longitud;
     });
 
-    // Leyenda
     const leyenda = document.getElementById('leyenda-grafico');
-    while (leyenda.firstChild) leyenda.removeChild(leyenda.firstChild);
-
+    leyenda.innerHTML = '';
     Object.entries(porTipoNorm).forEach(([tipo, importe]) => {
         const porcentaje = ((importe / totalGastos) * 100).toFixed(0);
         const item = document.createElement('div');
@@ -117,6 +326,3 @@ function crearArco(color, dasharray, dashGap, dashoffset) {
     c.setAttribute('stroke-dashoffset', dashoffset);
     return c;
 }
-// ── FIN DONUT CHART ───────────────────────────────────────────────────────
-
-document.addEventListener('DOMContentLoaded', cargarDashboard);
