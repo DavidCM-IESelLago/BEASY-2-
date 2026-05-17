@@ -36,5 +36,6 @@ try {
 } catch (\PDOException $e) {
     ResponseHelper::error("Error de conexión: " . $e->getMessage(), 500);
 } catch (\Exception $e) {
-    ResponseHelper::error($e->getMessage(), 401);
+    // Credenciales incorrectas → 400 (no 401, que se reserva para token expirado)
+    ResponseHelper::error($e->getMessage(), 400);
 }

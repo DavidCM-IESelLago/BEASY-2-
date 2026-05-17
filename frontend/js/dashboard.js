@@ -11,6 +11,10 @@ async function cargarDashboard() {
 
     // 2. Renderizar tabla de últimos movimientos
     const tbody = document.querySelector('#tabla-movimientos tbody');
+    if (!tbody) {
+        console.error('[Beasy] No se encontró #tabla-movimientos tbody en el DOM');
+        return;
+    }
 
     while (tbody.firstChild) {
         tbody.removeChild(tbody.firstChild);
@@ -36,27 +40,14 @@ async function cargarDashboard() {
         tbody.appendChild(fila);
     });
 
-    // 3. Cargar gráfico de gastos del mes
-    cargarGastosMes();
-}
-
-// ── GASTOS DEL MES: carga movimientos y actualiza el donut ────────────────
-async function cargarGastosMes() {
-    const data = await apiFetch('movimientos.php?page=1&limit=1000');
-    if (!data || data.status !== 'success') return;
-
-    const ahora  = new Date();
-    const delMes = data.movimientos.filter(m => {
-        const f = new Date(m.fecha);
-        return f.getMonth()    === ahora.getMonth() &&
-               f.getFullYear() === ahora.getFullYear();
-    });
-
-    actualizarGrafico(delMes);
+    // 3. Renderizar gráfico de gastos del mes con los datos ya disponibles
+    actualizarGrafico(dash.estadisticas_gastos);
 }
 
 // ── DONUT CHART ───────────────────────────────────────────────────────────
-function actualizarGrafico(movimientos) {
+// porTipo: objeto { "compra": 150.00, "transferencia": 200.00, ... }
+// Viene directamente de dash.estadisticas_gastos (ya filtrado por mes en el backend)
+function actualizarGrafico(porTipo) {
     const CIRCUNFERENCIA = 251.2;
     const COLORES = {
         compra:        '#1a73e8',
@@ -65,8 +56,13 @@ function actualizarGrafico(movimientos) {
         ingreso:       '#89fa9b'
     };
 
-    const gastos      = movimientos.filter(m => m.cantidad < 0);
-    const totalGastos = gastos.reduce((sum, m) => sum + Math.abs(m.cantidad), 0);
+    // Las claves de estadisticas_gastos vienen con ucfirst desde el backend → normalizar
+    const porTipoNorm = {};
+    Object.entries(porTipo || {}).forEach(([tipo, importe]) => {
+        porTipoNorm[tipo.toLowerCase()] = importe;
+    });
+
+    const totalGastos = Object.values(porTipoNorm).reduce((sum, v) => sum + v, 0);
 
     document.getElementById('total-gastos').textContent =
         totalGastos > 0
@@ -81,13 +77,8 @@ function actualizarGrafico(movimientos) {
         return;
     }
 
-    const porTipo = {};
-    gastos.forEach(m => {
-        porTipo[m.tipo] = (porTipo[m.tipo] || 0) + Math.abs(m.cantidad);
-    });
-
     let acumulado = 0;
-    Object.entries(porTipo).forEach(([tipo, importe]) => {
+    Object.entries(porTipoNorm).forEach(([tipo, importe]) => {
         const longitud = (importe / totalGastos) * CIRCUNFERENCIA;
         const offset   = CIRCUNFERENCIA - acumulado;
         svg.appendChild(crearArco(COLORES[tipo] || '#c1c6d6', longitud, CIRCUNFERENCIA - longitud, offset));
@@ -98,7 +89,7 @@ function actualizarGrafico(movimientos) {
     const leyenda = document.getElementById('leyenda-grafico');
     while (leyenda.firstChild) leyenda.removeChild(leyenda.firstChild);
 
-    Object.entries(porTipo).forEach(([tipo, importe]) => {
+    Object.entries(porTipoNorm).forEach(([tipo, importe]) => {
         const porcentaje = ((importe / totalGastos) * 100).toFixed(0);
         const item = document.createElement('div');
         item.style.cssText = 'display:flex;align-items:center;justify-content:space-between;font-size:13px;';

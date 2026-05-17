@@ -102,7 +102,7 @@ try {
         WHERE t.cuenta_origen_id IN ($placeholders)
           AND t.tipo != 'ingreso'
           AND MONTH(t.fecha) = MONTH(CURRENT_DATE())
-          AND YEAR(t.fecha) = YEAR(CURRENT_DATE())
+          AND YEAR(t.fecha)  = YEAR(CURRENT_DATE())
         GROUP BY t.tipo
         ORDER BY total DESC
     ");
@@ -112,7 +112,7 @@ try {
     // Convertir a formato { "categoria": importe }
     $estadisticasGastos = [];
     foreach ($statsRaw as $stat) {
-        $estadisticasGastos[ucfirst($stat['categoria'])] = (float) $stat['total'];
+        $estadisticasGastos[strtolower($stat['categoria'])] = (float) $stat['total'];
     }
 
     // 6. Respuesta final
