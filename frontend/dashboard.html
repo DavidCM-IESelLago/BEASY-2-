@@ -491,24 +491,25 @@
                             <p style="font-size:14px; color:var(--on-surface-variant)">Envía dinero de forma segura</p>
                         </div>
                     </div>
-                    <form>
+                    <form id="form-transferencia" novalidate>
                         <div class="form-field">
-                            <label class="form-label">Cuenta de origen</label>
-                            <select class="input-select">
-                                <option>ES98 1234 ... 3456 ($42,500.80)</option>
+                            <label class="form-label" for="trans-origen">Cuenta de origen</label>
+                            <select id="trans-origen" class="input-select" required>
+                                <option value="">Cargando cuentas...</option>
                             </select>
                         </div>
                         <div class="form-field">
-                            <label class="form-label">IBAN del destinatario</label>
-                            <input type="text" class="input-text" placeholder="ESXX XXXX XXXX XXXX XXXX">
+                            <label class="form-label" for="trans-iban">IBAN del destinatario</label>
+                            <input type="text" id="trans-iban" class="input-text" placeholder="ESXX XXXX XXXX XXXX XXXX" required autocomplete="off">
+                            <small id="trans-iban-error" style="display:none; color: var(--error); font-size:12px; margin-top:4px;">No existe esa cuenta</small>
                         </div>
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-                            <div class="form-field"><label class="form-label">Importe (€)</label><input type="number"
-                                    class="input-text" placeholder="0.00"></div>
-                            <div class="form-field"><label class="form-label">Concepto</label><input type="text"
-                                    class="input-text" placeholder="Ej: Alquiler"></div>
+                            <div class="form-field"><label class="form-label" for="trans-importe">Importe (€)</label><input type="number" id="trans-importe"
+                                    class="input-text" placeholder="0.00" min="0.01" step="0.01" required></div>
+                            <div class="form-field"><label class="form-label" for="trans-concepto">Concepto</label><input type="text" id="trans-concepto"
+                                    class="input-text" placeholder="Ej: Alquiler" required></div>
                         </div>
-                        <button type="button" class="btn-submit btn-blue">Realizar Transferencia</button>
+                        <button type="submit" id="btn-realizar-transferencia" class="btn-submit btn-blue">Realizar Transferencia</button>
                     </form>
                 </div>
             </div>
@@ -642,7 +643,134 @@
             document.getElementById('transfer-form').classList.add('hidden');
             document.getElementById('bizum-form').classList.add('hidden');
             document.getElementById(id).classList.remove('hidden');
+
+            // Cuando se muestre el formulario de transferencia, cargar las cuentas del usuario
+            if (id === 'transfer-form') {
+                cargarCuentasOrigen();
+            }
         }
+
+        // ─── TRANSFERENCIAS ─────────────────────────────────────────
+        let _cuentasUsuario = [];
+        let _ibanValidoCache = { iban: '', existe: false };
+        let _timerIban = null;
+
+        async function cargarCuentasOrigen() {
+            const select = document.getElementById('trans-origen');
+            if (!select) return;
+            select.innerHTML = '<option value="">Cargando cuentas...</option>';
+
+            const data = await apiFetch('cuentas.php');
+            if (!data || data.status !== 'success' || !Array.isArray(data.cuentas) || data.cuentas.length === 0) {
+                select.innerHTML = '<option value="">No tienes cuentas disponibles</option>';
+                return;
+            }
+
+            _cuentasUsuario = data.cuentas;
+            select.innerHTML = '<option value="">Selecciona una cuenta...</option>';
+            _cuentasUsuario.forEach(c => {
+                const saldo = Number(c.saldo).toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
+                const opt = document.createElement('option');
+                opt.value = c.id;
+                opt.textContent = `${c.numero_cuenta} (${saldo})`;
+                select.appendChild(opt);
+            });
+        }
+
+        // Validación en vivo del IBAN destino
+        document.addEventListener('DOMContentLoaded', () => {
+            const inputIban = document.getElementById('trans-iban');
+            const errorIban = document.getElementById('trans-iban-error');
+            const form      = document.getElementById('form-transferencia');
+
+            if (inputIban) {
+                inputIban.addEventListener('input', () => {
+                    const valor = inputIban.value.trim();
+                    errorIban.style.display = 'none';
+                    _ibanValidoCache = { iban: '', existe: false };
+
+                    clearTimeout(_timerIban);
+                    if (valor.length < 4) return;
+
+                    _timerIban = setTimeout(async () => {
+                        const ibanLimpio = encodeURIComponent(valor.replace(/\s+/g, ''));
+                        const data = await apiFetch(`verificarCuenta.php?iban=${ibanLimpio}`);
+                        if (!data || data.status !== 'success') return;
+
+                        _ibanValidoCache = { iban: valor, existe: !!data.existe, cuenta_id: data.cuenta_id || null };
+                        if (!data.existe) {
+                            errorIban.style.display = 'block';
+                        } else {
+                            errorIban.style.display = 'none';
+                        }
+                    }, 400);
+                });
+            }
+
+            if (form) {
+                form.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+
+                    const cuentaOrigenId = document.getElementById('trans-origen').value;
+                    const ibanDestino    = document.getElementById('trans-iban').value.trim();
+                    const importe        = parseFloat(document.getElementById('trans-importe').value);
+                    const concepto       = document.getElementById('trans-concepto').value.trim();
+
+                    // Validaciones cliente
+                    if (!cuentaOrigenId) {
+                        mostrarNotificacion('Selecciona una cuenta de origen', 'advertencia');
+                        return;
+                    }
+                    if (!ibanDestino) {
+                        mostrarNotificacion('Introduce el IBAN del destinatario', 'advertencia');
+                        return;
+                    }
+                    if (!importe || importe <= 0) {
+                        mostrarNotificacion('Introduce un importe válido', 'advertencia');
+                        return;
+                    }
+                    if (!concepto) {
+                        mostrarNotificacion('El concepto es obligatorio', 'advertencia');
+                        return;
+                    }
+
+                    // Si el IBAN está en caché como inexistente, mostrar error
+                    if (_ibanValidoCache.iban === ibanDestino && _ibanValidoCache.existe === false) {
+                        errorIban.style.display = 'block';
+                        mostrarNotificacion('La cuenta de destino no existe', 'error');
+                        return;
+                    }
+
+                    const btn = document.getElementById('btn-realizar-transferencia');
+                    btn.disabled = true;
+                    const txtOriginal = btn.textContent;
+                    btn.textContent = 'Procesando...';
+
+                    const respuesta = await apiFetch('transferencia.php', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            cuenta_origen_id: parseInt(cuentaOrigenId, 10),
+                            iban_destino: ibanDestino,
+                            importe: importe,
+                            concepto: concepto
+                        })
+                    });
+
+                    btn.disabled = false;
+                    btn.textContent = txtOriginal;
+
+                    if (respuesta && respuesta.status === 'success') {
+                        mostrarNotificacion('Transferencia realizada con éxito', 'exito');
+                        form.reset();
+                        errorIban.style.display = 'none';
+                        // Recargar saldos y movimientos en el dashboard
+                        if (typeof cargarDashboard === 'function') cargarDashboard();
+                        showSection('dashboard-content');
+                    }
+                    // Si respuesta == null, apiFetch ya ha mostrado la notificación
+                });
+            }
+        });
         function toggleModal(show) { document.getElementById('modalUser').style.display = show ? 'flex' : 'none'; }
         function toggleNotifications(show) { document.getElementById('notifPanel').classList.toggle('open', show); }
 

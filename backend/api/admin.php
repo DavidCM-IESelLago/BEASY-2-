@@ -31,7 +31,7 @@ try {
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$user || $user['rol'] !== 'admin') {
-        ResponseHelper::error("Acceso denegado", 403);
+        ResponseHelper::error("Acceso denegado", 404);
     }
 
     $accion = $_GET['accion'] ?? $_SERVER['REQUEST_METHOD'];
