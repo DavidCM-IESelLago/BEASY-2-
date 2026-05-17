@@ -80,7 +80,7 @@ try {
 
         $incidencias = $pdo->query("
             SELECT i.id, i.tipo, i.descripcion, i.estado,
-                   DATE_FORMAT(i.fecha_incidencia, '%d/%m/%Y') AS fecha_incidencia,
+                   DATE_FORMAT(i.fecha_creacion, '%d/%m/%Y') AS fecha_incidencia,
                    DATE_FORMAT(i.fecha_creacion, '%d/%m/%Y %H:%i') AS fecha_creacion,
                    u.nombre, u.apellidos, u.email
             FROM incidencias i

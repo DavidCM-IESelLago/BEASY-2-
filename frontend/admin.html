@@ -217,7 +217,9 @@
 
         const check = await apiFetch('admin.php?accion=incidencias');
         if (!check) {
-            window.location.href = 'index.html'; return;
+            localStorage.removeItem('jwt_token');
+            window.location.href = 'inicio_sesion.html';
+            return;
         }
 
         document.body.style.display = 'flex';
