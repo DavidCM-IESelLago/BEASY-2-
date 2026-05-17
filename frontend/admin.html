@@ -39,8 +39,6 @@
             background: var(--background);
             color: var(--on-surface);
             display: none;
-            height: 100vh;
-            overflow: hidden;
         }
 
         .material-symbols-outlined {
@@ -49,7 +47,7 @@
         .fill { font-variation-settings: 'FILL' 1; }
 
         /* LAYOUT */
-        .layout { display: flex; height: 100vh; overflow: hidden; }
+        .layout { display: flex; min-height: 100vh; }
 
         .sidebar {
             width: 280px;
@@ -59,9 +57,12 @@
             flex-direction: column;
             padding: 24px 0;
             flex-shrink: 0;
+            position: sticky;
+            top: 0;
+            height: 100vh;
         }
 
-        .main-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .main-wrapper { flex: 1; display: flex; flex-direction: column; }
 
         .header {
             height: 72px;
@@ -75,7 +76,7 @@
             flex-shrink: 0;
         }
 
-        .content { flex: 1; padding: 32px; overflow-y: auto; }
+        .content { flex: 1; padding: 32px; }
 
         /* NAV */
         .nav-lista { padding: 0 12px; list-style: none; display: flex; flex-direction: column; gap: 2px; }
@@ -325,20 +326,6 @@
                 <span class="material-symbols-outlined">bug_report</span> Incidencias
                 <span id="badge-nav-abiertas" style="margin-left:auto; background:var(--error-container); color:var(--error); padding:1px 7px; border-radius:20px; font-size:11px; font-weight:700;"></span>
             </button>
-
-            <div class="nav-divider"></div>
-
-            <!-- Accesos rápidos -->
-            <p style="font-size: 11px; font-weight: 700; color: var(--on-surface-variant); text-transform: uppercase; letter-spacing: 0.8px; padding: 0 16px; margin-bottom: 6px;">App</p>
-            <a href="dashboard.html" class="nav-link"><span class="material-symbols-outlined">dashboard</span> Dashboard</a>
-            <a href="misTarjetas.html" class="nav-link"><span class="material-symbols-outlined">credit_card</span> Tarjetas</a>
-            <a href="seguridad.html" class="nav-link"><span class="material-symbols-outlined">verified_user</span> Seguridad</a>
-
-            <div class="nav-divider"></div>
-
-            <button class="nav-link" onclick="cerrarSesion()" style="color: var(--error);">
-                <span class="material-symbols-outlined">logout</span> Cerrar sesión
-            </button>
         </nav>
     </aside>
 
@@ -531,8 +518,7 @@
 
         const check = await apiFetch('admin.php?accion=incidencias');
         if (!check) {
-            alert('Acceso denegado. Solo administradores.');
-            window.location.href = 'dashboard.html'; return;
+            window.location.href = 'index.html'; return;
         }
 
         document.body.style.display = 'flex';
