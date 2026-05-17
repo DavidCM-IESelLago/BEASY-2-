@@ -247,23 +247,45 @@
 
         /* Donut Chart */
         .chart-container {
-            width: 180px;
-            height: 180px;
-            margin: 0 auto 24px;
             position: relative;
-            border-radius: 50%;
-            background: conic-gradient(var(--primary-container) 0% 45%, var(--primary) 45% 70%, var(--tertiary-fixed) 70% 85%, var(--borde) 85% 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
         }
 
-        .chart-center {
+        .chart-svg {
+            width: 192px;
+            height: 192px;
+            transform: rotate(-90deg);
+        }
+
+        .chart-circle {
+            transition: all 0.5s ease-in-out;
+            cursor: pointer;
+        }
+
+        .chart-overlay {
             position: absolute;
-            inset: 20px;
-            background: white;
-            border-radius: 50%;
+            inset: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            pointer-events: none;
+        }
+
+        .chart-total-val {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .chart-total-label {
+            font-size: 11px;
+            color: var(--outline);
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 4px;
         }
 
         /* --- MODALES Y NOTIFICACIONES --- */
@@ -463,15 +485,18 @@
                     </table>
                 </div>
 
-                <div class="span-5 card">
-                    <h2 style="font-size:18px; font-weight:700; margin-bottom:24px;">Expenses Breakdown</h2>
+                <div class="span-5 card" style="display:flex; flex-direction:column;">
+                    <h2 style="font-size:18px; font-weight:700; margin-bottom:24px;">Gastos del Mes</h2>
                     <div class="chart-container">
-                        <div class="chart-center">
-                            <span style="font-size:10px; color:var(--outline); font-weight:700;">OCTOBER</span>
-                            <span style="font-size:18px; font-weight:900;">3.842€</span>
+                        <svg class="chart-svg" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" fill="transparent" r="40" stroke="#f3f4f5" stroke-width="14"></circle>
+                        </svg>
+                        <div class="chart-overlay">
+                            <span class="chart-total-label">Total gastos</span>
+                            <span class="chart-total-val" id="total-gastos">...</span>
                         </div>
                     </div>
-                    <div id="stats-gastos" style="display:grid; gap:12px;"></div>
+                    <div id="leyenda-grafico" style="display:flex; flex-direction:column; gap:8px; margin-top:16px;"></div>
                 </div>
             </div>
 
