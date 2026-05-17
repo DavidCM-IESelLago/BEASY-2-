@@ -1,78 +1,85 @@
 <?php
-
-// 1. Cargamos la configuración global
 require_once __DIR__ . '/../config/config.php';
-
-// 2. CARGAMOS LA CLASE FÍSICAMENTE ANTES QUE EL PORTERO
-// Esto evita el Fatal Error porque la clase ya estará en memoria cuando validateToken la necesite
-require_once __DIR__ . '/../src/AuthController.php'; 
-
-// 3. Ahora sí, llamamos al portero para validar el Token
+require_once __DIR__ . '/../src/AuthController.php';
+require_once __DIR__ . '/../src/ResponseHelper.php';
+require_once __DIR__ . '/../src/Database.php';
+require_once __DIR__ . '/../src/Notificacion.php';
 require_once __DIR__ . '/../middleware/validateToken.php';
 
-// 4. Cargamos el ayudante de respuestas
-require_once __DIR__ . '/../src/ResponseHelper.php';
+use Fintech\Backend\ResponseHelper;
+use Fintech\Backend\Notificacion;
 
-use Fintech\ResponseHelper;
-
-$metodo = $_SERVER['REQUEST_METHOD'];
+$usuarioId = validateToken();
+$metodo    = $_SERVER['REQUEST_METHOD'];
 
 try {
-    // --- CASO GET: Ver notificaciones (SIMULADO "A PELO") ---
+    // GET — obtener notificaciones del usuario autenticado
     if ($metodo === 'GET') {
-        
-        // Inventamos los datos usando la constante USER_ID que creó el portero
-        $notificacionesSimuladas = [
-            [
-                "id" => 1,
-                "usuario_id" => USER_ID,
-                "mensaje" => "Has recibido una transferencia de 15.50€ de Juan Pérez.",
-                "leida" => 0,
-                "fecha" => "2026-04-06 10:30:00"
-            ],
-            [
-                "id" => 2,
-                "usuario_id" => USER_ID,
-                "mensaje" => "Tu transferencia de 200.00€ se ha completado.",
-                "leida" => 0,
-                "fecha" => "2026-04-05 16:45:00"
-            ],
-            [
-                "id" => 3,
-                "usuario_id" => USER_ID,
-                "mensaje" => "Aviso: Mantenimiento del servidor esta noche.",
-                "leida" => 0,
-                "fecha" => "2026-04-04 09:00:00"
-            ]
-        ];
+        $notificaciones = Notificacion::findByUsuarioId($usuarioId);
+
+        $data = array_map(fn($n) => [
+            'id'         => $n->getId(),
+            'usuario_id' => $n->getUsuarioId(),
+            'mensaje'    => $n->getMensaje(),
+            'leida'      => $n->isLeida(),
+            'fecha'      => $n->getFecha(),
+        ], $notificaciones);
 
         ResponseHelper::jsonResponse([
-            'status' => 'success',
-            'cantidad' => count($notificacionesSimuladas),
-            'data' => $notificacionesSimuladas
-        ], 200);
+            'status'   => 'success',
+            'cantidad' => count($data),
+            'data'     => $data,
+        ]);
     }
 
-    // --- CASO PUT: Marcar como leída (SIMULADO "A PELO") ---
+    // PUT — marcar notificación/es como leídas
     elseif ($metodo === 'PUT') {
-        $data = json_decode(file_get_contents("php://input"), true);
+        $body = json_decode(file_get_contents('php://input'), true);
 
-        if (!isset($data['notificacion_id'])) {
+        // Marcar TODAS las no leídas del usuario de una vez
+        if (!empty($body['marcar_todas'])) {
+            $db   = Database::getInstance()->getConnection();
+            $stmt = $db->prepare(
+                "UPDATE notificaciones SET leida = 1 WHERE usuario_id = :uid AND leida = 0"
+            );
+            $stmt->execute(['uid' => $usuarioId]);
+
+            ResponseHelper::jsonResponse([
+                'status'  => 'success',
+                'message' => 'Todas las notificaciones marcadas como leídas',
+            ]);
+        }
+
+        // Marcar UNA notificación concreta
+        if (empty($body['notificacion_id'])) {
             ResponseHelper::error("Falta el parámetro 'notificacion_id'", 400);
         }
 
-        $id = $data['notificacion_id'];
+        $notif = Notificacion::findById((int)$body['notificacion_id']);
+
+        if (!$notif) {
+            ResponseHelper::error('Notificación no encontrada', 404);
+        }
+
+        // Verificar que la notificación pertenece al usuario autenticado
+        if ($notif->getUsuarioId() !== $usuarioId) {
+            ResponseHelper::error('Sin permiso para esta notificación', 403);
+        }
+
+        $notif->marcarLeida();
 
         ResponseHelper::jsonResponse([
-            'status' => 'success',
-            'message' => "Simulación: La notificación $id ha sido marcada como leída correctamente."
-        ], 200);
-    }
-    
-    else {
-        ResponseHelper::error("Método no permitido. Usa GET o PUT.", 405);
+            'status'  => 'success',
+            'message' => 'Notificación marcada como leída',
+        ]);
     }
 
+    else {
+        ResponseHelper::error('Método no permitido', 405);
+    }
+
+} catch (\PDOException $e) {
+    ResponseHelper::error('Error de base de datos: ' . $e->getMessage(), 500);
 } catch (\Exception $e) {
-    ResponseHelper::error("Error del servidor: " . $e->getMessage(), 500);
+    ResponseHelper::error('Error del servidor: ' . $e->getMessage(), 500);
 }

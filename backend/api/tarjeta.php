@@ -65,15 +65,35 @@ try {
         if (!in_array($nuevo_estado, ['activa', 'bloqueada', 'cancelada'])) ResponseHelper::error("Estado inválido", 400);
 
         $stmt = $pdo->prepare("
-            SELECT t.id FROM tarjetas t
+            SELECT t.id, t.numero FROM tarjetas t
             JOIN cuentas c ON t.cuenta_id = c.id
             WHERE t.id = :tarjeta_id AND c.usuario_id = :usuario_id
         ");
         $stmt->execute(['tarjeta_id' => $tarjeta_id, 'usuario_id' => $usuario_id]);
-        if (!$stmt->fetch()) ResponseHelper::error("Tarjeta no encontrada", 404);
+        $tarjeta = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!$tarjeta) ResponseHelper::error("Tarjeta no encontrada", 404);
 
         $stmt = $pdo->prepare("UPDATE tarjetas SET estado = :estado WHERE id = :id");
         $stmt->execute(['estado' => $nuevo_estado, 'id' => $tarjeta_id]);
+
+        // Notificación al usuario según el nuevo estado
+        try {
+            $ultimos4 = substr($tarjeta['numero'], -4);
+            $mensajes = [
+                'activa'    => "Tu tarjeta terminada en {$ultimos4} ha sido activada.",
+                'bloqueada' => "Tu tarjeta terminada en {$ultimos4} ha sido bloqueada por seguridad.",
+                'cancelada' => "Tu tarjeta terminada en {$ultimos4} ha sido cancelada.",
+            ];
+            $nStmt = $pdo->prepare(
+                "INSERT INTO notificaciones (usuario_id, mensaje) VALUES (:uid, :msg)"
+            );
+            $nStmt->execute([
+                ':uid' => $usuario_id,
+                ':msg' => $mensajes[$nuevo_estado] ?? "Estado de tarjeta actualizado.",
+            ]);
+        } catch (\Exception $e) {
+            // No interrumpir si falla la notificación
+        }
 
         ResponseHelper::jsonResponse(['status' => 'success', 'message' => 'Estado actualizado', 'estado' => $nuevo_estado]);
     }

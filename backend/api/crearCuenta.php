@@ -77,6 +77,20 @@ try {
     $stmt2->execute([':id' => $cuentaId]);
     $cuenta = $stmt2->fetch(PDO::FETCH_ASSOC);
 
+    // 8. Notificación al usuario
+    try {
+        $tipoTexto = $tipo === 'ahorros' ? 'de ahorros' : 'corriente';
+        $nStmt = $pdo->prepare(
+            "INSERT INTO notificaciones (usuario_id, mensaje) VALUES (:uid, :msg)"
+        );
+        $nStmt->execute([
+            ':uid' => $usuarioId,
+            ':msg' => "¡Tu nueva cuenta {$tipoTexto} ha sido creada! IBAN: {$numeroCuenta}",
+        ]);
+    } catch (\Exception $e) {
+        // No interrumpir la creación si falla la notificación
+    }
+
     ResponseHelper::jsonResponse([
         'status' => 'success',
         'cuenta' => [

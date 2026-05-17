@@ -86,7 +86,8 @@ class Notificacion extends Model
     public function marcarLeida(): bool
     {
         if ($this->leida) return true;
-        $stmt = $this->db->prepare("UPDATE notificaciones SET leida = 1 WHERE id = :id");
+        $db     = Database::getInstance()->getConnection();
+        $stmt   = $db->prepare("UPDATE notificaciones SET leida = 1 WHERE id = :id");
         $result = $stmt->execute(['id' => $this->id]);
         if ($result) {
             $this->leida = true;
