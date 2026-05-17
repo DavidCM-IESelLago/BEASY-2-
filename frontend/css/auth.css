@@ -1,0 +1,259 @@
+/* ═══════════════════════════════════════════════
+   auth.css — Estilos de páginas de autenticación
+   Cubre: inicio_sesion.html, registro.html
+   ═══════════════════════════════════════════════ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background-color: #f4f7f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* ─── Tarjeta principal ─────────────────────────── */
+.auth-card {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+}
+
+/* ─── Logo ─────────────────────────────────────── */
+.auth-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 30px;
+    color: #0056b3;
+    font-weight: 700;
+    font-size: 22px;
+}
+
+/* ─── Tipografía ───────────────────────────────── */
+h1 {
+    font-size: 24px;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+}
+
+.auth-subtitle {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 30px;
+}
+
+/* ─── Formulario ───────────────────────────────── */
+.form-group {
+    text-align: left;
+    margin-bottom: 16px;
+}
+
+label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #333;
+}
+
+input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #333;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+input:focus { border-color: #0056b3; }
+
+/* Password wrapper */
+.password-wrapper { position: relative; }
+
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    opacity: 0.5;
+}
+
+/* Teléfono */
+.phone-input {
+    display: flex;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.phone-input .prefix {
+    background: #f3f4f6;
+    padding: 12px;
+    border-right: 1px solid #d1d5db;
+    font-size: 14px;
+    color: #4b5563;
+}
+
+.phone-input input { border: none; }
+
+/* ─── Botones ──────────────────────────────────── */
+.btn-auth {
+    width: 100%;
+    background-color: #005cbd;
+    color: white;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.3s;
+}
+
+.btn-auth:hover { background-color: #004a99; }
+
+.btn-primary {
+    width: 100%;
+    background-color: #8db5e2;
+    color: white;
+    padding: 14px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: not-allowed;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:not(:disabled) {
+    background-color: #005cbd;
+    cursor: pointer;
+}
+
+/* ─── Links ────────────────────────────────────── */
+.forgot-password {
+    display: block;
+    text-align: right;
+    font-size: 12px;
+    color: #0056b3;
+    text-decoration: none;
+    margin-top: -5px;
+    margin-bottom: 25px;
+    font-weight: 600;
+}
+
+.auth-footer {
+    margin-top: 30px;
+    font-size: 13px;
+    color: #444;
+}
+
+.auth-footer a {
+    color: #0056b3;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* ─── Registro: cabecera de pasos ──────────────── */
+.auth-step-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.btn-back {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #6b7280;
+    cursor: pointer;
+    display: none;
+}
+
+.auth-step-counter {
+    font-size: 11px;
+    font-weight: 700;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ─── Pasos del formulario ─────────────────────── */
+.auth-step         { display: none; }
+.auth-step.active  { display: block; }
+
+.field-hint {
+    font-size: 11px;
+    color: #9ca3af;
+    margin-top: 4px;
+    display: block;
+}
+
+/* ─── Resumen (paso 3) ─────────────────────────── */
+.review-box {
+    background: #f9fafb;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    text-align: left;
+}
+
+.review-box h3 { font-size: 16px; margin-bottom: 15px; }
+
+.review-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #edf2f7;
+    padding-bottom: 8px;
+}
+
+.text-primary { color: #005cbd; font-weight: 600; }
+
+.form-check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    font-size: 13px;
+    text-align: left;
+}
+
+.form-check input { width: auto; cursor: pointer; }
+.form-check a { color: #005cbd; text-decoration: none; font-weight: 600; }
+
+/* ─── Pantalla de éxito ────────────────────────── */
+#success-screen {
+    display: none;
+    padding: 20px 0;
+}
+
+.success-icon-lg {
+    font-size: 64px;
+    color: #10b981;
+    margin-bottom: 20px;
+    display: inline-block;
+    background: #ecfdf5;
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+    border-radius: 50%;
+}

@@ -7,151 +7,23 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
-
-    <style>
-        /* --- VARIABLES Y RESET (Manteniendo tus avances) --- */
-        :root {
-            --primary: #005bbf;
-            --primary-container: #1a73e8;
-            --on-primary-fixed-variant: #004493;
-            --secondary-fixed: #d9e2ff;
-            --on-secondary-fixed: #001945;
-            --secondary-fixed-dim: #b0c6ff;
-            --tertiary: #006d2c;
-            --tertiary-fixed: #89fa9b;
-            --on-tertiary-fixed: #002108;
-            --tertiary-fixed-dim: #6ddd81;
-            --tertiary-container: #008939;
-            --background: #f8f9fa;
-            --surface: #f8f9fa;
-            --surface-bright: #f8f9fa;
-            --surface-container-lowest: #ffffff;
-            --surface-container-low: #f3f4f5;
-            --surface-container: #edeeef;
-            --surface-container-high: #e7e8e9;
-            --on-surface: #191c1d;
-            --on-surface-variant: #414754;
-            --outline: #727785;
-            --outline-variant: #c1c6d6;
-            --error: #ba1a1a;
-            --borde: #e1e3e4;
-            --shadow: 0px 4px 20px rgba(0,0,0,0.04);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--background);
-            color: var(--on-surface);
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-        .fill { font-variation-settings: 'FILL' 1; }
-
-        /* --- SIDEBAR --- */
-        .sidebar {
-            width: 280px;
-            background: var(--surface-container-lowest);
-            border-right: 1px solid var(--borde);
-            display: flex;
-            flex-direction: column;
-            padding: 24px 0;
-            flex-shrink: 0;
-            z-index: 20;
-        }
-
-        .logo-box { padding: 0 24px; margin-bottom: 32px; display: flex; align-items: center; gap: 12px; }
-        .logo-icon { background: var(--primary-container); color: white; padding: 8px; border-radius: 8px; display: flex; }
-        .logo-text { font-size: 18px; font-weight: 700; color: var(--primary); }
-
-        .nav-lista { flex: 1; display: flex; flex-direction: column; gap: 4px; padding: 0 12px; }
-        .nav-link { display: flex; align-items: center; gap: 12px; padding: 12px 16px; text-decoration: none; color: var(--on-surface-variant); font-size: 14px; font-weight: 500; border-radius: 8px; transition: 0.2s; }
-        .nav-link:hover { background: var(--surface-container-low); color: var(--on-surface); }
-        .nav-link.activo { background: var(--secondary-fixed); color: var(--primary); font-weight: 600; border-left: 4px solid var(--primary); border-top-left-radius: 0; border-bottom-left-radius: 0; }
-
-        /* --- MAIN LAYOUT Y HEADER --- */
-        .main-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-        .header { height: 72px; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(20px); border-bottom: 1px solid var(--borde); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; flex-shrink: 0; z-index: 10; }
-        .header-title { font-weight: 600; }
-        .header-actions { display: flex; align-items: center; gap: 16px; }
-
-        .notif-btn { background: none; border: none; cursor: pointer; position: relative; padding: 8px; color: var(--on-surface-variant); }
-        .notif-punto { position: absolute; top: 10px; right: 10px; width: 8px; height: 8px; background: var(--error); border-radius: 50%; }
-
-        .perfil-btn { display: flex; align-items: center; gap: 8px; padding: 4px 12px; border-radius: 50px; cursor: pointer; transition: 0.2s; }
-        .perfil-btn:hover { background: var(--surface-container-low); }
-        .perfil-img { width: 32px; border-radius: 50%; }
-        .perfil-name { font-size: 14px; font-weight: 500; }
-
-        /* --- CONTENIDO Y GRID --- */
-        .content { flex: 1; padding: 32px; overflow-y: auto; }
-        .container-inner { max-width: 1440px; margin: 0 auto; }
-        .seccion-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px; }
-        .seccion-titulo { font-size: 24px; font-weight: 600; margin-bottom: 4px; }
-        .seccion-subtitulo { color: var(--on-surface-variant); }
-
-        .grid-layout { display: grid; grid-template-columns: repeat(12, 1fr); gap: 24px; margin-bottom: 32px; }
-        .card { background: var(--surface-container-lowest); border-radius: 16px; border: 1px solid var(--outline-variant); box-shadow: var(--shadow); padding: 24px; display: flex; flex-direction: column; }
-        .col-4 { grid-column: span 4; }
-        .col-8 { grid-column: span 8; }
-
-        /* --- GRÁFICO DONUT --- */
-        .card-titulo { font-size: 18px; font-weight: 600; margin-bottom: 24px; }
-        .chart-container { position: relative; flex: 1; display: flex; align-items: center; justify-content: center; min-height: 200px; }
-        .chart-svg { width: 192px; height: 192px; transform: rotate(-90deg); }
-        .chart-circle { transition: all 0.5s ease-in-out; cursor: pointer; }
-        .chart-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; }
-        .chart-total-val { font-size: 24px; font-weight: 700; }
-
-        /* --- TABLA DE TRANSACCIONES --- */
-        .table-container { overflow-x: auto; border: 1px solid var(--outline-variant); border-radius: 16px; background: var(--surface-container-lowest); display: flex; flex-direction: column; }
-        .table-header { padding: 24px; border-bottom: 1px solid var(--outline-variant); display: flex; justify-content: space-between; align-items: center; background: var(--surface-bright); }
-        table { width: 100%; border-collapse: collapse; text-align: left; }
-        th { padding: 12px 24px; font-size: 12px; text-transform: uppercase; color: var(--on-surface-variant); background: rgba(243, 244, 245, 0.5); border-bottom: 1px solid var(--outline-variant); }
-        td { padding: 16px 24px; border-bottom: 1px solid var(--outline-variant); vertical-align: middle; }
-        tr:hover { background: var(--surface-bright); transition: 0.2s; }
-
-        .tx-grupo { display: flex; align-items: center; gap: 12px; }
-        .tx-icono { width: 40px; height: 40px; border-radius: 50%; background: var(--surface-container); display: flex; align-items: center; justify-content: center; color: var(--outline); }
-        .tx-nombre { font-weight: 500; }
-        .tx-metodo { font-size: 12px; color: var(--outline); text-transform: uppercase; }
-        .tx-importe { text-align: right; font-weight: 500; }
-
-        /* ── CAMBIO 1: clases de importe positivo (verde) y negativo (rojo) ── */
-        .tx-positivo { color: var(--tertiary-container); font-weight: 600; }
-        .tx-negativo { color: var(--error);              font-weight: 600; }
-
-        /* --- NUEVAS CLASES PARA BADGES (Sincronizadas con DB) --- */
-        .badge { display: inline-flex; align-items: center; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; text-transform: capitalize; }
-        .badge-ingreso { background: #e6f4ea; color: #006d2c; }
-        .badge-compra { background: #f3f4f5; color: #191c1d; }
-        .badge-transferencia { background: #d9e2ff; color: #001945; }
-        .badge-bizum { background: #d1fae5; color: #059669; }
-
-        .btn-text { background: none; border: none; color: var(--primary-container); font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: 0.2s; }
-
-        /* --- MODAL --- */
-        .modal-fondo { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 100; }
-        .modal-caja { background: white; width: 450px; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-    </style>
+    <link rel="stylesheet" href="css/app.css" />
 </head>
 
 <body>
 
     <aside class="sidebar">
         <div class="logo-box">
-            <div class="logo-icon"><span class="material-symbols-outlined fill">account_balance</span></div>
+            <div class="logo-icon">
+                <span class="material-symbols-outlined icon-fill">account_balance</span>
+            </div>
             <h1 class="logo-text">Beasy</h1>
         </div>
         <nav class="nav-lista">
             <a href="dashboard.html" class="nav-link"><span class="material-symbols-outlined">dashboard</span> Dashboard</a>
             <a href="cuentas.html" class="nav-link"><span class="material-symbols-outlined">account_balance</span> Cuentas</a>
             <a href="misTarjetas.html" class="nav-link"><span class="material-symbols-outlined">credit_card</span> Tarjetas</a>
-            <a href="movimientos.html" class="nav-link activo"><span class="material-symbols-outlined fill">payments</span> Movimientos</a>
+            <a href="movimientos.html" class="nav-link activo"><span class="material-symbols-outlined icon-fill">payments</span> Movimientos</a>
             <a href="seguridad.html" class="nav-link"><span class="material-symbols-outlined">verified_user</span> Seguridad</a>
         </nav>
     </aside>
@@ -160,9 +32,9 @@
         <header class="header">
             <div class="header-title">Resumen de Movimientos</div>
             <div class="header-actions">
-                <button id="btn-notificaciones" onclick="toggleNotificaciones(true)" style="background:none;border:none;cursor:pointer;position:relative;padding:8px;">
-                    <span class="material-symbols-outlined" style="color:#414754;">notifications</span>
-                    <span id="badge-notificaciones" style="position:absolute;top:4px;right:4px;min-width:16px;height:16px;background:#ba1a1a;border-radius:99px;font-size:10px;font-weight:700;color:white;display:none;align-items:center;justify-content:center;padding:0 3px;">0</span>
+                <button id="btn-notificaciones" class="notif-btn" onclick="toggleNotificaciones(true)">
+                    <span class="material-symbols-outlined">notifications</span>
+                    <span id="badge-notificaciones" class="notif-badge">0</span>
                 </button>
                 <div class="perfil-btn" onclick="toggleModal(true)">
                     <img id="header-avatar" src="https://ui-avatars.com/api/?name=...&background=005bbf&color=fff" class="perfil-img">
@@ -173,32 +45,34 @@
         </header>
 
         <main class="content">
-            <div class="container-inner">
-                <div class="seccion-header">
+            <div class="page-inner" style="max-width:1440px;">
+                <div class="section-header">
                     <div>
-                        <h2 class="seccion-titulo">Movimientos</h2>
-                        <p class="seccion-subtitulo">Analiza tu actividad financiera reciente en tiempo real.</p>
+                        <h2 class="section-title">Movimientos</h2>
+                        <p class="section-subtitle">Analiza tu actividad financiera reciente en tiempo real.</p>
                     </div>
                 </div>
 
-                <div class="grid-layout">
+                <div class="app-grid" style="margin-bottom:32px;">
                     <div class="col-4">
                         <div class="card">
-                            <h3 class="card-titulo">Gastos del Mes</h3>
+                            <h3 class="card-title">Gastos del Mes</h3>
                             <div class="chart-container">
-                                <svg class="chart-svg" viewbox="0 0 100 100">
+                                <svg class="chart-svg" viewBox="0 0 100 100">
                                     <circle cx="50" cy="50" fill="transparent" r="40" stroke="#f3f4f5" stroke-width="14"></circle>
                                     <circle class="chart-circle" cx="50" cy="50" fill="transparent" r="40" stroke="#1a73e8" stroke-dasharray="251.2" stroke-dashoffset="138.16" stroke-width="14"></circle>
                                 </svg>
-                                <div class="chart-overlay"><span class="chart-total-val" id="total-gastos">...</span></div>
+                                <div class="chart-overlay">
+                                    <span class="chart-total-val" id="total-gastos">...</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="col-8">
-                        <div class="table-container">
-                            <div class="table-header">
-                                <h3 class="card-titulo" style="margin: 0;">Actividad Reciente</h3>
+                        <div class="table-wrap">
+                            <div class="table-head">
+                                <h3 class="card-title" style="margin:0;">Actividad Reciente</h3>
                             </div>
                             <table>
                                 <thead>
@@ -206,13 +80,12 @@
                                         <th>Concepto</th>
                                         <th>Categoría</th>
                                         <th>Fecha</th>
-                                        <th style="text-align: right;">Importe</th>
+                                        <th style="text-align:right;">Importe</th>
                                     </tr>
                                 </thead>
-                                <tbody id="contenedor-transacciones">
-                                    </tbody>
+                                <tbody id="contenedor-transacciones"></tbody>
                             </table>
-                            <div class="table-footer">
+                            <div style="padding:16px 24px; border-top:1px solid var(--border-light);">
                                 <button id="btn-ver-mas" class="btn-text" style="margin:0 auto;">Cargando movimientos...</button>
                             </div>
                         </div>
@@ -222,244 +95,200 @@
         </main>
     </div>
 
-<script src="js/api.js"></script>
-<script>
-    const LIMITE = 3;
-    let paginaActual = 1;
+    <!-- Modal usuario -->
+    <div id="modalUser" class="user-modal">
+        <div class="user-modal-box">
+            <div class="user-modal-header">
+                <h3 style="font-weight:700;">Detalles de cuenta</h3>
+                <span class="material-symbols-outlined" style="cursor:pointer; color:var(--text-muted);" onclick="toggleModal(false)">close</span>
+            </div>
+            <div class="user-modal-body">
+                <div style="display:flex; gap:16px; align-items:center; margin-bottom:24px;">
+                    <img id="modal-avatar" src="https://ui-avatars.com/api/?name=...&background=005bbf&color=fff" style="width:50px; height:50px; border-radius:50%;">
+                    <div><p id="modal-nombre" style="font-weight:700; font-size:16px;">...</p></div>
+                </div>
+                <div style="font-size:14px; color:var(--text-muted); display:grid; gap:12px;">
+                    <p><strong>Email:</strong> <span id="modal-email">...</span></p>
+                    <p><strong>ID:</strong> <span id="modal-id">...</span></p>
+                </div>
+                <button onclick="cerrarSesion()" style="color:var(--error); border:1px solid var(--error); width:100%; margin-top:20px; display:flex; align-items:center; justify-content:center; gap:8px; padding:10px 20px; border-radius:8px; font-size:14px; font-weight:500; cursor:pointer; background:white; font-family:inherit;">
+                    <span class="material-symbols-outlined">logout</span> Cerrar Sesión
+                </button>
+            </div>
+            <div class="user-modal-footer">
+                <button onclick="toggleModal(false)" style="padding:8px 20px; background:var(--primary-light); color:white; border:none; border-radius:8px; font-weight:600; cursor:pointer; font-family:inherit;">Cerrar</button>
+            </div>
+        </div>
+    </div>
 
-    /* ── DONUT: carga todos los movimientos del mes actual ───────── */
-    async function cargarDatosMes() {
-        const data = await apiFetch('movimientos.php?page=1&limit=1000');
-        if (!data || data.status !== 'success') return;
+    <!-- Panel notificaciones -->
+    <div id="notifPanel" class="notif-panel">
+        <div class="notif-panel-header">
+            <h3 style="font-weight:700; font-size:16px;">Notificaciones</h3>
+            <span class="material-symbols-outlined" style="cursor:pointer; color:var(--text-muted);" onclick="toggleNotificaciones(false)">close</span>
+        </div>
+        <div id="lista-notificaciones" class="notif-panel-body"></div>
+    </div>
 
-        const ahora  = new Date();
-        const delMes = data.movimientos.filter(m => {
-            const f = new Date(m.fecha);
-            return f.getMonth()    === ahora.getMonth() &&
-                   f.getFullYear() === ahora.getFullYear();
-        });
+    <script src="js/api.js"></script>
+    <script>
+        const LIMITE = 3;
+        let paginaActual = 1;
 
-        actualizarGrafico(delMes);
-    }
-
-    /* ── TABLA: paginación de 3 en 3 ────────────────────────────── */
-    async function cargarPagina(pagina) {
-        const tbody = document.getElementById('contenedor-transacciones');
-        const boton = document.getElementById('btn-ver-mas');
-
-        boton.innerText = 'Cargando...';
-        boton.disabled  = true;
-
-        const data = await apiFetch(`movimientos.php?page=${pagina}&limit=${LIMITE}`);
-
-        if (!data) {
-            if (pagina === 1) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:40px;">No se pudo conectar con el servidor</td></tr>';
-            }
-            boton.innerText = 'Reintentar';
-            boton.disabled  = false;
-            return;
+        async function cargarDatosMes() {
+            const data = await apiFetch('movimientos.php?page=1&limit=1000');
+            if (!data || data.status !== 'success') return;
+            const ahora  = new Date();
+            const delMes = data.movimientos.filter(m => {
+                const f = new Date(m.fecha);
+                return f.getMonth() === ahora.getMonth() && f.getFullYear() === ahora.getFullYear();
+            });
+            actualizarGrafico(delMes);
         }
 
-        if (data.status === 'success') {
-            const nuevos = data.movimientos;
-
-            if (pagina === 1 && nuevos.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:40px;color:var(--on-surface-variant);">Sin movimientos registrados</td></tr>';
-                boton.style.display = 'none';
+        async function cargarPagina(pagina) {
+            const tbody = document.getElementById('contenedor-transacciones');
+            const boton = document.getElementById('btn-ver-mas');
+            boton.innerText = 'Cargando...';
+            boton.disabled  = true;
+            const data = await apiFetch(`movimientos.php?page=${pagina}&limit=${LIMITE}`);
+            if (!data) {
+                if (pagina === 1) tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:40px;">No se pudo conectar con el servidor</td></tr>';
+                boton.innerText = 'Reintentar';
+                boton.disabled  = false;
                 return;
             }
-
-            pintarMovimientos(nuevos);
-
-            if (nuevos.length < LIMITE) {
-                boton.innerText    = 'No hay más transacciones';
-                boton.disabled     = true;
-                boton.style.cursor = 'default';
+            if (data.status === 'success') {
+                const nuevos = data.movimientos;
+                if (pagina === 1 && nuevos.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:40px;color:var(--text-muted);">Sin movimientos registrados</td></tr>';
+                    boton.style.display = 'none';
+                    return;
+                }
+                pintarMovimientos(nuevos);
+                if (nuevos.length < LIMITE) {
+                    boton.innerText    = 'No hay más transacciones';
+                    boton.disabled     = true;
+                    boton.style.cursor = 'default';
+                } else {
+                    boton.innerText = 'Cargar más';
+                    boton.disabled  = false;
+                }
             } else {
-                boton.innerText = 'Cargar más';
+                boton.innerText = 'Reintentar';
                 boton.disabled  = false;
             }
-        } else {
-            boton.innerText = 'Reintentar';
-            boton.disabled  = false;
-        }
-    }
-
-    /* ── DONUT CHART ─────────────────────────────────────────────── */
-    function actualizarGrafico(movimientos) {
-        const CIRCUNFERENCIA = 251.2;
-
-        const gastos      = movimientos.filter(m => m.cantidad < 0);
-        const totalGastos = gastos.reduce((sum, m) => sum + Math.abs(m.cantidad), 0);
-
-        document.getElementById('total-gastos').textContent =
-            totalGastos > 0 ? totalGastos.toFixed(2) + '€' : '0.00€';
-
-        const porTipo = {};
-        gastos.forEach(m => {
-            porTipo[m.tipo] = (porTipo[m.tipo] || 0) + Math.abs(m.cantidad);
-        });
-
-        const COLORES = {
-            compra:        '#1a73e8',
-            transferencia: '#005bbf',
-            bizum:         '#006d2c',
-            ingreso:       '#89fa9b'
-        };
-
-        const svg = document.querySelector('.chart-svg');
-        svg.querySelectorAll('.chart-circle').forEach(c => c.remove());
-
-        if (totalGastos === 0) {
-            svg.appendChild(crearArco('#c1c6d6', CIRCUNFERENCIA, 0, CIRCUNFERENCIA));
-            return;
         }
 
-        let acumulado = 0;
-        Object.entries(porTipo).forEach(([tipo, importe]) => {
-            const longitud = (importe / totalGastos) * CIRCUNFERENCIA;
-            const offset   = CIRCUNFERENCIA - acumulado;
-            svg.appendChild(crearArco(COLORES[tipo] || '#c1c6d6', longitud, CIRCUNFERENCIA - longitud, offset));
-            acumulado += longitud;
-        });
-
-        let leyenda = document.getElementById('leyenda-grafico');
-        if (!leyenda) {
-            leyenda = document.createElement('div');
-            leyenda.id = 'leyenda-grafico';
-            leyenda.style.cssText = 'display:flex;flex-direction:column;gap:8px;margin-top:16px;';
-            document.querySelector('.chart-container').closest('.card').appendChild(leyenda);
+        function actualizarGrafico(movimientos) {
+            const CIRCUNFERENCIA = 251.2;
+            const gastos      = movimientos.filter(m => m.cantidad < 0);
+            const totalGastos = gastos.reduce((sum, m) => sum + Math.abs(m.cantidad), 0);
+            document.getElementById('total-gastos').textContent = totalGastos > 0 ? totalGastos.toFixed(2) + '€' : '0.00€';
+            const porTipo = {};
+            gastos.forEach(m => { porTipo[m.tipo] = (porTipo[m.tipo] || 0) + Math.abs(m.cantidad); });
+            const COLORES = { compra:'#1a73e8', transferencia:'#005bbf', bizum:'#006d2c', ingreso:'#89fa9b' };
+            const svg = document.querySelector('.chart-svg');
+            svg.querySelectorAll('.chart-circle').forEach(c => c.remove());
+            if (totalGastos === 0) { svg.appendChild(crearArco('#c1c6d6', CIRCUNFERENCIA, 0, CIRCUNFERENCIA)); return; }
+            let acumulado = 0;
+            Object.entries(porTipo).forEach(([tipo, importe]) => {
+                const longitud = (importe / totalGastos) * CIRCUNFERENCIA;
+                const offset   = CIRCUNFERENCIA - acumulado;
+                svg.appendChild(crearArco(COLORES[tipo] || '#c1c6d6', longitud, CIRCUNFERENCIA - longitud, offset));
+                acumulado += longitud;
+            });
+            let leyenda = document.getElementById('leyenda-grafico');
+            if (!leyenda) {
+                leyenda = document.createElement('div');
+                leyenda.id = 'leyenda-grafico';
+                leyenda.style.cssText = 'display:flex;flex-direction:column;gap:8px;margin-top:16px;';
+                document.querySelector('.chart-container').closest('.card').appendChild(leyenda);
+            }
+            leyenda.innerHTML = '';
+            Object.entries(porTipo).forEach(([tipo, importe]) => {
+                const porcentaje = ((importe / totalGastos) * 100).toFixed(0);
+                const item = document.createElement('div');
+                item.style.cssText = 'display:flex;align-items:center;justify-content:space-between;font-size:13px;';
+                item.innerHTML = `
+                    <div style="display:flex;align-items:center;gap:8px;">
+                        <span style="width:10px;height:10px;border-radius:50%;background:${COLORES[tipo]||'#c1c6d6'};flex-shrink:0;"></span>
+                        <span style="text-transform:capitalize;color:var(--text-muted);">${tipo}</span>
+                    </div>
+                    <span style="font-weight:600;">${importe.toFixed(2)}€ <span style="font-weight:400;color:var(--text-muted);">(${porcentaje}%)</span></span>
+                `;
+                leyenda.appendChild(item);
+            });
         }
-        leyenda.innerHTML = '';
-        Object.entries(porTipo).forEach(([tipo, importe]) => {
-            const porcentaje = ((importe / totalGastos) * 100).toFixed(0);
-            const item = document.createElement('div');
-            item.style.cssText = 'display:flex;align-items:center;justify-content:space-between;font-size:13px;';
-            item.innerHTML = `
-                <div style="display:flex;align-items:center;gap:8px;">
-                    <span style="width:10px;height:10px;border-radius:50%;background:${COLORES[tipo] || '#c1c6d6'};flex-shrink:0;"></span>
-                    <span style="text-transform:capitalize;color:var(--on-surface-variant);">${tipo}</span>
-                </div>
-                <span style="font-weight:600;">${importe.toFixed(2)}€ <span style="font-weight:400;color:var(--on-surface-variant);">(${porcentaje}%)</span></span>
-            `;
-            leyenda.appendChild(item);
-        });
-    }
 
-    function crearArco(color, dasharray, dashGap, dashoffset) {
-        const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        c.setAttribute('class', 'chart-circle');
-        c.setAttribute('cx', '50');
-        c.setAttribute('cy', '50');
-        c.setAttribute('fill', 'transparent');
-        c.setAttribute('r', '40');
-        c.setAttribute('stroke', color);
-        c.setAttribute('stroke-width', '14');
-        c.setAttribute('stroke-dasharray', `${dasharray} ${dashGap}`);
-        c.setAttribute('stroke-dashoffset', dashoffset);
-        return c;
-    }
-    /* ── FIN DONUT CHART ─────────────────────────────────────────── */
+        function crearArco(color, dasharray, dashGap, dashoffset) {
+            const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            c.setAttribute('class', 'chart-circle');
+            c.setAttribute('cx', '50'); c.setAttribute('cy', '50');
+            c.setAttribute('fill', 'transparent'); c.setAttribute('r', '40');
+            c.setAttribute('stroke', color); c.setAttribute('stroke-width', '14');
+            c.setAttribute('stroke-dasharray', `${dasharray} ${dashGap}`);
+            c.setAttribute('stroke-dashoffset', dashoffset);
+            return c;
+        }
 
-    function pintarMovimientos(movimientos) {
-        const tbody = document.getElementById('contenedor-transacciones');
-        // No limpiamos: cada llamada AÑADE filas a las ya existentes
+        function pintarMovimientos(movimientos) {
+            const tbody = document.getElementById('contenedor-transacciones');
+            movimientos.forEach(mov => {
+                let icono = 'payments';
+                if (mov.tipo === 'compra')        icono = 'shopping_cart';
+                if (mov.tipo === 'bizum')         icono = 'send_money';
+                if (mov.tipo === 'transferencia') icono = 'swap_horiz';
+                if (mov.tipo === 'ingreso')       icono = 'savings';
+                const esPositivo  = mov.cantidad > 0;
+                const claseImporte = esPositivo ? 'amount-pos' : 'amount-neg';
+                const importe     = (esPositivo ? '+' : '') + mov.cantidad.toFixed(2) + '€';
+                const fila = `
+                    <tr>
+                        <td>
+                            <div class="tx-info">
+                                <div class="tx-icon"><span class="material-symbols-outlined">${icono}</span></div>
+                                <div><p class="tx-name">${mov.concepto}</p><p class="tx-method">${mov.tipo.toUpperCase()}</p></div>
+                            </div>
+                        </td>
+                        <td><span class="badge badge-${mov.tipo}">${mov.tipo}</span></td>
+                        <td>
+                            <p class="tx-date">${new Date(mov.fecha).toLocaleDateString('es-ES')}</p>
+                            <p class="tx-time">${new Date(mov.fecha).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</p>
+                        </td>
+                        <td class="tx-amount ${claseImporte}">${importe}</td>
+                    </tr>
+                `;
+                tbody.insertAdjacentHTML('beforeend', fila);
+            });
+        }
 
-        movimientos.forEach(mov => {
-            let icono = 'payments';
-            if (mov.tipo === 'compra')        icono = 'shopping_cart';
-            if (mov.tipo === 'bizum')         icono = 'send_money';
-            if (mov.tipo === 'transferencia') icono = 'swap_horiz';
-            if (mov.tipo === 'ingreso')       icono = 'savings';
+        function toggleModal(show) { document.getElementById('modalUser').style.display = show ? 'flex' : 'none'; }
+        function cerrarSesion() { localStorage.removeItem('jwt_token'); window.location.href = 'inicio_sesion.html'; }
 
-            const esPositivo  = mov.cantidad > 0;
-            const claseDinero = esPositivo ? 'tx-positivo' : 'tx-negativo';
-            const importe     = (esPositivo ? '+' : '') + mov.cantidad.toFixed(2) + '€';
+        async function cargarPerfil() {
+            const datos = await apiFetch('perfil.php');
+            if (!datos || datos.status !== 'success') return;
+            const nombreCompleto = datos.nombre + ' ' + datos.apellidos;
+            const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(datos.iniciales)}&background=005bbf&color=fff`;
+            document.getElementById('header-avatar').src = avatarUrl;
+            document.getElementById('header-nombre').textContent = datos.nombre + ' ' + datos.apellidos.split(' ')[0] + '.';
+            document.getElementById('modal-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(nombreCompleto)}&background=005bbf&color=fff`;
+            document.getElementById('modal-nombre').textContent = nombreCompleto;
+            document.getElementById('modal-email').textContent = datos.email;
+            document.getElementById('modal-id').textContent = '#' + String(datos.id).padStart(6, '0');
+        }
 
-            const fila = `
-                <tr>
-                    <td>
-                        <div class="tx-grupo">
-                            <div class="tx-icono"><span class="material-symbols-outlined">${icono}</span></div>
-                            <div><p class="tx-nombre">${mov.concepto}</p><p class="tx-metodo">${mov.tipo.toUpperCase()}</p></div>
-                        </div>
-                    </td>
-                    <td><span class="badge badge-${mov.tipo}">${mov.tipo}</span></td>
-                    <td>
-                        <p class="tx-fecha">${new Date(mov.fecha).toLocaleDateString('es-ES')}</p>
-                        <p class="tx-hora">${new Date(mov.fecha).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</p>
-                    </td>
-                    <td class="tx-importe ${claseDinero}">${importe}</td>
-                </tr>
-            `;
-            tbody.insertAdjacentHTML('beforeend', fila);
-        });
-    }
-
-    function toggleModal(show) { document.getElementById('modalUser').style.display = show ? 'flex' : 'none'; }
-    function cerrarSesion() {
-        localStorage.removeItem('jwt_token');
-        window.location.href = 'inicio_sesion.html';
-    }
-    async function cargarPerfil() {
-        const datos = await apiFetch('perfil.php');
-        if (!datos || datos.status !== 'success') return;
-        const nombreCompleto = datos.nombre + ' ' + datos.apellidos;
-        const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(datos.iniciales)}&background=005bbf&color=fff`;
-        document.getElementById('header-avatar').src = avatarUrl;
-        document.getElementById('header-nombre').textContent = datos.nombre + ' ' + datos.apellidos.split(' ')[0] + '.';
-        document.getElementById('modal-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(nombreCompleto)}&background=005bbf&color=fff`;
-        document.getElementById('modal-nombre').textContent = nombreCompleto;
-        document.getElementById('modal-email').textContent = datos.email;
-        document.getElementById('modal-id').textContent = '#' + String(datos.id).padStart(6, '0');
-    }
-    window.onload = function () {
-        cargarDatosMes();
-        cargarPagina(paginaActual);
-        cargarPerfil();
-        document.getElementById('btn-ver-mas').addEventListener('click', () => {
-            paginaActual++;
+        window.onload = function () {
+            cargarDatosMes();
             cargarPagina(paginaActual);
-        });
-    };
-</script>
-
-<div id="modalUser" style="position:fixed;inset:0;background:rgba(0,0,0,0.4);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:999;">
-    <div style="background:white;width:400px;border-radius:24px;overflow:hidden;">
-        <div style="padding:24px;border-bottom:1px solid #e1e3e4;display:flex;justify-content:space-between;align-items:center;">
-            <h3 style="font-weight:700;">Detalles de cuenta</h3>
-            <span class="material-symbols-outlined" style="cursor:pointer;color:#414754;" onclick="toggleModal(false)">close</span>
-        </div>
-        <div style="padding:24px;">
-            <div style="display:flex;gap:16px;align-items:center;margin-bottom:24px;">
-                <img id="modal-avatar" src="https://ui-avatars.com/api/?name=...&background=005bbf&color=fff" style="width:50px;height:50px;border-radius:50%;">
-                <div><p id="modal-nombre" style="font-weight:700;font-size:16px;">...</p></div>
-            </div>
-            <div style="font-size:14px;color:#414754;display:grid;gap:12px;">
-                <p><strong>Email:</strong> <span id="modal-email">...</span></p>
-                <p><strong>ID:</strong> <span id="modal-id">...</span></p>
-            </div>
-            <button onclick="cerrarSesion()" style="color:#ba1a1a;border:1px solid #ba1a1a;width:100%;margin-top:20px;display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;background:white;font-family:inherit;">
-                <span class="material-symbols-outlined">logout</span> Cerrar Sesión
-            </button>
-        </div>
-        <div style="padding:16px 24px;background:#f3f4f5;text-align:right;">
-            <button onclick="toggleModal(false)" style="padding:8px 20px;background:#1a73e8;color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-family:inherit;">Cerrar</button>
-        </div>
-    </div>
-</div>
-
-
-    <!-- Panel de notificaciones -->
-    <div id="notifPanel" style="position:fixed;top:0;right:0;height:100%;width:380px;max-width:100vw;background:white;z-index:500;transform:translateX(100%);transition:transform 0.3s ease;box-shadow:-4px 0 32px rgba(0,0,0,0.1);display:flex;flex-direction:column;">
-        <div style="padding:24px;border-bottom:1px solid #e1e3e4;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
-            <h3 style="font-weight:700;font-size:16px;">Notificaciones</h3>
-            <span class="material-symbols-outlined" style="cursor:pointer;color:#414754;" onclick="toggleNotificaciones(false)">close</span>
-        </div>
-        <div id="lista-notificaciones" style="flex:1;overflow-y:auto;"></div>
-    </div>
-
+            cargarPerfil();
+            document.getElementById('btn-ver-mas').addEventListener('click', () => {
+                paginaActual++;
+                cargarPagina(paginaActual);
+            });
+        };
+    </script>
     <script src="js/notificaciones.js"></script>
 </body>
 </html>

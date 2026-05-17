@@ -7,205 +7,7 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-
-    <style>
-        /* --- VARIABLES DE TEMA FINTECH PREMIUM --- */
-        :root {
-            --primary: #1a73e8;
-            --primary-light: #eff4ff;
-            --primary-dark: #005bbf;
-            --secondary: #2b5bb5;
-            --tertiary: #008939;
-            --tertiary-light: #e6f4ea;
-            --background: #f8f9fa;
-            --surface: #ffffff;
-            --on-surface: #191c1d;
-            --on-surface-variant: #6b7280;
-            --outline-variant: #e5e7eb;
-            --error: #ba1a1a;
-            --font-main: 'Inter', sans-serif;
-            --shadow-card: 0px 2px 8px rgba(0,0,0,0.04);
-            --shadow-hover: 0px 8px 24px rgba(26,115,232,0.08);
-            --shadow-modal: 0px 20px 60px rgba(0,0,0,0.15);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: var(--font-main); background-color: var(--background); color: var(--on-surface); display: flex; height: 100vh; overflow: hidden; }
-        a { text-decoration: none; }
-        button { font-family: inherit; cursor: pointer; border: none; background: none; }
-        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-        .icon-fill { font-variation-settings: 'FILL' 1; }
-
-        /* --- SIDEBAR (alineado con dashboard.html / movimientos.html) --- */
-        .sidebar { width: 280px; background: var(--surface); border-right: 1px solid var(--outline-variant); display: flex; flex-direction: column; padding: 24px 0; flex-shrink: 0; z-index: 20; }
-        .logo-box { padding: 0 24px; margin-bottom: 32px; display: flex; align-items: center; gap: 12px; }
-        .logo-icon { background: var(--primary); color: white; padding: 8px; border-radius: 8px; display: flex; }
-        .logo-text { font-size: 18px; font-weight: 700; color: var(--primary-dark); }
-        .nav-lista { flex: 1; display: flex; flex-direction: column; gap: 4px; padding: 0 12px; }
-        .nav-link { display: flex; align-items: center; gap: 12px; padding: 12px 16px; color: var(--on-surface-variant); font-size: 14px; font-weight: 500; border-radius: 8px; transition: 0.2s; }
-        .nav-link:hover { background: var(--background); color: var(--on-surface); }
-        .nav-link.activo { background: var(--primary-light); color: var(--primary); font-weight: 600; border-left: 4px solid var(--primary); border-top-left-radius: 0; border-bottom-left-radius: 0; }
-
-        /* --- MAIN AREA --- */
-        .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-        .top-header { height: 72px; background: rgba(255,255,255,0.8); backdrop-filter: blur(20px); border-bottom: 1px solid var(--outline-variant); display: flex; justify-content: space-between; align-items: center; padding: 0 32px; flex-shrink: 0; z-index: 10; }
-        .header-title { font-weight: 600; font-size: 15px; }
-        .header-actions { display: flex; align-items: center; gap: 16px; }
-        .notif-btn { background: none; border: none; cursor: pointer; position: relative; padding: 8px; color: var(--on-surface-variant); }
-        .notif-punto { position: absolute; top: 10px; right: 10px; width: 8px; height: 8px; background: var(--error); border-radius: 50%; }
-        .perfil-btn { display: flex; align-items: center; gap: 8px; padding: 4px 12px; border-radius: 50px; cursor: pointer; transition: 0.2s; }
-        .perfil-btn:hover { background: var(--background); }
-        .perfil-img { width: 32px; border-radius: 50%; }
-        .perfil-name { font-size: 14px; font-weight: 500; }
-
-        .page-container { flex: 1; padding: 32px; overflow-y: auto; }
-        .page-inner { max-width: 1200px; margin: 0 auto; }
-
-        /* --- CONTROL DE VISTAS SPA --- */
-        .view-section { display: none; animation: fadeIn 0.3s ease; }
-        .view-section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* --- VISTA 1: GRID DE CUENTAS --- */
-        .page-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px; }
-        .page-title { font-size: 28px; font-weight: 800; color: var(--on-surface); letter-spacing: -0.5px; margin-bottom: 4px; }
-        .page-subtitle { font-size: 14px; color: var(--on-surface-variant); }
-        .btn-open-acc { background: var(--primary); color: white; font-size: 14px; font-weight: 600; padding: 10px 20px; border-radius: 8px; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
-        .btn-open-acc:hover { background: var(--primary-dark); }
-
-        .accounts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
-        .account-card { background: var(--surface); border: 1px solid var(--outline-variant); border-radius: 16px; padding: 24px; box-shadow: var(--shadow-card); min-height: 180px; display: flex; flex-direction: column; justify-content: space-between; transition: 0.3s; cursor: pointer; }
-        .account-card:hover { box-shadow: var(--shadow-hover); border-color: rgba(26,115,232,0.3); transform: translateY(-2px); }
-        .card-header-flex { display: flex; justify-content: space-between; align-items: flex-start; }
-        .card-title { font-size: 16px; font-weight: 700; }
-        .card-acc-num { font-size: 12px; font-family: monospace; letter-spacing: 1px; color: var(--on-surface-variant); margin-top: 4px; }
-        .card-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
-        .card-icon .material-symbols-outlined { font-size: 20px; }
-        .icon-blue { background: var(--primary-light); color: var(--primary); }
-        .icon-green { background: var(--tertiary-light); color: var(--tertiary); }
-        .balance-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--on-surface-variant); margin-bottom: 2px; }
-        .balance-amount { font-size: 32px; font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: baseline; gap: 8px; }
-        .balance-trend { font-size: 12px; font-weight: 700; color: var(--tertiary); display: flex; align-items: center; }
-        .card-skeleton { background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 8px; height: 36px; }
-        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-        /* --- VISTA 2: FORMULARIO --- */
-        .form-wrapper { max-width: 760px; }
-        .stepper { display: flex; align-items: center; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--outline-variant); }
-        .step-item { display: flex; align-items: center; gap: 12px; }
-        .step-circle { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 13px; flex-shrink: 0; }
-        .step-active .step-circle { background: var(--primary); color: white; }
-        .step-active > span { font-weight: 700; color: var(--on-surface); font-size: 15px; }
-        .step-done .step-circle { background: var(--tertiary); color: white; }
-        .step-done > span { font-weight: 600; color: var(--on-surface-variant); font-size: 15px; }
-        .step-inactive { opacity: 0.45; }
-        .step-inactive .step-circle { border: 2px solid var(--outline-variant); color: var(--on-surface-variant); background: transparent; }
-        .step-inactive > span { font-weight: 500; color: var(--on-surface-variant); font-size: 15px; }
-        .step-line { flex: 1; height: 1px; background: var(--outline-variant); margin: 0 24px; }
-
-        .form-group { margin-bottom: 24px; }
-        .form-label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 8px; color: var(--on-surface); text-transform: uppercase; letter-spacing: 0.3px; }
-        .form-input, .form-select { width: 100%; padding: 12px 16px; border: 1px solid var(--outline-variant); border-radius: 8px; background: var(--surface); outline: none; font-size: 14px; font-family: inherit; transition: 0.2s; color: var(--on-surface); }
-        .form-input:focus, .form-select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
-
-        .bento-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        .bento-option { border: 1px solid var(--outline-variant); border-radius: 12px; padding: 20px 16px; cursor: pointer; background: var(--surface); transition: 0.2s; position: relative; }
-        .bento-option:hover { border-color: #aeb5c2; }
-        .bento-option input { position: absolute; opacity: 0; }
-        .bento-option:has(input:checked) { border: 2px solid var(--primary); background: var(--primary-light); }
-        .bento-icon-box { display: inline-flex; width: 40px; height: 40px; border-radius: 8px; align-items: center; justify-content: center; background: var(--background); color: var(--on-surface-variant); margin-bottom: 16px; }
-        .bento-option:has(input:checked) .bento-icon-box { background: rgba(26,115,232,0.15); color: var(--primary); }
-        .bento-title { font-weight: 700; font-size: 15px; margin-bottom: 4px; }
-        .bento-desc { font-size: 12px; color: var(--on-surface-variant); line-height: 1.4; }
-        .bento-check { display: none; position: absolute; top: 14px; right: 14px; color: var(--primary); font-size: 22px; }
-        .bento-option:has(input:checked) .bento-check { display: block; }
-
-        .input-money-wrapper { position: relative; display: flex; align-items: center; }
-        .input-money-wrapper span { position: absolute; left: 16px; color: var(--on-surface-variant); font-weight: 600; }
-        .input-money-wrapper input { padding-left: 36px; }
-
-        .huchas-box { background: var(--surface); border: 1px solid var(--outline-variant); border-radius: 12px; padding: 20px; display: flex; align-items: flex-start; gap: 16px; }
-        .huchas-icon { width: 40px; height: 40px; border-radius: 50%; background: #f3f4f6; color: #9ca3af; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .toggle-switch { position: relative; display: inline-block; width: 40px; height: 22px; flex-shrink: 0; }
-        .toggle-switch input { opacity: 0; width: 0; height: 0; }
-        .toggle-slider { position: absolute; cursor: pointer; inset: 0; background: var(--outline-variant); transition: .3s; border-radius: 22px; }
-        .toggle-slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 2px; bottom: 2px; background: white; transition: .3s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        .toggle-switch input:checked + .toggle-slider { background: var(--primary); }
-        .toggle-switch input:checked + .toggle-slider:before { transform: translateX(18px); }
-
-        .form-actions { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--outline-variant); padding-top: 24px; margin-top: 32px; }
-        .btn-cancel { padding: 10px 24px; font-weight: 600; font-size: 14px; color: var(--on-surface-variant); border-radius: 8px; transition: 0.2s; }
-        .btn-cancel:hover { background: #e5e7eb; }
-        .btn-primary { background: var(--primary); color: white; padding: 10px 24px; font-weight: 600; font-size: 14px; border-radius: 8px; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
-        .btn-primary:hover { background: var(--primary-dark); }
-
-        /* Paso 2 — resumen de cuenta seleccionada */
-        .resumen-box { background: var(--background); border: 1px solid var(--outline-variant); border-radius: 12px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
-        .resumen-tipo { display: flex; align-items: center; gap: 12px; }
-        .resumen-icon { width: 40px; height: 40px; border-radius: 8px; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; }
-        .resumen-nombre { font-weight: 700; font-size: 15px; }
-        .resumen-desc { font-size: 12px; color: var(--on-surface-variant); }
-        .btn-edit { font-size: 12px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; }
-
-        .checkbox-legal { display: flex; align-items: flex-start; gap: 12px; margin-top: 24px; }
-        .checkbox-legal input { width: 16px; height: 16px; margin-top: 2px; accent-color: var(--primary); flex-shrink: 0; }
-        .checkbox-legal label { font-size: 13px; color: var(--on-surface-variant); line-height: 1.5; }
-        .checkbox-legal a { color: var(--primary); font-weight: 600; }
-
-        /* --- VISTA 3: ÉXITO --- */
-        .success-wrapper { max-width: 500px; margin: 60px auto; text-align: center; }
-        .success-icon { width: 80px; height: 80px; background: var(--tertiary-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; }
-        .success-icon .material-symbols-outlined { font-size: 44px; color: var(--tertiary); }
-        .success-title { font-size: 28px; font-weight: 800; margin-bottom: 12px; }
-        .success-subtitle { color: var(--on-surface-variant); font-size: 15px; margin-bottom: 32px; line-height: 1.6; }
-        .success-details { background: var(--surface); border: 1px solid var(--outline-variant); border-radius: 16px; padding: 24px; margin-bottom: 28px; text-align: left; }
-        .success-details-header { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 15px; margin-bottom: 20px; color: var(--on-surface); }
-        .detail-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--outline-variant); }
-        .detail-row:last-child { border-bottom: none; }
-        .detail-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--on-surface-variant); margin-bottom: 2px; }
-        .detail-value { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 10px; }
-        .btn-copy { background: none; border: none; cursor: pointer; color: var(--on-surface-variant); padding: 4px; border-radius: 6px; transition: 0.2s; }
-        .btn-copy:hover { color: var(--primary); background: var(--primary-light); }
-        .btn-volver { width: 100%; background: var(--primary); color: white; padding: 14px; border-radius: 12px; font-weight: 700; font-size: 15px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
-        .btn-volver:hover { background: var(--primary-dark); }
-        .btn-pdf { background: none; color: var(--primary); font-size: 13px; font-weight: 600; margin-top: 16px; display: inline-block; }
-
-        /* --- MODAL DE DETALLE DE CUENTA --- */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
-        .modal-overlay.open { display: flex; }
-        .modal-box { background: var(--surface); border-radius: 24px; width: 100%; max-width: 480px; overflow: hidden; box-shadow: var(--shadow-modal); animation: modalIn 0.25s ease; }
-        @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-        .modal-header { padding: 20px 24px 0; display: flex; justify-content: space-between; align-items: center; }
-        .modal-header h3 { font-size: 18px; font-weight: 700; }
-        .modal-close { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--on-surface-variant); transition: 0.2s; }
-        .modal-close:hover { background: var(--background); }
-        .modal-acc-num { font-size: 12px; font-family: monospace; color: var(--on-surface-variant); letter-spacing: 1px; padding: 0 24px; margin-top: 2px; }
-        .modal-balance-box { margin: 16px 24px; background: var(--background); border-radius: 12px; padding: 16px 20px; }
-        .modal-balance-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--on-surface-variant); margin-bottom: 4px; }
-        .modal-balance-val { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
-        .modal-actions { display: flex; gap: 12px; padding: 0 24px; }
-        .modal-btn-primary { flex: 1; background: var(--primary); color: white; padding: 10px; border-radius: 8px; font-weight: 600; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 6px; transition: 0.2s; }
-        .modal-btn-primary:hover { background: var(--primary-dark); }
-        .modal-btn-secondary { flex: 1; background: var(--background); color: var(--on-surface); border: 1px solid var(--outline-variant); padding: 10px; border-radius: 8px; font-weight: 600; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 6px; transition: 0.2s; }
-        .modal-btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
-        .modal-btn-green { flex: 1; background: var(--tertiary-light); color: var(--tertiary); padding: 10px; border-radius: 8px; font-weight: 600; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 6px; transition: 0.2s; }
-        .modal-btn-green:hover { background: #c8ecd0; }
-        .modal-btn-red { flex: 1; background: #fde8e8; color: var(--error); padding: 10px; border-radius: 8px; font-weight: 600; font-size: 13px; display: flex; align-items: center; justify-content: center; gap: 6px; transition: 0.2s; }
-        .modal-btn-red:hover { background: #fbd0d0; }
-        .modal-section-title { padding: 16px 24px 8px; font-size: 13px; font-weight: 700; color: var(--on-surface-variant); text-transform: uppercase; letter-spacing: 0.5px; }
-        .modal-mov-list { padding: 0 16px 20px; display: flex; flex-direction: column; gap: 4px; }
-        .modal-mov-item { display: flex; align-items: center; gap: 12px; padding: 10px 8px; border-radius: 8px; }
-        .modal-mov-item:hover { background: var(--background); }
-        .modal-mov-icon { width: 36px; height: 36px; border-radius: 50%; background: var(--background); display: flex; align-items: center; justify-content: center; color: var(--on-surface-variant); flex-shrink: 0; }
-        .modal-mov-info { flex: 1; }
-        .modal-mov-name { font-size: 14px; font-weight: 500; }
-        .modal-mov-date { font-size: 12px; color: var(--on-surface-variant); }
-        .modal-mov-amount { font-size: 14px; font-weight: 700; }
-        .amount-pos { color: var(--tertiary); }
-        .amount-neg { color: var(--error); }
-        .modal-mov-empty { text-align: center; padding: 20px; color: var(--on-surface-variant); font-size: 13px; }
-    </style>
+    <link rel="stylesheet" href="css/app.css"/>
 </head>
 <body>
 
@@ -225,13 +27,13 @@
     </aside>
 
     <!-- MAIN -->
-    <div class="main-content">
-        <header class="top-header">
+    <div class="main-wrapper">
+        <header class="header">
             <div class="header-title">Gestión de Cuentas</div>
             <div class="header-actions">
-                <button id="btn-notificaciones" onclick="toggleNotificaciones(true)" style="background:none;border:none;cursor:pointer;position:relative;padding:8px;">
-                    <span class="material-symbols-outlined" style="color:#414754;">notifications</span>
-                    <span id="badge-notificaciones" style="position:absolute;top:4px;right:4px;min-width:16px;height:16px;background:#ba1a1a;border-radius:99px;font-size:10px;font-weight:700;color:white;display:none;align-items:center;justify-content:center;padding:0 3px;">0</span>
+                <button id="btn-notificaciones" class="notif-btn" onclick="toggleNotificaciones(true)">
+                    <span class="material-symbols-outlined">notifications</span>
+                    <span id="badge-notificaciones" class="notif-badge">0</span>
                 </button>
                 <div class="perfil-btn" onclick="toggleModal(true)">
                     <img id="header-avatar" src="https://ui-avatars.com/api/?name=...&background=005bbf&color=fff" class="perfil-img">
@@ -241,31 +43,30 @@
             </div>
         </header>
 
-        <div class="page-container">
+        <div class="content">
             <div class="page-inner">
 
                 <!-- VISTA 1: MIS CUENTAS -->
-                <section id="section-accounts" class="view-section active">
+                <section id="section-accounts" class="page-section active">
                     <div class="page-header">
                         <div>
                             <h2 class="page-title">Mis Cuentas</h2>
                             <p class="page-subtitle">Consulta tus saldos y gestiona tus cuentas.</p>
                         </div>
-                        <button id="btn-show-form" class="btn-open-acc">
+                        <button id="btn-show-form" class="btn-new-account">
                             <span class="material-symbols-outlined" style="font-size:18px;">add</span> Nueva Cuenta
                         </button>
                     </div>
                     <div class="accounts-grid" id="accounts-grid">
-                        <!-- Cards cargadas dinámicamente -->
                         <div class="account-card"><div class="card-skeleton" style="height:140px;"></div></div>
                         <div class="account-card"><div class="card-skeleton" style="height:140px;"></div></div>
                     </div>
                 </section>
 
                 <!-- VISTA 2A: FORMULARIO PASO 1 -->
-                <section id="section-form-step1" class="view-section">
+                <section id="section-form-step1" class="page-section">
                     <div class="form-wrapper">
-                        <h2 class="page-title" style="font-size:32px;margin-bottom:8px;">Crear Nueva Cuenta</h2>
+                        <h2 class="page-title" style="font-size:32px; margin-bottom:8px;">Crear Nueva Cuenta</h2>
                         <p class="page-subtitle" style="margin-bottom:32px;">Configura los detalles para empezar a gestionar tus fondos.</p>
 
                         <div class="stepper">
@@ -283,25 +84,25 @@
                         <form id="form-step1">
                             <div class="form-group">
                                 <label class="form-label">Tipo de Cuenta</label>
-                                <div class="bento-grid">
-                                    <label class="bento-option">
+                                <div class="type-grid">
+                                    <label class="type-option">
                                         <input type="radio" name="acc_type" value="corriente" checked>
-                                        <span class="material-symbols-outlined bento-check icon-fill">check_circle</span>
-                                        <div class="bento-icon-box"><span class="material-symbols-outlined">account_balance_wallet</span></div>
-                                        <div class="bento-title">Cuenta Corriente</div>
-                                        <div class="bento-desc">Para el día a día, sin comisiones de mantenimiento.</div>
+                                        <span class="material-symbols-outlined type-option-check icon-fill">check_circle</span>
+                                        <div class="type-option-icon"><span class="material-symbols-outlined">account_balance_wallet</span></div>
+                                        <div class="type-option-title">Cuenta Corriente</div>
+                                        <div class="type-option-desc">Para el día a día, sin comisiones de mantenimiento.</div>
                                     </label>
-                                    <label class="bento-option">
+                                    <label class="type-option">
                                         <input type="radio" name="acc_type" value="ahorros">
-                                        <span class="material-symbols-outlined bento-check icon-fill">check_circle</span>
-                                        <div class="bento-icon-box"><span class="material-symbols-outlined">savings</span></div>
-                                        <div class="bento-title">Hucha (Ahorro)</div>
-                                        <div class="bento-desc">Guarda dinero hacia una meta específica.</div>
+                                        <span class="material-symbols-outlined type-option-check icon-fill">check_circle</span>
+                                        <div class="type-option-icon"><span class="material-symbols-outlined">savings</span></div>
+                                        <div class="type-option-title">Hucha (Ahorro)</div>
+                                        <div class="type-option-desc">Guarda dinero hacia una meta específica.</div>
                                     </label>
                                 </div>
                             </div>
 
-                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px;">
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:24px;">
                                 <div>
                                     <label class="form-label">Nombre / Alias</label>
                                     <input id="input-alias" type="text" class="form-input" placeholder="ej. Fondo Vacaciones">
@@ -312,18 +113,18 @@
                                         <select class="form-select" style="appearance:none;">
                                             <option>Euro (€)</option>
                                         </select>
-                                        <span class="material-symbols-outlined" style="position:absolute;right:16px;top:12px;pointer-events:none;color:#6b7280;">expand_more</span>
+                                        <span class="material-symbols-outlined" style="position:absolute; right:16px; top:12px; pointer-events:none; color:var(--text-muted);">expand_more</span>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="form-label">Depósito Inicial</label>
-                                <div class="input-money-wrapper">
+                                <div class="input-money-wrap">
                                     <span>€</span>
                                     <input id="input-deposito" type="number" class="form-input" placeholder="0.00" min="0" step="0.01">
                                 </div>
-                                <p style="font-size:12px;color:var(--on-surface-variant);margin-top:8px;">Depósito mínimo requerido: €0.00</p>
+                                <p style="font-size:12px; color:var(--text-muted); margin-top:8px;">Depósito mínimo requerido: €0.00</p>
                             </div>
 
                             <div class="form-actions">
@@ -337,9 +138,9 @@
                 </section>
 
                 <!-- VISTA 2B: FORMULARIO PASO 2 -->
-                <section id="section-form-step2" class="view-section">
+                <section id="section-form-step2" class="page-section">
                     <div class="form-wrapper">
-                        <h2 class="page-title" style="font-size:32px;margin-bottom:8px;">Crear Nueva Cuenta</h2>
+                        <h2 class="page-title" style="font-size:32px; margin-bottom:8px;">Crear Nueva Cuenta</h2>
                         <p class="page-subtitle" style="margin-bottom:32px;">Configura los detalles para empezar a gestionar tus fondos.</p>
 
                         <div class="stepper">
@@ -347,7 +148,7 @@
                                 <div class="step-circle"><span class="material-symbols-outlined icon-fill" style="font-size:16px;">check</span></div>
                                 <span>Detalles</span>
                             </div>
-                            <div class="step-line" style="background:var(--primary);"></div>
+                            <div class="step-line" style="background:var(--primary-light);"></div>
                             <div class="step-item step-active">
                                 <div class="step-circle">2</div>
                                 <span>Financiación</span>
@@ -355,21 +156,21 @@
                         </div>
 
                         <!-- Resumen del paso 1 -->
-                        <div class="resumen-box">
-                            <div class="resumen-tipo">
-                                <div class="resumen-icon" id="resumen-icon">
+                        <div class="step-summary">
+                            <div class="step-summary-type">
+                                <div class="step-summary-icon" id="resumen-icon">
                                     <span class="material-symbols-outlined icon-fill">account_balance_wallet</span>
                                 </div>
                                 <div>
-                                    <div class="resumen-nombre" id="resumen-nombre">Cuenta Corriente</div>
-                                    <div class="resumen-desc" id="resumen-desc">Sin comisiones de mantenimiento</div>
+                                    <div class="step-summary-name" id="resumen-nombre">Cuenta Corriente</div>
+                                    <div class="step-summary-desc" id="resumen-desc">Sin comisiones de mantenimiento</div>
                                 </div>
                             </div>
-                            <button class="btn-edit" id="btn-back-step1">EDITAR</button>
+                            <button class="btn-link" id="btn-back-step1">EDITAR</button>
                         </div>
 
                         <form id="form-step2">
-                            <div class="checkbox-legal">
+                            <div class="form-check">
                                 <input type="checkbox" id="chk-legal" required>
                                 <label for="chk-legal">
                                     Acepto los <a href="#">Términos y Condiciones</a> y la <a href="#">Declaración Electrónica</a>, y autorizo a FintechPro a gestionar la transferencia de fondos desde la fuente seleccionada.
@@ -378,7 +179,7 @@
 
                             <div class="form-actions">
                                 <button type="button" id="btn-back-step1-bottom" class="btn-cancel">
-                                    <span style="display:flex;align-items:center;gap:4px;">
+                                    <span style="display:flex; align-items:center; gap:4px;">
                                         <span class="material-symbols-outlined" style="font-size:16px;">arrow_back</span> Atrás
                                     </span>
                                 </button>
@@ -391,7 +192,7 @@
                 </section>
 
                 <!-- VISTA 3: ÉXITO -->
-                <section id="section-success" class="view-section">
+                <section id="section-success" class="page-section">
                     <div class="success-wrapper">
                         <div class="success-icon">
                             <span class="material-symbols-outlined icon-fill">check_circle</span>
@@ -401,7 +202,7 @@
 
                         <div class="success-details">
                             <div class="success-details-header">
-                                <span class="material-symbols-outlined icon-fill" style="color:var(--primary);font-size:20px;">account_balance</span>
+                                <span class="material-symbols-outlined icon-fill" style="color:var(--primary-light); font-size:20px;">account_balance</span>
                                 Detalles de la Cuenta
                             </div>
                             <div class="detail-row">
@@ -409,7 +210,7 @@
                                     <div class="detail-label">Tipo de Cuenta</div>
                                     <div class="detail-value" id="success-tipo">Cuenta Corriente</div>
                                 </div>
-                                <span class="material-symbols-outlined icon-fill" style="color:var(--primary);font-size:20px;">account_balance_wallet</span>
+                                <span class="material-symbols-outlined icon-fill" style="color:var(--primary-light); font-size:20px;">account_balance_wallet</span>
                             </div>
                             <div class="detail-row">
                                 <div>
@@ -430,7 +231,7 @@
                             </div>
                         </div>
 
-                        <button class="btn-volver" id="btn-ir-cuentas">
+                        <button class="btn-back-primary" id="btn-ir-cuentas">
                             Ir a Mis Cuentas <span class="material-symbols-outlined" style="font-size:18px;">arrow_forward</span>
                         </button>
                         <div>
@@ -445,21 +246,20 @@
 
     <!-- MODAL DETALLE CUENTA -->
     <div class="modal-overlay" id="modal-cuenta">
-        <div class="modal-box">
-            <div class="modal-header">
-                <h3 id="modal-cuenta-nombre">Cuenta Corriente</h3>
-                <button class="modal-close" id="modal-close">
+        <div class="modal-box" style="width:100%; max-width:480px;">
+            <div style="padding:20px 24px 0; display:flex; justify-content:space-between; align-items:center;">
+                <h3 id="modal-cuenta-nombre" style="font-size:18px; font-weight:700;">Cuenta Corriente</h3>
+                <button id="modal-close" style="width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--text-muted); transition:0.2s; background:none; border:none; cursor:pointer;">
                     <span class="material-symbols-outlined">close</span>
                 </button>
             </div>
-            <p class="modal-acc-num" id="modal-cuenta-num">ES91 •••• •••• 4892</p>
+            <p class="modal-account-num" id="modal-cuenta-num">ES91 •••• •••• 4892</p>
 
-            <div class="modal-balance-box">
-                <div class="modal-balance-label">SALDO ACTUAL</div>
-                <div class="modal-balance-val" id="modal-saldo">€0.00</div>
+            <div class="modal-balance">
+                <div class="modal-balance-hint">SALDO ACTUAL</div>
+                <div class="modal-balance-value" id="modal-saldo">€0.00</div>
             </div>
 
-            <!-- Botones cuenta corriente -->
             <div class="modal-actions" id="modal-actions-corriente">
                 <button class="modal-btn-primary">
                     <span class="material-symbols-outlined" style="font-size:16px;">swap_horiz</span> Transferir
@@ -469,7 +269,6 @@
                 </button>
             </div>
 
-            <!-- Botones hucha (ocultos por defecto) -->
             <div class="modal-actions" id="modal-actions-hucha" style="display:none;">
                 <button class="modal-btn-green">
                     <span class="material-symbols-outlined" style="font-size:16px;">add</span> Ingresar
@@ -489,44 +288,51 @@
         </div>
     </div>
 
-    <div id="modalUser" style="position:fixed;inset:0;background:rgba(0,0,0,0.4);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:999;">
-        <div style="background:white;width:400px;border-radius:24px;overflow:hidden;">
-            <div style="padding:24px;border-bottom:1px solid #e1e3e4;display:flex;justify-content:space-between;align-items:center;">
+    <!-- Modal usuario -->
+    <div id="modalUser" class="user-modal">
+        <div class="user-modal-box">
+            <div class="user-modal-header">
                 <h3 style="font-weight:700;">Detalles de cuenta</h3>
-                <span class="material-symbols-outlined" style="cursor:pointer;color:#414754;" onclick="toggleModal(false)">close</span>
+                <span class="material-symbols-outlined" style="cursor:pointer; color:var(--text-muted);" onclick="toggleModal(false)">close</span>
             </div>
-            <div style="padding:24px;">
-                <div style="display:flex;gap:16px;align-items:center;margin-bottom:24px;">
-                    <img id="modal-avatar" src="https://ui-avatars.com/api/?name=...&background=005bbf&color=fff" style="width:50px;height:50px;border-radius:50%;">
-                    <div><p id="modal-nombre" style="font-weight:700;font-size:16px;">...</p></div>
+            <div class="user-modal-body">
+                <div style="display:flex; gap:16px; align-items:center; margin-bottom:24px;">
+                    <img id="modal-avatar" src="https://ui-avatars.com/api/?name=...&background=005bbf&color=fff" style="width:50px; height:50px; border-radius:50%;">
+                    <div><p id="modal-nombre" style="font-weight:700; font-size:16px;">...</p></div>
                 </div>
-                <div style="font-size:14px;color:#414754;display:grid;gap:12px;">
+                <div style="font-size:14px; color:var(--text-muted); display:grid; gap:12px;">
                     <p><strong>Email:</strong> <span id="modal-email">...</span></p>
                     <p><strong>ID:</strong> <span id="modal-id">...</span></p>
                 </div>
-                <button onclick="cerrarSesion()" style="color:#ba1a1a;border:1px solid #ba1a1a;width:100%;margin-top:20px;display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;background:white;font-family:inherit;">
+                <button onclick="cerrarSesion()" style="color:var(--error); border:1px solid var(--error); width:100%; margin-top:20px; display:flex; align-items:center; justify-content:center; gap:8px; padding:10px 20px; border-radius:8px; font-size:14px; font-weight:500; cursor:pointer; background:white; font-family:inherit;">
                     <span class="material-symbols-outlined">logout</span> Cerrar Sesión
                 </button>
             </div>
-            <div style="padding:16px 24px;background:#f3f4f5;text-align:right;">
-                <button onclick="toggleModal(false)" style="padding:8px 20px;background:#1a73e8;color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-family:inherit;">Cerrar</button>
+            <div class="user-modal-footer">
+                <button onclick="toggleModal(false)" style="padding:8px 20px; background:var(--primary-light); color:white; border:none; border-radius:8px; font-weight:600; cursor:pointer; font-family:inherit;">Cerrar</button>
             </div>
         </div>
     </div>
 
+    <!-- Panel notificaciones -->
+    <div id="notifPanel" class="notif-panel">
+        <div class="notif-panel-header">
+            <h3 style="font-weight:700; font-size:16px;">Notificaciones</h3>
+            <span class="material-symbols-outlined" style="cursor:pointer; color:var(--text-muted);" onclick="toggleNotificaciones(false)">close</span>
+        </div>
+        <div id="lista-notificaciones" class="notif-panel-body"></div>
+    </div>
+
     <script src="js/api.js"></script>
     <script>
-        // ── ESTADO GLOBAL ──────────────────────────────────────────
-        let cuentasData    = [];   // datos del backend
-        let movimientosData = [];  // todos los movimientos cargados
-        let nuevaCuenta    = {};   // datos del formulario en curso
-        let cuentaCreada   = {};   // datos de la cuenta recién creada
+        let cuentasData     = [];
+        let movimientosData = [];
+        let nuevaCuenta     = {};
+        let cuentaCreada    = {};
 
         function toggleModal(show) { document.getElementById('modalUser').style.display = show ? 'flex' : 'none'; }
-        function cerrarSesion() {
-            localStorage.removeItem('jwt_token');
-            window.location.href = 'inicio_sesion.html';
-        }
+        function cerrarSesion() { localStorage.removeItem('jwt_token'); window.location.href = 'inicio_sesion.html'; }
+
         async function cargarPerfil() {
             const datos = await apiFetch('perfil.php');
             if (!datos || datos.status !== 'success') return;
@@ -540,7 +346,6 @@
             document.getElementById('modal-id').textContent = '#' + String(datos.id).padStart(6, '0');
         }
 
-        // ── ARRANQUE ───────────────────────────────────────────────
         window.onload = async function () {
             await Promise.all([cargarCuentas(), cargarMovimientos(), cargarPerfil()]);
             pintarCuentas();
@@ -548,53 +353,45 @@
 
         async function cargarCuentas() {
             const data = await apiFetch('cuentas.php');
-            if (data && data.status === 'success') {
-                cuentasData = data.cuentas;
-            }
+            if (data && data.status === 'success') cuentasData = data.cuentas;
         }
 
         async function cargarMovimientos() {
             const data = await apiFetch('movimientos.php?page=1&limit=100');
-            if (data && data.status === 'success') {
-                movimientosData = data.movimientos;
-            }
+            if (data && data.status === 'success') movimientosData = data.movimientos;
         }
 
-        // ── PINTADO DE CUENTAS ─────────────────────────────────────
         function pintarCuentas() {
             const grid = document.getElementById('accounts-grid');
             grid.innerHTML = '';
-
             if (!cuentasData.length) {
-                grid.innerHTML = '<p style="color:var(--on-surface-variant);font-size:14px;">No tienes cuentas aún. ¡Crea la primera!</p>';
+                grid.innerHTML = '<p style="color:var(--text-muted); font-size:14px;">No tienes cuentas aún. ¡Crea la primera!</p>';
                 return;
             }
-
             cuentasData.forEach(cuenta => {
-                const esHucha    = cuenta.tipo === 'ahorros';
-                const iconName   = esHucha ? 'savings' : 'account_balance_wallet';
-                const iconClass  = esHucha ? 'icon-green' : 'icon-blue';
-                const label      = esHucha ? 'SALDO HUCHA' : 'SALDO DISPONIBLE';
-                const titulo     = esHucha ? 'Hucha (Ahorro)' : 'Cuenta Corriente';
-                const numMask    = enmascararNumero(cuenta.numero_cuenta);
-                const saldoFmt   = formatearEuros(cuenta.saldo);
-
+                const esHucha   = cuenta.tipo === 'ahorros';
+                const iconName  = esHucha ? 'savings' : 'account_balance_wallet';
+                const iconClass = esHucha ? 'icon-green' : 'icon-blue';
+                const label     = esHucha ? 'SALDO HUCHA' : 'SALDO DISPONIBLE';
+                const titulo    = esHucha ? 'Hucha (Ahorro)' : 'Cuenta Corriente';
+                const numMask   = enmascararNumero(cuenta.numero_cuenta);
+                const saldoFmt  = formatearEuros(cuenta.saldo);
                 const card = document.createElement('div');
                 card.className = 'account-card';
                 card.dataset.id = cuenta.id;
                 card.innerHTML = `
-                    <div class="card-header-flex">
+                    <div class="card-header-row">
                         <div>
-                            <h3 class="card-title">${titulo}</h3>
-                            <p class="card-acc-num">${numMask}</p>
+                            <h3 class="card-name">${titulo}</h3>
+                            <p class="card-number">${numMask}</p>
                         </div>
-                        <div class="card-icon ${iconClass}">
+                        <div class="account-icon ${iconClass}">
                             <span class="material-symbols-outlined icon-fill">${iconName}</span>
                         </div>
                     </div>
                     <div style="margin-top:24px;">
-                        <p class="balance-label">${label}</p>
-                        <p class="balance-amount">${saldoFmt}</p>
+                        <p class="balance-hint">${label}</p>
+                        <p class="balance-value">${saldoFmt}</p>
                     </div>
                 `;
                 card.addEventListener('click', () => abrirModal(cuenta));
@@ -602,30 +399,20 @@
             });
         }
 
-        // ── MODAL DE DETALLE ───────────────────────────────────────
         function abrirModal(cuenta) {
             const esHucha = cuenta.tipo === 'ahorros';
-
             document.getElementById('modal-cuenta-nombre').textContent = esHucha ? 'Hucha (Ahorro)' : 'Cuenta Corriente';
             document.getElementById('modal-cuenta-num').textContent    = enmascararNumero(cuenta.numero_cuenta);
             document.getElementById('modal-saldo').textContent         = formatearEuros(cuenta.saldo);
-
-            // Mostrar botones correctos según tipo
             document.getElementById('modal-actions-corriente').style.display = esHucha ? 'none' : 'flex';
             document.getElementById('modal-actions-hucha').style.display     = esHucha ? 'flex' : 'none';
-
-            // Filtrar últimos 3 movimientos del usuario (no podemos filtrar por cuenta en el endpoint actual)
             pintarMovimientosModal(movimientosData.slice(0, 3));
-
             document.getElementById('modal-cuenta').classList.add('open');
         }
 
         function pintarMovimientosModal(movimientos) {
             const lista = document.getElementById('modal-mov-list');
-            if (!movimientos.length) {
-                lista.innerHTML = '<div class="modal-mov-empty">Sin movimientos recientes</div>';
-                return;
-            }
+            if (!movimientos.length) { lista.innerHTML = '<div class="modal-mov-empty">Sin movimientos recientes</div>'; return; }
             lista.innerHTML = '';
             movimientos.forEach(mov => {
                 let icono = 'payments';
@@ -633,17 +420,13 @@
                 if (mov.tipo === 'bizum')         icono = 'send_money';
                 if (mov.tipo === 'transferencia') icono = 'swap_horiz';
                 if (mov.tipo === 'ingreso')       icono = 'savings';
-
-                const esPos   = mov.cantidad > 0;
+                const esPos    = mov.cantidad > 0;
                 const claseAmt = esPos ? 'amount-pos' : 'amount-neg';
                 const signo    = esPos ? '+' : '';
                 const fecha    = new Date(mov.fecha).toLocaleDateString('es-ES', {day:'2-digit', month:'short', year:'numeric'});
-
                 lista.innerHTML += `
                     <div class="modal-mov-item">
-                        <div class="modal-mov-icon">
-                            <span class="material-symbols-outlined" style="font-size:18px;">${icono}</span>
-                        </div>
+                        <div class="modal-mov-icon"><span class="material-symbols-outlined" style="font-size:18px;">${icono}</span></div>
                         <div class="modal-mov-info">
                             <div class="modal-mov-name">${mov.concepto}</div>
                             <div class="modal-mov-date">${fecha}</div>
@@ -654,16 +437,11 @@
             });
         }
 
-        document.getElementById('modal-close').addEventListener('click', () => {
-            document.getElementById('modal-cuenta').classList.remove('open');
-        });
-        document.getElementById('modal-cuenta').addEventListener('click', function(e) {
-            if (e.target === this) this.classList.remove('open');
-        });
+        document.getElementById('modal-close').addEventListener('click', () => document.getElementById('modal-cuenta').classList.remove('open'));
+        document.getElementById('modal-cuenta').addEventListener('click', function(e) { if (e.target === this) this.classList.remove('open'); });
 
-        // ── NAVEGACIÓN SPA ─────────────────────────────────────────
         function mostrarVista(id) {
-            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             window.scrollTo(0, 0);
         }
@@ -678,82 +456,51 @@
             mostrarVista('section-accounts');
         });
 
-        // ── PASO 1 → PASO 2 ────────────────────────────────────────
         document.getElementById('form-step1').addEventListener('submit', function(e) {
             e.preventDefault();
             const tipo     = document.querySelector('input[name="acc_type"]:checked').value;
             const alias    = document.getElementById('input-alias').value.trim();
             const deposito = parseFloat(document.getElementById('input-deposito').value) || 0;
-
             nuevaCuenta = { tipo, alias, deposito };
-
-            // Actualizar resumen en paso 2
             const esHucha = tipo === 'ahorros';
             document.getElementById('resumen-nombre').textContent = esHucha ? 'Hucha (Ahorro)' : 'Cuenta Corriente';
             document.getElementById('resumen-desc').textContent   = esHucha ? 'Meta de ahorro personalizada' : 'Sin comisiones de mantenimiento';
             document.getElementById('resumen-icon').innerHTML     = `<span class="material-symbols-outlined icon-fill">${esHucha ? 'savings' : 'account_balance_wallet'}</span>`;
-
             mostrarVista('section-form-step2');
         });
 
-        // ── PASO 2 → ÉXITO ─────────────────────────────────────────
         document.getElementById('form-step2').addEventListener('submit', async function(e) {
             e.preventDefault();
             const chk = document.getElementById('chk-legal');
-            if (!chk.checked) {
-                mostrarNotificacion('Debes aceptar los términos y condiciones.', 'advertencia');
-                return;
-            }
-
+            if (!chk.checked) { mostrarNotificacion('Debes aceptar los términos y condiciones.', 'advertencia'); return; }
             const btn = document.getElementById('btn-submit-final');
-            btn.disabled    = true;
-            btn.innerHTML   = 'Creando cuenta... <span class="material-symbols-outlined" style="font-size:18px;animation:spin 1s linear infinite;">sync</span>';
-
+            btn.disabled  = true;
+            btn.innerHTML = 'Creando cuenta... <span class="material-symbols-outlined" style="font-size:18px;animation:spin 1s linear infinite;">sync</span>';
             const respuesta = await apiFetch('crearCuenta.php', {
                 method: 'POST',
-                body: JSON.stringify({
-                    tipo:     nuevaCuenta.tipo,
-                    deposito: nuevaCuenta.deposito
-                })
+                body: JSON.stringify({ tipo: nuevaCuenta.tipo, deposito: nuevaCuenta.deposito })
             });
-
             btn.disabled  = false;
             btn.innerHTML = 'Completar Apertura <span class="material-symbols-outlined" style="font-size:18px;">check</span>';
-
-            if (!respuesta || respuesta.status !== 'success') {
-                // apiFetch ya muestra la notificación de error
-                return;
-            }
-
+            if (!respuesta || respuesta.status !== 'success') return;
             const cuenta = respuesta.cuenta;
-            cuentaCreada = {
-                tipo:   cuenta.tipo === 'ahorros' ? 'Hucha (Ahorro)' : 'Cuenta Corriente',
-                numero: cuenta.numero_cuenta,
-                saldo:  cuenta.saldo
-            };
-
+            cuentaCreada = { tipo: cuenta.tipo === 'ahorros' ? 'Hucha (Ahorro)' : 'Cuenta Corriente', numero: cuenta.numero_cuenta, saldo: cuenta.saldo };
             document.getElementById('success-tipo').textContent   = cuentaCreada.tipo;
             document.getElementById('success-numero').textContent = cuentaCreada.numero;
             document.getElementById('success-saldo').textContent  = formatearEuros(cuentaCreada.saldo);
-
-            // Limpiar formulario para una posible próxima apertura
             document.getElementById('form-step1').reset();
             document.getElementById('chk-legal').checked = false;
-
             mostrarVista('section-success');
         });
 
-        // ── HELPERS ────────────────────────────────────────────────
         function enmascararNumero(num) {
             if (!num) return '•••• •••• •••• ••••';
             const limpio = num.replace(/\s/g, '');
-            const prefijo = limpio.slice(0, 4);          // ej. "ES00"
-            const ultimos = limpio.slice(-4);             // ej. "3453"
-            return `${prefijo} •••• •••• ${ultimos}`;
+            return `${limpio.slice(0,4)} •••• •••• ${limpio.slice(-4)}`;
         }
 
         function formatearEuros(valor) {
-            return '€' + parseFloat(valor).toLocaleString('es-ES', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            return '€' + parseFloat(valor).toLocaleString('es-ES', {minimumFractionDigits:2, maximumFractionDigits:2});
         }
 
         function copiarNumero() {
@@ -761,17 +508,6 @@
             navigator.clipboard.writeText(num).then(() => mostrarNotificacion('Número copiado al portapapeles', 'exito'));
         }
     </script>
-
-
-    <!-- Panel de notificaciones -->
-    <div id="notifPanel" style="position:fixed;top:0;right:0;height:100%;width:380px;max-width:100vw;background:white;z-index:500;transform:translateX(100%);transition:transform 0.3s ease;box-shadow:-4px 0 32px rgba(0,0,0,0.1);display:flex;flex-direction:column;">
-        <div style="padding:24px;border-bottom:1px solid #e1e3e4;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
-            <h3 style="font-weight:700;font-size:16px;">Notificaciones</h3>
-            <span class="material-symbols-outlined" style="cursor:pointer;color:#414754;" onclick="toggleNotificaciones(false)">close</span>
-        </div>
-        <div id="lista-notificaciones" style="flex:1;overflow-y:auto;"></div>
-    </div>
-
     <script src="js/notificaciones.js"></script>
 </body>
 </html>

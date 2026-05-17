@@ -8,397 +8,121 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
-
-    <style>
-        :root {
-            --fondo: #f8f9fa;
-            --blanco: #ffffff;
-            --primario: #005bbf;
-            --primario-brillante: #1a73e8;
-            --negro-tarjeta: #191c1d;
-            --texto-gris: #414754;
-            --borde: #e1e3e4;
-            --verde: #008939;
-            --error: #ba1a1a;
-            --shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--fondo);
-            color: var(--negro-tarjeta);
-            display: none;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .sidebar {
-            width: 280px;
-            background: var(--blanco);
-            border-right: 1px solid var(--borde);
-            display: flex;
-            flex-direction: column;
-            padding: 24px 0;
-            z-index: 20;
-        }
-
-        .logo-area {
-            padding: 0 24px;
-            margin-bottom: 32px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .logo-box {
-            background: var(--primario-brillante);
-            color: white;
-            padding: 8px;
-            border-radius: 8px;
-            display: flex;
-        }
-
-        .nav-grupo {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            padding: 0 12px;
-        }
-
-        .nav-enlace {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            text-decoration: none;
-            color: var(--texto-gris);
-            font-size: 14px;
-            font-weight: 500;
-            border-radius: 8px;
-            transition: 0.2s;
-        }
-
-        .nav-enlace:hover { background: #f3f4f5; color: var(--negro-tarjeta); }
-
-        .nav-enlace.activo {
-            background: #d9e2ff;
-            color: var(--primario);
-            font-weight: 600;
-            border-left: 4px solid var(--primario);
-            border-top-left-radius: 0;
-            border-bottom-left-radius: 0;
-        }
-
-        .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-
-        .header {
-            height: 72px;
-            background: rgba(255,255,255,0.8);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--borde);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 32px;
-            flex-shrink: 0;
-        }
-
-        .perfil-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 4px 12px;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .perfil-btn:hover { background: #f3f4f5; }
-
-        .content {
-            flex: 1;
-            padding: 32px;
-            overflow-y: auto;
-            margin-right: 400px;
-        }
-
-        .tarjeta-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 24px;
-            margin-top: 32px;
-        }
-
-        .tarjeta-visual {
-            aspect-ratio: 1.58 / 1;
-            border-radius: 20px;
-            padding: 24px;
-            color: white;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: 0.3s;
-            cursor: pointer;
-            box-shadow: var(--shadow);
-        }
-
-        .tarjeta-visual:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.15); }
-        .tarjeta-visual.seleccionada { outline: 3px solid var(--primario); outline-offset: 4px; }
-
-        .tarjeta-azul { background: linear-gradient(135deg, #005bbf 0%, #1a73e8 100%); }
-        .tarjeta-negra { background: linear-gradient(135deg, #191c1d 0%, #2e3132 100%); }
-        .tarjeta-bloqueada { filter: grayscale(0.6); opacity: 0.7; }
-        .tarjeta-cancelada { filter: grayscale(1); opacity: 0.5; }
-
-        .badge-estado {
-            position: absolute;
-            top: 14px;
-            right: 14px;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 10px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .badge-activa { background: rgba(0,200,100,0.25); color: #00ff88; }
-        .badge-bloqueada { background: rgba(255,100,0,0.25); color: #ffaa44; }
-        .badge-cancelada { background: rgba(200,0,0,0.25); color: #ff6666; }
-
-        /* Panel derecho */
-        .panel-glass {
-            width: 400px;
-            position: fixed;
-            right: 0;
-            top: 72px;
-            bottom: 0;
-            background: rgba(255,255,255,0.7);
-            backdrop-filter: blur(24px);
-            border-left: 1px solid rgba(0,0,0,0.05);
-            padding: 24px;
-            z-index: 10;
-            overflow-y: auto;
-        }
-
-        .btn-accion {
-            flex: 1;
-            background: white;
-            border: 1px solid var(--borde);
-            padding: 16px;
-            border-radius: 16px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: 0.2s;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .btn-accion:hover { background: #f3f4f5; transform: translateY(-2px); }
-        .btn-accion:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-
-        .panel-placeholder {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            gap: 12px;
-            color: var(--texto-gris);
-            text-align: center;
-        }
-
-        /* Modal datos */
-        .modal-fondo {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.4);
-            backdrop-filter: blur(4px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-        }
-
-        .modal-caja {
-            background: white;
-            width: 420px;
-            border-radius: 24px;
-            overflow: hidden;
-            animation: zoom 0.25s ease;
-        }
-
-        @keyframes zoom {
-            from { transform: scale(0.9); opacity: 0; }
-            to   { transform: scale(1);   opacity: 1; }
-        }
-
-        .dato-fila {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--borde);
-            font-size: 14px;
-        }
-
-        .dato-fila:last-child { border-bottom: none; }
-
-        .chip-estado {
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        .chip-activa   { background: #e6f4ea; color: var(--verde); }
-        .chip-bloqueada { background: #fff3e0; color: #e65100; }
-        .chip-cancelada { background: #fdecea; color: var(--error); }
-
-        .btn-danger {
-            width: 100%;
-            padding: 12px;
-            background: #fdecea;
-            color: var(--error);
-            border: 1px solid #f5c6c6;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 14px;
-            cursor: pointer;
-            font-family: 'Inter', sans-serif;
-            transition: 0.2s;
-        }
-
-        .btn-danger:hover { background: #fad7d7; }
-
-        .skeleton {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-            border-radius: 20px;
-        }
-
-        @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-    </style>
+    <link rel="stylesheet" href="css/app.css" />
 </head>
 
-<body>
+<body style="display:none;">
     <aside class="sidebar">
-        <div class="logo-area">
-            <div class="logo-box">
-                <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">account_balance</span>
+        <div class="logo-box">
+            <div class="logo-icon">
+                <span class="material-symbols-outlined icon-fill">account_balance</span>
             </div>
-            <h1 style="font-size: 18px; font-weight: 700; color: var(--primario);">Beasy</h1>
+            <h1 class="logo-text">Beasy</h1>
         </div>
 
-        <nav class="nav-grupo">
-            <a href="dashboard.html" class="nav-enlace"><span class="material-symbols-outlined">dashboard</span> Dashboard</a>
-            <a href="cuentas.html" class="nav-enlace"><span class="material-symbols-outlined">account_balance</span> Cuentas</a>
-            <a href="misTarjetas.html" class="nav-enlace activo"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">credit_card</span> Tarjetas</a>
-            <a href="movimientos.html" class="nav-enlace"><span class="material-symbols-outlined">payments</span> Movimientos</a>
-            <a href="seguridad.html" class="nav-enlace"><span class="material-symbols-outlined">verified_user</span> Seguridad</a>
+        <nav class="nav-lista">
+            <a href="dashboard.html" class="nav-link"><span class="material-symbols-outlined">dashboard</span> Dashboard</a>
+            <a href="cuentas.html" class="nav-link"><span class="material-symbols-outlined">account_balance</span> Cuentas</a>
+            <a href="misTarjetas.html" class="nav-link activo"><span class="material-symbols-outlined icon-fill">credit_card</span> Tarjetas</a>
+            <a href="movimientos.html" class="nav-link"><span class="material-symbols-outlined">payments</span> Movimientos</a>
+            <a href="seguridad.html" class="nav-link"><span class="material-symbols-outlined">verified_user</span> Seguridad</a>
         </nav>
     </aside>
 
-    <div class="main">
+    <div class="main-wrapper">
         <header class="header">
-            <div style="font-weight: 600;">Cards Overview</div>
-            <div style="display: flex; align-items: center; gap: 16px;">
-                <button id="btn-notificaciones" onclick="toggleNotificaciones(true)" style="background:none;border:none;cursor:pointer;position:relative;padding:8px;">
-                    <span class="material-symbols-outlined" style="color:#414754;">notifications</span>
-                    <span id="badge-notificaciones" style="position:absolute;top:4px;right:4px;min-width:16px;height:16px;background:#ba1a1a;border-radius:99px;font-size:10px;font-weight:700;color:white;display:none;align-items:center;justify-content:center;padding:0 3px;">0</span>
+            <div class="header-title">Cards Overview</div>
+            <div class="header-actions">
+                <button id="btn-notificaciones" class="notif-btn" onclick="toggleNotificaciones(true)">
+                    <span class="material-symbols-outlined">notifications</span>
+                    <span id="badge-notificaciones" class="notif-badge">0</span>
                 </button>
                 <div class="perfil-btn" onclick="toggleModal(true)">
-                    <img id="header-avatar" src="https://ui-avatars.com/api/?name=...&background=005bbf&color=fff" style="width: 32px; border-radius: 50%;">
-                    <span id="header-nombre" style="font-size: 14px; font-weight: 500;">...</span>
-                    <span class="material-symbols-outlined" style="font-size: 18px;">keyboard_arrow_down</span>
+                    <img id="header-avatar" src="https://ui-avatars.com/api/?name=...&background=005bbf&color=fff" class="perfil-img">
+                    <span id="header-nombre" class="perfil-name">...</span>
+                    <span class="material-symbols-outlined">keyboard_arrow_down</span>
                 </div>
             </div>
         </header>
 
-        <main class="content">
-            <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+        <main class="content cards-content">
+            <div class="page-header">
                 <div>
-                    <h2 style="font-size: 44px; font-weight: 700; letter-spacing: -1.5px;">My Cards</h2>
-                    <p style="color: var(--texto-gris); margin-top: 4px;">Manage your virtual cards and settings.</p>
+                    <h2 class="page-title" style="font-size:44px; letter-spacing:-1.5px;">My Cards</h2>
+                    <p class="page-subtitle">Manage your virtual cards and settings.</p>
                 </div>
             </div>
 
-            <div class="tarjeta-grid" id="tarjeta-grid">
+            <div class="cards-grid" id="tarjeta-grid">
                 <!-- Skeleton mientras carga -->
-                <div class="skeleton" style="aspect-ratio: 1.58/1;"></div>
+                <div class="skeleton" style="aspect-ratio:1.58/1;"></div>
             </div>
         </main>
 
         <!-- Panel derecho -->
-        <aside class="panel-glass" id="panel">
-            <div class="panel-placeholder" id="panel-placeholder">
-                <span class="material-symbols-outlined" style="font-size: 48px; opacity: 0.3;">credit_card</span>
-                <p style="font-weight: 600;">Select a card</p>
-                <p style="font-size: 13px; opacity: 0.6;">Click on any card to see its details</p>
+        <aside class="detail-panel" id="panel">
+            <div class="detail-panel-empty" id="panel-placeholder">
+                <span class="material-symbols-outlined" style="font-size:48px; opacity:0.3;">credit_card</span>
+                <p style="font-weight:600;">Select a card</p>
+                <p style="font-size:13px; opacity:0.6;">Click on any card to see its details</p>
             </div>
 
-            <div id="panel-contenido" style="display: none;">
-                <!-- Mini tarjeta en panel -->
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h3 style="font-size: 18px; font-weight: 700;">Card Details</h3>
-                    <button onclick="cerrarPanel()" style="background:none;border:none;cursor:pointer;">
-                        <span class="material-symbols-outlined" style="color: var(--texto-gris);">close</span>
+            <div id="panel-contenido" style="display:none;">
+                <!-- Cabecera del panel -->
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                    <h3 style="font-size:18px; font-weight:700;">Card Details</h3>
+                    <button onclick="cerrarPanel()">
+                        <span class="material-symbols-outlined" style="color:var(--text-muted);">close</span>
                     </button>
                 </div>
 
-                <div class="tarjeta-visual tarjeta-azul" id="panel-tarjeta-visual" style="aspect-ratio: 1.8/1; margin-bottom: 20px;">
-                    <div style="display: flex; justify-content: space-between;">
+                <!-- Mini tarjeta en panel -->
+                <div class="card-visual card-blue" id="panel-tarjeta-visual" style="aspect-ratio:1.8/1; margin-bottom:20px;">
+                    <div style="display:flex; justify-content:space-between;">
                         <span class="material-symbols-outlined">contactless</span>
-                        <span style="font-weight: 900; font-style: italic;">VISA</span>
+                        <span style="font-weight:900; font-style:italic;">VISA</span>
                     </div>
                     <div>
-                        <p id="panel-numero" style="font-family: monospace; font-size: 15px; letter-spacing: 2px;">•••• •••• •••• ••••</p>
-                        <p id="panel-expiracion" style="font-size: 12px; opacity: 0.7; margin-top: 6px;"></p>
+                        <p id="panel-numero" style="font-family:monospace; font-size:15px; letter-spacing:2px;">•••• •••• •••• ••••</p>
+                        <p id="panel-expiracion" style="font-size:12px; opacity:0.7; margin-top:6px;"></p>
                     </div>
                 </div>
 
                 <!-- Botones acción -->
-                <div style="display: flex; gap: 12px; margin-bottom: 28px;">
-                    <button class="btn-accion" id="btn-view" onclick="abrirModalDatos()">
-                        <div style="width:40px;height:40px;border-radius:50%;background:#e8f0fe;color:var(--primario);display:flex;align-items:center;justify-content:center;">
+                <div style="display:flex; gap:12px; margin-bottom:28px;">
+                    <button class="panel-btn" id="btn-view" onclick="abrirModalDatos()">
+                        <div style="width:40px;height:40px;border-radius:50%;background:#e8f0fe;color:var(--primary);display:flex;align-items:center;justify-content:center;">
                             <span class="material-symbols-outlined">visibility</span>
                         </div>
-                        <span style="font-size: 11px; font-weight: 700;">View Data</span>
+                        <span style="font-size:11px; font-weight:700;">View Data</span>
                     </button>
-                    <button class="btn-accion" id="btn-freeze" onclick="toggleFreeze()">
+                    <button class="panel-btn" id="btn-freeze" onclick="toggleFreeze()">
                         <div id="freeze-icon-wrap" style="width:40px;height:40px;border-radius:50%;background:#ffdad6;color:var(--error);display:flex;align-items:center;justify-content:center;">
                             <span class="material-symbols-outlined" id="freeze-icon">block</span>
                         </div>
-                        <span style="font-size: 11px; font-weight: 700;" id="freeze-label">Freeze</span>
+                        <span style="font-size:11px; font-weight:700;" id="freeze-label">Freeze</span>
                     </button>
                 </div>
 
                 <!-- Datos rápidos -->
-                <div style="background: #f8f9fa; border-radius: 16px; padding: 16px; margin-bottom: 20px;">
-                    <div class="dato-fila">
-                        <span style="color: var(--texto-gris);">Status</span>
-                        <span class="chip-estado" id="panel-estado-chip">activa</span>
+                <div style="background:var(--bg); border-radius:16px; padding:16px; margin-bottom:20px;">
+                    <div class="data-row">
+                        <span style="color:var(--text-muted);">Status</span>
+                        <span class="status-chip" id="panel-estado-chip">activa</span>
                     </div>
-                    <div class="dato-fila">
-                        <span style="color: var(--texto-gris);">Card number</span>
-                        <span id="panel-numero-corto" style="font-family: monospace; font-weight: 600;"></span>
+                    <div class="data-row">
+                        <span style="color:var(--text-muted);">Card number</span>
+                        <span id="panel-numero-corto" style="font-family:monospace; font-weight:600;"></span>
                     </div>
-                    <div class="dato-fila" style="border-bottom: none;">
-                        <span style="color: var(--texto-gris);">Expires</span>
-                        <span id="panel-exp-dato" style="font-weight: 600;"></span>
+                    <div class="data-row" style="border-bottom:none;">
+                        <span style="color:var(--text-muted);">Expires</span>
+                        <span id="panel-exp-dato" style="font-weight:600;"></span>
                     </div>
                 </div>
 
                 <!-- Cancelar tarjeta -->
-                <button class="btn-danger" id="btn-cancelar" onclick="cancelarTarjeta()">
-                    <span class="material-symbols-outlined" style="vertical-align: middle; font-size: 18px;">cancel</span>
+                <button class="btn-destructive" id="btn-cancelar" onclick="cancelarTarjeta()">
+                    <span class="material-symbols-outlined" style="vertical-align:middle; font-size:18px;">cancel</span>
                     Cancel card permanently
                 </button>
             </div>
@@ -406,86 +130,96 @@
     </div>
 
     <!-- Modal: Ver datos completos -->
-    <div class="modal-fondo" id="modalDatos">
-        <div class="modal-caja">
-            <div style="padding: 20px 24px; border-bottom: 1px solid var(--borde); display: flex; justify-content: space-between; align-items: center;">
-                <h3 style="font-weight: 700;">Card Data</h3>
-                <span class="material-symbols-outlined" style="cursor: pointer;" onclick="cerrarModalDatos()">close</span>
+    <div class="modal-overlay" id="modalDatos">
+        <div class="modal-box" style="width:420px;">
+            <div style="padding:20px 24px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+                <h3 style="font-weight:700;">Card Data</h3>
+                <span class="material-symbols-outlined" style="cursor:pointer;" onclick="cerrarModalDatos()">close</span>
             </div>
-            <div style="padding: 24px;">
-                <div class="tarjeta-visual tarjeta-azul" id="modal-tarjeta-visual" style="aspect-ratio: 1.8/1; margin-bottom: 24px;">
-                    <div style="display: flex; justify-content: space-between;">
+            <div style="padding:24px;">
+                <div class="card-visual card-blue" id="modal-tarjeta-visual" style="aspect-ratio:1.8/1; margin-bottom:24px;">
+                    <div style="display:flex; justify-content:space-between;">
                         <span class="material-symbols-outlined">contactless</span>
-                        <span style="font-weight: 900; font-style: italic;">VISA</span>
+                        <span style="font-weight:900; font-style:italic;">VISA</span>
                     </div>
                     <div>
-                        <p id="modal-numero-completo" style="font-family: monospace; font-size: 16px; letter-spacing: 3px;"></p>
-                        <p id="modal-expiracion" style="font-size: 12px; opacity: 0.7; margin-top: 4px;"></p>
+                        <p id="modal-numero-completo" style="font-family:monospace; font-size:16px; letter-spacing:3px;"></p>
+                        <p id="modal-expiracion" style="font-size:12px; opacity:0.7; margin-top:4px;"></p>
                     </div>
                 </div>
-                <div class="dato-fila">
-                    <span style="color: var(--texto-gris);">Full number</span>
-                    <span id="modal-num" style="font-family: monospace; font-weight: 700; font-size: 15px;"></span>
+                <div class="data-row">
+                    <span style="color:var(--text-muted);">Full number</span>
+                    <span id="modal-num" style="font-family:monospace; font-weight:700; font-size:15px;"></span>
                 </div>
-                <div class="dato-fila">
-                    <span style="color: var(--texto-gris);">CVV</span>
-                    <span id="modal-cvv" style="font-family: monospace; font-weight: 700; font-size: 18px; letter-spacing: 4px;"></span>
+                <div class="data-row">
+                    <span style="color:var(--text-muted);">CVV</span>
+                    <span id="modal-cvv" style="font-family:monospace; font-weight:700; font-size:18px; letter-spacing:4px;"></span>
                 </div>
-                <div class="dato-fila">
-                    <span style="color: var(--texto-gris);">Expiry date</span>
-                    <span id="modal-exp" style="font-weight: 600;"></span>
+                <div class="data-row">
+                    <span style="color:var(--text-muted);">Expiry date</span>
+                    <span id="modal-exp" style="font-weight:600;"></span>
                 </div>
-                <div class="dato-fila">
-                    <span style="color: var(--texto-gris);">Status</span>
-                    <span class="chip-estado" id="modal-estado"></span>
+                <div class="data-row">
+                    <span style="color:var(--text-muted);">Status</span>
+                    <span class="status-chip" id="modal-estado"></span>
                 </div>
             </div>
-            <div style="padding: 16px 24px; background: #f3f4f5; text-align: right;">
-                <button onclick="cerrarModalDatos()" style="padding: 8px 20px; background: var(--primario-brillante); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif;">Close</button>
+            <div style="padding:16px 24px; background:var(--surface-dim); text-align:right;">
+                <button onclick="cerrarModalDatos()" style="padding:8px 20px; background:var(--primary-light); color:white; border:none; border-radius:8px; font-weight:600; cursor:pointer; font-family:inherit;">Close</button>
             </div>
         </div>
     </div>
 
     <!-- Modal confirmación cancelar -->
-    <div class="modal-fondo" id="modalCancelar">
-        <div class="modal-caja" style="width: 380px;">
-            <div style="padding: 28px 24px; text-align: center;">
-                <div style="width: 56px; height: 56px; border-radius: 50%; background: #fdecea; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
-                    <span class="material-symbols-outlined" style="color: var(--error); font-size: 28px;">warning</span>
+    <div class="modal-overlay" id="modalCancelar">
+        <div class="modal-box" style="width:380px;">
+            <div style="padding:28px 24px; text-align:center;">
+                <div style="width:56px;height:56px;border-radius:50%;background:var(--error-bg);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+                    <span class="material-symbols-outlined" style="color:var(--error); font-size:28px;">warning</span>
                 </div>
-                <h3 style="font-weight: 700; margin-bottom: 8px;">Cancel this card?</h3>
-                <p style="color: var(--texto-gris); font-size: 14px;">This action is permanent and cannot be undone. The card will be deactivated immediately.</p>
+                <h3 style="font-weight:700; margin-bottom:8px;">Cancel this card?</h3>
+                <p style="color:var(--text-muted); font-size:14px;">This action is permanent and cannot be undone. The card will be deactivated immediately.</p>
             </div>
-            <div style="padding: 16px 24px; display: flex; gap: 12px; border-top: 1px solid var(--borde);">
-                <button onclick="cerrarModalCancelar()" style="flex:1; padding: 10px; border: 1px solid var(--borde); background: white; border-radius: 10px; font-weight: 600; cursor: pointer; font-family: 'Inter', sans-serif;">Keep card</button>
-                <button onclick="confirmarCancelacion()" style="flex:1; padding: 10px; background: var(--error); color: white; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; font-family: 'Inter', sans-serif;">Yes, cancel</button>
+            <div style="padding:16px 24px; display:flex; gap:12px; border-top:1px solid var(--border);">
+                <button onclick="cerrarModalCancelar()" style="flex:1;padding:10px;border:1px solid var(--border);background:white;border-radius:10px;font-weight:600;cursor:pointer;font-family:inherit;">Keep card</button>
+                <button onclick="confirmarCancelacion()" style="flex:1;padding:10px;background:var(--error);color:white;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-family:inherit;">Yes, cancel</button>
             </div>
         </div>
     </div>
 
-    <div id="modalUser" style="position:fixed;inset:0;background:rgba(0,0,0,0.4);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:999;">
-        <div style="background:white;width:400px;border-radius:24px;overflow:hidden;">
-            <div style="padding:24px;border-bottom:1px solid #e1e3e4;display:flex;justify-content:space-between;align-items:center;">
+    <!-- Modal usuario -->
+    <div id="modalUser" class="user-modal">
+        <div class="user-modal-box">
+            <div class="user-modal-header">
                 <h3 style="font-weight:700;">Detalles de cuenta</h3>
-                <span class="material-symbols-outlined" style="cursor:pointer;color:#414754;" onclick="toggleModal(false)">close</span>
+                <span class="material-symbols-outlined" style="cursor:pointer; color:var(--text-muted);" onclick="toggleModal(false)">close</span>
             </div>
-            <div style="padding:24px;">
-                <div style="display:flex;gap:16px;align-items:center;margin-bottom:24px;">
+            <div class="user-modal-body">
+                <div style="display:flex; gap:16px; align-items:center; margin-bottom:24px;">
                     <img id="modal-avatar" src="https://ui-avatars.com/api/?name=...&background=005bbf&color=fff" style="width:50px;height:50px;border-radius:50%;">
-                    <div><p id="modal-nombre" style="font-weight:700;font-size:16px;">...</p></div>
+                    <div><p id="modal-nombre" style="font-weight:700; font-size:16px;">...</p></div>
                 </div>
-                <div style="font-size:14px;color:#414754;display:grid;gap:12px;">
+                <div style="font-size:14px; color:var(--text-muted); display:grid; gap:12px;">
                     <p><strong>Email:</strong> <span id="modal-email">...</span></p>
                     <p><strong>ID:</strong> <span id="modal-id">...</span></p>
                 </div>
-                <button onclick="cerrarSesion()" style="color:#ba1a1a;border:1px solid #ba1a1a;width:100%;margin-top:20px;display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;background:white;font-family:inherit;">
+                <button onclick="cerrarSesion()" style="color:var(--error);border:1px solid var(--error);width:100%;margin-top:20px;display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;background:white;font-family:inherit;">
                     <span class="material-symbols-outlined">logout</span> Cerrar Sesión
                 </button>
             </div>
-            <div style="padding:16px 24px;background:#f3f4f5;text-align:right;">
-                <button onclick="toggleModal(false)" style="padding:8px 20px;background:#1a73e8;color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-family:inherit;">Cerrar</button>
+            <div class="user-modal-footer">
+                <button onclick="toggleModal(false)" style="padding:8px 20px;background:var(--primary-light);color:white;border:none;border-radius:8px;font-weight:600;cursor:pointer;font-family:inherit;">Cerrar</button>
             </div>
         </div>
+    </div>
+
+    <!-- Panel de notificaciones -->
+    <div id="notifPanel" class="notif-panel">
+        <div class="notif-panel-header">
+            <h3 style="font-weight:700; font-size:16px;">Notificaciones</h3>
+            <span class="material-symbols-outlined" style="cursor:pointer; color:var(--text-muted);" onclick="toggleNotificaciones(false)">close</span>
+        </div>
+        <div id="lista-notificaciones" class="notif-panel-body"></div>
     </div>
 
     <script src="js/api.js"></script>
@@ -522,6 +256,7 @@
             document.getElementById('modal-email').textContent = datos.email;
             document.getElementById('modal-id').textContent = '#' + String(datos.id).padStart(6, '0');
         }
+
         function toggleModal(show) { document.getElementById('modalUser').style.display = show ? 'flex' : 'none'; }
         function cerrarSesion() {
             localStorage.removeItem('jwt_token');
@@ -535,7 +270,7 @@
 
             if (!res || res.status !== 'success' || res.data.length === 0) {
                 grid.innerHTML = `
-                    <div style="grid-column:1/-1; text-align:center; padding:60px; color:var(--texto-gris);">
+                    <div style="grid-column:1/-1; text-align:center; padding:60px; color:var(--text-muted);">
                         <span class="material-symbols-outlined" style="font-size:48px;opacity:0.3;">credit_card_off</span>
                         <p style="margin-top:12px;font-weight:600;">No cards found</p>
                     </div>`;
@@ -546,18 +281,20 @@
             grid.innerHTML = '';
 
             res.data.forEach((t, i) => {
-                const clase = i % 2 === 0 ? 'tarjeta-azul' : 'tarjeta-negra';
-                const estadoClass = t.estado !== 'activa' ? `tarjeta-${t.estado}` : '';
-                const badgeClass = `badge-${t.estado}`;
+                const clase      = i % 2 === 0 ? 'card-blue' : 'card-dark';
+                const estadoClass = t.estado === 'bloqueada' ? 'card-blocked'
+                                  : t.estado === 'cancelada' ? 'card-cancelled' : '';
+                const badgeClass  = t.estado === 'activa'    ? 'card-badge-active'
+                                  : t.estado === 'bloqueada' ? 'card-badge-blocked' : 'card-badge-cancelled';
                 const logo = i % 2 === 0
                     ? `<span style="font-weight:900;font-style:italic;font-size:20px;">VISA</span>`
                     : `<div style="display:flex;"><div style="width:24px;height:24px;background:#eb001b;border-radius:50%;opacity:0.9;"></div><div style="width:24px;height:24px;background:#f79e1b;border-radius:50%;margin-left:-12px;opacity:0.9;"></div></div>`;
 
                 const el = document.createElement('div');
-                el.className = `tarjeta-visual ${clase} ${estadoClass}`;
+                el.className = `card-visual ${clase} ${estadoClass}`.trim();
                 el.dataset.id = t.id;
                 el.innerHTML = `
-                    <span class="badge-estado ${badgeClass}">${t.estado}</span>
+                    <span class="card-badge ${badgeClass}">${t.estado}</span>
                     <div style="display:flex;justify-content:space-between;">
                         <span class="material-symbols-outlined" style="font-size:32px;">contactless</span>
                         ${logo}
@@ -577,40 +314,36 @@
 
         // ─── SELECCIÓN ────────────────────────────────────────────
         function seleccionarTarjeta(t, el, clase) {
-            document.querySelectorAll('.tarjeta-visual').forEach(c => c.classList.remove('seleccionada'));
-            el.classList.add('seleccionada');
+            document.querySelectorAll('.card-visual').forEach(c => c.classList.remove('card-selected'));
+            el.classList.add('card-selected');
             tarjetaSeleccionada = t;
 
-            // Actualizar panel
             document.getElementById('panel-placeholder').style.display = 'none';
             document.getElementById('panel-contenido').style.display = 'block';
 
-            // Mini tarjeta en panel
             const visual = document.getElementById('panel-tarjeta-visual');
-            visual.className = `tarjeta-visual ${clase}`;
+            visual.className = `card-visual ${clase}`;
             document.getElementById('panel-numero').textContent = t.numero_oculto;
             document.getElementById('panel-expiracion').textContent = 'Expires ' + t.expiracion;
 
-            // Datos rápidos
             document.getElementById('panel-numero-corto').textContent = t.numero_oculto;
             document.getElementById('panel-exp-dato').textContent = t.expiracion;
             actualizarChipEstado('panel-estado-chip', t.estado);
-
-            // Botón freeze
             actualizarBotonesEstado(t.estado);
         }
 
         function actualizarChipEstado(id, estado) {
             const chip = document.getElementById(id);
-            chip.className = `chip-estado chip-${estado}`;
+            const estadoEn = estado === 'activa' ? 'active' : estado === 'bloqueada' ? 'blocked' : 'cancelled';
+            chip.className = `status-chip chip-${estadoEn}`;
             chip.textContent = estado.charAt(0).toUpperCase() + estado.slice(1);
         }
 
         function actualizarBotonesEstado(estado) {
-            const btnFreeze = document.getElementById('btn-freeze');
+            const btnFreeze  = document.getElementById('btn-freeze');
             const btnCancelar = document.getElementById('btn-cancelar');
-            const wrap = document.getElementById('freeze-icon-wrap');
-            const icon = document.getElementById('freeze-icon');
+            const wrap  = document.getElementById('freeze-icon-wrap');
+            const icon  = document.getElementById('freeze-icon');
             const label = document.getElementById('freeze-label');
 
             const cancelada = estado === 'cancelada';
@@ -618,7 +351,7 @@
 
             if (estado === 'bloqueada') {
                 wrap.style.background = '#e8f0fe';
-                wrap.style.color = 'var(--primario)';
+                wrap.style.color = 'var(--primary)';
                 icon.textContent = 'lock_open';
                 label.textContent = 'Unfreeze';
             } else {
@@ -634,7 +367,7 @@
         function cerrarPanel() {
             document.getElementById('panel-placeholder').style.display = 'flex';
             document.getElementById('panel-contenido').style.display = 'none';
-            document.querySelectorAll('.tarjeta-visual').forEach(c => c.classList.remove('seleccionada'));
+            document.querySelectorAll('.card-visual').forEach(c => c.classList.remove('card-selected'));
             tarjetaSeleccionada = null;
         }
 
@@ -654,9 +387,7 @@
             document.getElementById('modalDatos').style.display = 'flex';
         }
 
-        function cerrarModalDatos() {
-            document.getElementById('modalDatos').style.display = 'none';
-        }
+        function cerrarModalDatos() { document.getElementById('modalDatos').style.display = 'none'; }
 
         // ─── FREEZE / UNFREEZE ────────────────────────────────────
         async function toggleFreeze() {
@@ -671,60 +402,42 @@
             document.getElementById('modalCancelar').style.display = 'flex';
         }
 
-        function cerrarModalCancelar() {
-            document.getElementById('modalCancelar').style.display = 'none';
-        }
+        function cerrarModalCancelar() { document.getElementById('modalCancelar').style.display = 'none'; }
 
         async function confirmarCancelacion() {
             cerrarModalCancelar();
             await cambiarEstado('cancelada');
         }
 
-        // ─── CAMBIAR ESTADO (shared) ──────────────────────────────
+        // ─── CAMBIAR ESTADO ───────────────────────────────────────
         async function cambiarEstado(nuevoEstado) {
             const res = await apiFetch('tarjeta.php', {
                 method: 'PUT',
-                body: JSON.stringify({
-                    tarjeta_id: tarjetaSeleccionada.id,
-                    estado: nuevoEstado
-                })
+                body: JSON.stringify({ tarjeta_id: tarjetaSeleccionada.id, estado: nuevoEstado })
             });
 
-            if (!res || res.status !== 'success') {
-                alert('Error al actualizar la tarjeta');
-                return;
-            }
+            if (!res || res.status !== 'success') { alert('Error al actualizar la tarjeta'); return; }
 
-            // Actualizar estado local
             tarjetaSeleccionada.estado = nuevoEstado;
             const idx = todasLasTarjetas.findIndex(t => t.id === tarjetaSeleccionada.id);
             if (idx !== -1) todasLasTarjetas[idx].estado = nuevoEstado;
 
             // Actualizar badge en la tarjeta del grid
-            const cardEl = document.querySelector(`.tarjeta-visual[data-id="${tarjetaSeleccionada.id}"]`);
+            const cardEl = document.querySelector(`.card-visual[data-id="${tarjetaSeleccionada.id}"]`);
             if (cardEl) {
-                const badge = cardEl.querySelector('.badge-estado');
-                badge.className = `badge-estado badge-${nuevoEstado}`;
+                const badge = cardEl.querySelector('.card-badge');
+                const badgeClass = nuevoEstado === 'activa'    ? 'card-badge-active'
+                                 : nuevoEstado === 'bloqueada' ? 'card-badge-blocked' : 'card-badge-cancelled';
+                badge.className = `card-badge ${badgeClass}`;
                 badge.textContent = nuevoEstado;
-                cardEl.classList.toggle('tarjeta-bloqueada', nuevoEstado === 'bloqueada');
-                cardEl.classList.toggle('tarjeta-cancelada', nuevoEstado === 'cancelada');
+                cardEl.classList.toggle('card-blocked',   nuevoEstado === 'bloqueada');
+                cardEl.classList.toggle('card-cancelled', nuevoEstado === 'cancelada');
             }
 
-            // Actualizar panel
             actualizarChipEstado('panel-estado-chip', nuevoEstado);
             actualizarBotonesEstado(nuevoEstado);
         }
     </script>
-
-
-    <!-- Panel de notificaciones -->
-    <div id="notifPanel" style="position:fixed;top:0;right:0;height:100%;width:380px;max-width:100vw;background:white;z-index:500;transform:translateX(100%);transition:transform 0.3s ease;box-shadow:-4px 0 32px rgba(0,0,0,0.1);display:flex;flex-direction:column;">
-        <div style="padding:24px;border-bottom:1px solid #e1e3e4;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
-            <h3 style="font-weight:700;font-size:16px;">Notificaciones</h3>
-            <span class="material-symbols-outlined" style="cursor:pointer;color:#414754;" onclick="toggleNotificaciones(false)">close</span>
-        </div>
-        <div id="lista-notificaciones" style="flex:1;overflow-y:auto;"></div>
-    </div>
 
     <script src="js/notificaciones.js"></script>
 </body>

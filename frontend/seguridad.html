@@ -4,436 +4,78 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Security Center - FintechPro</title>
+    <title>Seguridad - Beasy</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap"
-        rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-        rel="stylesheet" />
-
-    <style>
-        :root {
-            --fondo: #f8f9fa;
-            --blanco: #ffffff;
-            --primario: #005bbf;
-            --primario-suave: #1a73e8;
-            --primario-contenedor: #1a73e8;
-            --primario-fijo: #d8e2ff;
-            --texto: #191c1d;
-            --texto-gris: #414754;
-            --borde: #e1e3e4;
-            --outline-variant: #c1c6d6;
-            --verde: #008939;
-            --verde-fondo: #89fa9b;
-            --error: #ba1a1a;
-            --error-fondo: #ffdad6;
-            --sombra: 0 4px 20px rgba(0, 0, 0, 0.04);
-            --surface-low: #f3f4f5;
-        }
-
-        /* Reset General */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--fondo);
-            color: var(--texto);
-            display: none;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-
-        .fill {
-            font-variation-settings: 'FILL' 1;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        /* SIDEBAR */
-        .sidebar {
-            width: 280px;
-            background: var(--blanco);
-            border-right: 1px solid var(--borde);
-            display: flex;
-            flex-direction: column;
-            padding: 24px 0;
-            z-index: 20;
-        }
-
-        .logo-box {
-            padding: 0 24px;
-            margin-bottom: 32px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .logo-icon {
-            background: var(--primario-suave);
-            color: white;
-            padding: 8px;
-            border-radius: 8px;
-            display: flex;
-        }
-
-        .nav-lista {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            padding: 0 12px;
-        }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            text-decoration: none;
-            color: var(--texto-gris);
-            font-size: 14px;
-            font-weight: 500;
-            border-radius: 8px;
-            transition: 0.2s;
-        }
-
-        .nav-link:hover {
-            background: #f3f4f5;
-            color: var(--texto);
-        }
-
-        .nav-link.activo {
-            background: #d9e2ff;
-            color: var(--primario);
-            font-weight: 600;
-            border-left: 4px solid var(--primario);
-            border-top-left-radius: 0;
-            border-bottom-left-radius: 0;
-        }
-
-        /* HEADER */
-        .main-wrapper {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .header {
-            height: 72px;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--borde);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 32px;
-            flex-shrink: 0;
-        }
-
-        .notif-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            position: relative;
-            padding: 8px;
-            color: var(--texto-gris);
-        }
-
-        .notif-punto {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 8px;
-            height: 8px;
-            background: var(--error);
-            border-radius: 50%;
-        }
-
-        .perfil-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 4px 12px;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .perfil-btn:hover {
-            background: #f3f4f5;
-        }
-
-        /* CONTENIDO Y GRID */
-        .content {
-            flex: 1;
-            padding: 32px;
-            overflow-y: auto;
-        }
-
-        .max-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            width: 100%;
-        }
-
-        .grid-layout {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 24px;
-        }
-
-        /* CARD Y FORMULARIOS */
-        .card {
-            background: white;
-            border: 1px solid var(--outline-variant);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .card-header {
-            padding: 24px;
-            border-bottom: 1px solid var(--outline-variant);
-            background: var(--surface-low);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .card-body {
-            padding: 24px;
-            background: white;
-        }
-
-        .input-group {
-            margin-bottom: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .label {
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--texto);
-        }
-
-        .input-style {
-            width: 100%;
-            background: var(--fondo);
-            border: 1px solid var(--outline-variant);
-            border-radius: 8px;
-            padding: 10px 16px;
-            font-size: 14px;
-            transition: 0.2s;
-        }
-
-        .input-style:focus {
-            outline: none;
-            border-color: var(--primario-suave);
-            box-shadow: 0 0 0 1px var(--primario-suave);
-        }
-
-        /* BOTONES */
-        .btn {
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            border: 1px solid transparent;
-        }
-
-        .btn-primary {
-            background: var(--primario-contenedor);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            opacity: 0.9;
-        }
-
-        .btn-outline {
-            background: white;
-            border-color: var(--outline-variant);
-        }
-
-        .btn-outline:hover {
-            background: var(--surface-low);
-        }
-
-        /* STEPPER */
-        .stepper {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 32px;
-        }
-
-        .step-circle {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            border: 1px solid var(--outline-variant);
-            color: var(--texto-gris);
-        }
-
-        .step-active {
-            background: var(--primario-contenedor);
-            color: white;
-            border-color: var(--primario-contenedor);
-        }
-
-        .step-line {
-            height: 2px;
-            width: 48px;
-            background: var(--outline-variant);
-        }
-
-        .step-line.active {
-            background: var(--primario-contenedor);
-            opacity: 0.2;
-        }
-
-        /* MODAL */
-        .modal-fondo {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.4);
-            backdrop-filter: blur(4px);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-        }
-
-        .modal-caja {
-            background: white;
-            width: 400px;
-            border-radius: 24px;
-            overflow: hidden;
-            animation: zoom 0.3s ease;
-        }
-
-        @keyframes zoom {
-            from {
-                transform: scale(0.9);
-            }
-
-            to {
-                transform: scale(1);
-            }
-        }
-
-        /* COLSPAN */
-        .col-span-8 {
-            grid-column: span 8 / span 8;
-        }
-
-        .col-span-4 {
-            grid-column: span 4 / span 4;
-        }
-
-        @media (max-width: 1024px) {
-
-            .col-span-8,
-            .col-span-4 {
-                grid-column: span 12 / span 12;
-            }
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/app.css" />
 </head>
 
-<body>
+<body style="display:none;">
 
     <aside class="sidebar">
         <div class="logo-box">
-            <div class="logo-icon"><span class="material-symbols-outlined fill">account_balance</span></div>
-            <h1 style="font-size: 18px; font-weight: 700; color: var(--primario);">Beasy</h1>
+            <div class="logo-icon"><span class="material-symbols-outlined icon-fill">account_balance</span></div>
+            <h1 class="logo-text">Beasy</h1>
         </div>
         <nav class="nav-lista">
             <a href="dashboard.html" class="nav-link"><span class="material-symbols-outlined">dashboard</span> Dashboard</a>
             <a href="cuentas.html" class="nav-link"><span class="material-symbols-outlined">account_balance</span> Cuentas</a>
             <a href="misTarjetas.html" class="nav-link"><span class="material-symbols-outlined">credit_card</span> Tarjetas</a>
             <a href="movimientos.html" class="nav-link"><span class="material-symbols-outlined">payments</span> Movimientos</a>
-            <a href="#" class="nav-link activo"><span class="material-symbols-outlined fill">verified_user</span>
-                Seguridad</a>
+            <a href="#" class="nav-link activo"><span class="material-symbols-outlined icon-fill">verified_user</span> Seguridad</a>
         </nav>
     </aside>
 
     <div class="main-wrapper">
         <header class="header">
-            <div style="font-weight: 600; font-size: 18px;">Security & Help Center</div>
-            <div style="display: flex; align-items: center; gap: 16px;">
-                <button id="btn-notificaciones" onclick="toggleNotificaciones(true)" style="background:none;border:none;cursor:pointer;position:relative;padding:8px;">
-                    <span class="material-symbols-outlined" style="color:#414754;">notifications</span>
-                    <span id="badge-notificaciones" style="position:absolute;top:4px;right:4px;min-width:16px;height:16px;background:#ba1a1a;border-radius:99px;font-size:10px;font-weight:700;color:white;display:none;align-items:center;justify-content:center;padding:0 3px;">0</span>
+            <div class="header-title">Security & Help Center</div>
+            <div class="header-actions">
+                <button id="btn-notificaciones" class="notif-btn" onclick="toggleNotificaciones(true)">
+                    <span class="material-symbols-outlined">notifications</span>
+                    <span id="badge-notificaciones" class="notif-badge">0</span>
                 </button>
                 <div class="perfil-btn" onclick="toggleModal(true)">
-                    <img id="header-avatar" src="https://ui-avatars.com/api/?name=...&background=005bbf&color=fff"
-                        style="width: 32px; border-radius: 50%;">
-                    <span id="header-nombre" style="font-size: 14px; font-weight: 500;">...</span>
-                    <span class="material-symbols-outlined" style="font-size: 18px;">keyboard_arrow_down</span>
+                    <img id="header-avatar" src="https://ui-avatars.com/api/?name=...&background=005bbf&color=fff" class="perfil-img">
+                    <span id="header-nombre" class="perfil-name">...</span>
+                    <span class="material-symbols-outlined">keyboard_arrow_down</span>
                 </div>
             </div>
         </header>
 
         <main class="content">
-            <div class="max-container">
+            <div class="page-inner" style="max-width:1000px;">
 
-                <div style="margin-bottom: 32px;">
-                    <h2 style="font-size: 30px; font-weight: 700; margin-bottom: 8px;">Reportar Incidencia</h2>
-                    <p style="color: var(--texto-gris);">Manage your account security, report issues, and find
-                        assistance.</p>
+                <div style="margin-bottom:32px;">
+                    <h2 class="page-title">Reportar Incidencia</h2>
+                    <p class="page-subtitle">Manage your account security, report issues, and find assistance.</p>
                 </div>
 
-                <div class="grid-layout">
-                    <div class="col-span-8">
-                        <div class="card">
+                <div class="app-grid">
+                    <div class="col-8">
+                        <div class="card" style="padding:0;">
                             <div class="card-header">
-                                <div style="display: flex; align-items: center; gap: 12px;">
-                                    <span class="material-symbols-outlined"
-                                        style="color: var(--primario);">warning</span>
-                                    <h3 style="font-size: 18px; font-weight: 700;">File a Detailed Report</h3>
+                                <div style="display:flex; align-items:center; gap:12px;">
+                                    <span class="material-symbols-outlined" style="color:var(--primary);">warning</span>
+                                    <h3 style="font-size:18px; font-weight:700;">File a Detailed Report</h3>
                                 </div>
                                 <span class="material-symbols-outlined">expand_less</span>
                             </div>
 
                             <div class="card-body">
                                 <!-- PASO 1 -->
-                                <div id="paso-1" class="seccion-paso">
-                                    <div class="stepper">
-                                        <div class="step-circle step-active">1</div>
-
-                                        <span style="margin-left: 8px; font-size: 14px; color: var(--texto-gris);">
+                                <div id="paso-1" class="form-step">
+                                    <div class="stepper" style="border-bottom:none; padding-bottom:0; gap:8px; margin-bottom:32px;">
+                                        <div class="step-circle-sm step-active">1</div>
+                                        <span style="margin-left:8px; font-size:14px; color:var(--text-muted);">
                                             Step 1: Incident Details
                                         </span>
                                     </div>
 
-                                    <div
-                                        style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
-                                        <div class="input-group">
-                                            <label class="label">Issue Type</label>
-                                            <select class="input-style" id="select_tipo">
+                                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:24px;">
+                                        <div class="form-group">
+                                            <label class="form-label">Issue Type</label>
+                                            <select class="form-input" id="select_tipo">
                                                 <option>Suspicious Account Activity</option>
                                                 <option>Phishing Attempt</option>
                                                 <option>Identity Theft</option>
@@ -441,22 +83,20 @@
                                             </select>
                                         </div>
 
-                                        <div class="input-group">
-                                            <label class="label">Date of Occurrence</label>
-                                            <input type="date" class="input-style">
+                                        <div class="form-group">
+                                            <label class="form-label">Date of Occurrence</label>
+                                            <input type="date" class="form-input">
                                         </div>
                                     </div>
 
-                                    <div class="input-group">
-                                        <label class="label">Incident Description</label>
-                                        <textarea id="textarea_mensaje" class="input-style" rows="4"
+                                    <div class="form-group">
+                                        <label class="form-label">Incident Description</label>
+                                        <textarea id="textarea_mensaje" class="form-input" rows="4"
                                             placeholder="Please provide specific details..."></textarea>
                                     </div>
 
-                                    <div
-                                        style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--outline-variant); display: flex; justify-content: flex-end; gap: 12px;">
+                                    <div style="margin-top:24px; padding-top:24px; border-top:1px solid var(--border-light); display:flex; justify-content:flex-end; gap:12px;">
                                         <button class="btn btn-outline">Cancel</button>
-
                                         <button class="btn btn-primary" onclick="irAlPaso(3)">
                                             Next: Review
                                         </button>
@@ -464,45 +104,34 @@
                                 </div>
 
                                 <!-- PASO 3 -->
-                                <div id="paso-3" class="seccion-paso hidden">
-
-                                    <div class="stepper">
-                                        <div class="step-circle step-active">
-                                            <span class="material-symbols-outlined" style="font-size:14px">check</span>
+                                <div id="paso-3" class="form-step hidden">
+                                    <div class="stepper" style="border-bottom:none; padding-bottom:0; gap:8px; margin-bottom:32px;">
+                                        <div class="step-circle-sm step-active">
+                                            <span class="material-symbols-outlined" style="font-size:14px;">check</span>
                                         </div>
-
-                                        <div class="step-line active"></div>
-
-                                        <div class="step-circle step-active">2</div>
-
-                                        <span style="margin-left: 8px; font-size: 14px; color: var(--texto-gris);">
+                                        <div class="step-line-sm active"></div>
+                                        <div class="step-circle-sm step-active">2</div>
+                                        <span style="margin-left:8px; font-size:14px; color:var(--text-muted);">
                                             Step 2: Final Review
                                         </span>
                                     </div>
 
-                                    <div style="background: var(--surface-low); border-radius: 12px; padding: 20px;">
-                                        <h4 style="font-weight: 700; margin-bottom: 12px;">Summary</h4>
-
-                                        <p style="font-size: 14px; margin-bottom: 8px;">
+                                    <div style="background:var(--surface-dim); border-radius:12px; padding:20px;">
+                                        <h4 style="font-weight:700; margin-bottom:12px;">Summary</h4>
+                                        <p style="font-size:14px; margin-bottom:8px;">
                                             <strong>Type:</strong>
                                             <span id="summary-type">Suspicious Activity</span>
                                         </p>
-
-                                        <p style="font-size: 14px;">
+                                        <p style="font-size:14px;">
                                             <strong>Description:</strong>
                                             <span id="summary-desc">...</span>
                                         </p>
                                     </div>
 
-                                    <div
-                                        style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--outline-variant); display: flex; justify-content: flex-end; gap: 12px;">
-
-                                        <button class="btn btn-outline" onclick="irAlPaso(1)">
-                                            Back
-                                        </button>
-
+                                    <div style="margin-top:24px; padding-top:24px; border-top:1px solid var(--border-light); display:flex; justify-content:flex-end; gap:12px;">
+                                        <button class="btn btn-outline" onclick="irAlPaso(1)">Back</button>
                                         <button class="btn btn-primary" id="btnSubmit" onclick="enviarReporte()"
-                                            style="background: var(--verde);">
+                                            style="background:var(--tertiary);">
                                             Submit Report
                                         </button>
                                     </div>
@@ -510,101 +139,88 @@
                             </div>
                         </div>
 
-                        <div id="paso-4" class="seccion-paso hidden">
-                            <div
-                                style="max-width: 560px; margin: 48px auto 0; background: white; padding: 40px; border-radius: 24px; text-align: center; border: 1px solid var(--outline-variant); box-shadow: var(--sombra);">
-                                <div
-                                    style="width: 96px; height: 96px; background: #e8f5e9; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 32px;">
-                                    <span class="material-symbols-outlined fill"
-                                        style="font-size: 72px; color: #2e7d32;">check_circle</span>
+                        <div id="paso-4" class="form-step hidden">
+                            <div style="max-width:560px; margin:48px auto 0; background:white; padding:40px; border-radius:24px; text-align:center; border:1px solid var(--border-light); box-shadow:var(--shadow);">
+                                <div style="width:96px;height:96px;background:var(--green-bg);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 32px;">
+                                    <span class="material-symbols-outlined icon-fill" style="font-size:72px; color:#2e7d32;">check_circle</span>
                                 </div>
-                                <h1 style="font-size: 28px; font-weight: 700; margin-bottom: 12px;">Report Submitted
-                                    Successfully</h1>
-                                <div
-                                    style="background: var(--fondo); padding: 12px 24px; border-radius: 8px; display: inline-block; margin-bottom: 32px; border: 1px solid var(--outline-variant);">
-                                    <span style="font-size: 12px; color: var(--texto-gris); display: block;">Tracking
-                                        Number</span>
-                                    <span style="font-size: 18px; font-weight: 700; color: var(--primario);"
-                                        id="num-ticket">#SR-XXXXX</span>
+                                <h1 style="font-size:28px; font-weight:700; margin-bottom:12px;">Report Submitted Successfully</h1>
+                                <div style="background:var(--bg);padding:12px 24px;border-radius:8px;display:inline-block;margin-bottom:32px;border:1px solid var(--border-light);">
+                                    <span style="font-size:12px; color:var(--text-muted); display:block;">Tracking Number</span>
+                                    <span style="font-size:18px; font-weight:700; color:var(--primary);" id="num-ticket">#SR-XXXXX</span>
                                 </div>
-                                <button class="btn btn-primary"
-                                    style="width: 100%; padding: 16px; justify-content: center;"
-                                    onclick="location.reload()">Return to Security Center</button>
+                                <button class="btn btn-primary" style="width:100%; padding:16px; justify-content:center;" onclick="location.reload()">
+                                    Return to Security Center
+                                </button>
                             </div>
                         </div>
 
                     </div>
+                </div>
+            </div>
         </main>
     </div>
 
-    <div class="modal-fondo" id="modalUser">
-        <div class="modal-caja">
-            <div
-                style="padding: 24px; border-bottom: 1px solid var(--borde); display: flex; justify-content: space-between; align-items: center;">
-                <h3 style="font-weight: 700;">Account Details</h3>
-                <span class="material-symbols-outlined" style="cursor: pointer; color: var(--texto-gris);"
-                    onclick="toggleModal(false)">close</span>
+    <!-- Modal usuario -->
+    <div id="modalUser" class="user-modal">
+        <div class="user-modal-box">
+            <div class="user-modal-header">
+                <h3 style="font-weight:700;">Detalles de cuenta</h3>
+                <span class="material-symbols-outlined" style="cursor:pointer; color:var(--text-muted);" onclick="toggleModal(false)">close</span>
             </div>
-            <div style="padding: 24px;">
-                <div style="display: flex; gap: 16px; align-items: center; margin-bottom: 24px;">
-                    <img id="modal-avatar" src="https://ui-avatars.com/api/?name=...&background=005bbf&color=fff"
-                        style="width: 50px; border-radius: 50%;">
-                    <div>
-                        <p id="modal-nombre" style="font-weight: 700;">...</p>
-                    </div>
+            <div class="user-modal-body">
+                <div style="display:flex; gap:16px; align-items:center; margin-bottom:24px;">
+                    <img id="modal-avatar" src="https://ui-avatars.com/api/?name=...&background=005bbf&color=fff" style="width:50px;height:50px;border-radius:50%;">
+                    <div><p id="modal-nombre" style="font-weight:700;">...</p></div>
                 </div>
-                <div style="font-size: 14px; color: var(--texto-gris); display: grid; gap: 12px;">
+                <div style="font-size:14px; color:var(--text-muted); display:grid; gap:12px;">
                     <p><strong>Email:</strong> <span id="modal-email">...</span></p>
                     <p><strong>ID:</strong> <span id="modal-id">...</span></p>
                 </div>
                 <button class="btn btn-outline" onclick="cerrarSesion()"
-                    style="color: var(--error); border-color: var(--error); width: 100%; margin-top: 20px; justify-content: center;">
-                    <span class="material-symbols-outlined">logout</span> Sign Out
+                    style="color:var(--error); border-color:var(--error); width:100%; margin-top:20px; justify-content:center;">
+                    <span class="material-symbols-outlined">logout</span> Cerrar Sesión
                 </button>
             </div>
-            <div style="padding: 16px 24px; background: #f3f4f5; text-align: right;">
-                <button class="btn btn-primary" onclick="toggleModal(false)">Close</button>
+            <div class="user-modal-footer">
+                <button class="btn btn-primary" onclick="toggleModal(false)">Cerrar</button>
             </div>
         </div>
     </div>
 
+    <!-- Panel de notificaciones -->
+    <div id="notifPanel" class="notif-panel">
+        <div class="notif-panel-header">
+            <h3 style="font-weight:700; font-size:16px;">Notificaciones</h3>
+            <span class="material-symbols-outlined" style="cursor:pointer; color:var(--text-muted);" onclick="toggleNotificaciones(false)">close</span>
+        </div>
+        <div id="lista-notificaciones" class="notif-panel-body"></div>
+    </div>
+
     <script src="js/api.js"></script>
     <script>
-        // 1. DEFINICIÓN GLOBAL (Fuera de cualquier función)
         const token = localStorage.getItem('jwt_token');
 
-        // 2. VALIDACIÓN DE SESIÓN AL CARGAR
         document.addEventListener('DOMContentLoaded', async () => {
-            // Si no hay token en el navegador, mandamos al login de inmediato
             if (!token) {
-                console.warn("No hay token detectado localmente.");
                 window.location.href = 'inicio_sesion.html';
                 return;
             }
 
             try {
-                // Intentamos validar con el servidor usando el helper
                 const respuesta = await apiFetch('validate_helper.php');
-
                 if (respuesta && respuesta.status === 'success') {
-                    console.log("Sesión verificada correctamente en el servidor.");
-                    // Mostramos el body (que estaba oculto por el CSS)
                     document.body.style.display = 'flex';
-                    // Cargamos los datos del usuario
                     cargarPerfil();
                 } else {
-                    console.error("Token inválido para el servidor.");
                     localStorage.removeItem('jwt_token');
                     window.location.href = 'inicio_sesion.html';
                 }
             } catch (e) {
-                console.error("Error técnico al conectar con el validador:", e);
-                // En caso de error crítico (como un 404 del helper), mostramos la web igual para depurar
                 document.body.style.display = 'flex';
             }
         });
 
-        // 3. FUNCIONES DE LA INTERFAZ
         async function cargarPerfil() {
             const datos = await apiFetch('perfil.php');
             if (!datos || datos.status !== 'success') return;
@@ -612,18 +228,16 @@
             const nombreCompleto = datos.nombre + ' ' + datos.apellidos;
             const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(datos.iniciales)}&background=005bbf&color=fff`;
 
-            // Header
             document.getElementById('header-avatar').src = avatarUrl;
             document.getElementById('header-nombre').textContent = datos.nombre + ' ' + datos.apellidos.split(' ')[0] + '.';
-
-            // Modal
             document.getElementById('modal-avatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(nombreCompleto)}&background=005bbf&color=fff`;
             document.getElementById('modal-nombre').textContent = nombreCompleto;
             document.getElementById('modal-email').textContent = datos.email;
             document.getElementById('modal-id').textContent = '#' + String(datos.id).padStart(6, '0');
         }
+
         function irAlPaso(n) {
-            document.querySelectorAll('.seccion-paso').forEach(sec => sec.classList.add('hidden'));
+            document.querySelectorAll('.form-step').forEach(sec => sec.classList.add('hidden'));
             const paso = document.getElementById('paso-' + n);
             if (paso) paso.classList.remove('hidden');
 
@@ -643,19 +257,13 @@
         }
 
         async function enviarReporte() {
-            const tipo = document.getElementById('select_tipo').value;
+            const tipo    = document.getElementById('select_tipo').value;
             const mensaje = document.getElementById('textarea_mensaje').value;
-            const fecha = new Date().toISOString().split('T')[0]; // Fecha actual YYYY-MM-DD
+            const fecha   = new Date().toISOString().split('T')[0];
 
-            // Creamos un objeto normal, ya no necesitamos FormData de archivos
-            const datos = {
-                tipo: tipo,
-                mensaje: mensaje,
-                fecha: fecha
-            };
+            const datos = { tipo, mensaje, fecha };
 
             try {
-                // Usamos apiFetch que ya gestiona el Token y la URL base de Docker
                 const data = await apiFetch('CrearIncidencia.php', {
                     method: 'POST',
                     body: JSON.stringify(datos)
@@ -673,16 +281,6 @@
             }
         }
     </script>
-
-
-    <!-- Panel de notificaciones -->
-    <div id="notifPanel" style="position:fixed;top:0;right:0;height:100%;width:380px;max-width:100vw;background:white;z-index:500;transform:translateX(100%);transition:transform 0.3s ease;box-shadow:-4px 0 32px rgba(0,0,0,0.1);display:flex;flex-direction:column;">
-        <div style="padding:24px;border-bottom:1px solid #e1e3e4;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;">
-            <h3 style="font-weight:700;font-size:16px;">Notificaciones</h3>
-            <span class="material-symbols-outlined" style="cursor:pointer;color:#414754;" onclick="toggleNotificaciones(false)">close</span>
-        </div>
-        <div id="lista-notificaciones" style="flex:1;overflow-y:auto;"></div>
-    </div>
 
     <script src="js/notificaciones.js"></script>
 </body>
