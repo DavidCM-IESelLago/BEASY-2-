@@ -98,6 +98,7 @@ CREATE TABLE incidencias (
     tipo ENUM('Suspicious Account Activity', 'Phishing Attempt', 'Identity Theft') NOT NULL,
     descripcion TEXT NOT NULL,
     estado ENUM('abierta', 'resuelta') DEFAULT 'abierta',
+    fecha_incidencia DATE NOT NULL DEFAULT (CURRENT_DATE),
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

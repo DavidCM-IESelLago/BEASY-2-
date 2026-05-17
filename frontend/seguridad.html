@@ -429,8 +429,7 @@
                                         </span>
                                     </div>
 
-                                    <div
-                                        style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+                                    <div style="margin-bottom: 24px;">
                                         <div class="input-group">
                                             <label class="label">Issue Type</label>
                                             <select class="input-style" id="select_tipo">
@@ -439,11 +438,6 @@
                                                 <option>Identity Theft</option>
                                                 <option>Other</option>
                                             </select>
-                                        </div>
-
-                                        <div class="input-group">
-                                            <label class="label">Date of Occurrence</label>
-                                            <input type="date" class="input-style">
                                         </div>
                                     </div>
 
@@ -645,13 +639,10 @@
         async function enviarReporte() {
             const tipo = document.getElementById('select_tipo').value;
             const mensaje = document.getElementById('textarea_mensaje').value;
-            const fecha = new Date().toISOString().split('T')[0]; // Fecha actual YYYY-MM-DD
 
-            // Creamos un objeto normal, ya no necesitamos FormData de archivos
             const datos = {
                 tipo: tipo,
-                mensaje: mensaje,
-                fecha: fecha
+                mensaje: mensaje
             };
 
             try {

@@ -35,24 +35,19 @@ try {
 
     $tipo        = trim($input['tipo']    ?? '');
     $descripcion = trim($input['mensaje'] ?? '');
-    $fecha       = $input['fecha']        ?? date('Y-m-d');
 
     if (empty($tipo) || empty($descripcion)) {
         ResponseHelper::error("Datos incompletos: tipo y descripción son obligatorios", 400);
-    }
-
-    if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $fecha)) {
-        $fecha = date('Y-m-d');
     }
 
     // 4. Insertar en la BD usando Database::getInstance() como el resto del proyecto
     $db = Database::getInstance()->getConnection();
 
     $stmt = $db->prepare("
-        INSERT INTO incidencias (usuario_id, tipo, fecha_incidencia, descripcion)
-        VALUES (?, ?, ?, ?)
+        INSERT INTO incidencias (usuario_id, tipo, descripcion)
+        VALUES (?, ?, ?)
     ");
-    $stmt->execute([$usuario_id, $tipo, $fecha, $descripcion]);
+    $stmt->execute([$usuario_id, $tipo, $descripcion]);
 
     $idGenerado = $db->lastInsertId();
 
