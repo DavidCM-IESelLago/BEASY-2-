@@ -1,3 +1,13 @@
+// ── Toggle visibilidad de contraseña ─────────────────────────────────────────
+document.querySelectorAll('.toggle-password').forEach(icon => {
+    icon.addEventListener('click', () => {
+        const input = icon.previousElementSibling;
+        const visible = input.type === 'text';
+        input.type = visible ? 'password' : 'text';
+        icon.textContent = visible ? 'visibility' : 'visibility_off';
+    });
+});
+
 document.getElementById('form-login').addEventListener('submit', async (e) => {
     e.preventDefault();
     const email    = document.getElementById('email').value.trim();

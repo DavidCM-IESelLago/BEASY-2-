@@ -3,6 +3,18 @@
 // ── Estado ────────────────────────────────────────────────────────────────────
 let currentStep = 1;
 
+// ── Toggle visibilidad de contraseña ─────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.toggle-password').forEach(icon => {
+        icon.addEventListener('click', () => {
+            const input = icon.previousElementSibling;
+            const visible = input.type === 'text';
+            input.type       = visible ? 'password' : 'text';
+            icon.textContent = visible ? 'visibility' : 'visibility_off';
+        });
+    });
+});
+
 // ── Navegación de pasos ───────────────────────────────────────────────────────
 function validateAndNext(modifier) {
     const currentStepEl = document.getElementById(`step${currentStep}`);

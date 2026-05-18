@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro - Beasy</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/auth.css">
 </head>
 
@@ -58,15 +59,15 @@
                     <div class="form-group">
                         <label>Contraseña</label>
                         <div class="password-wrapper">
-                            <input type="password" id="input_password" placeholder="••••••••" required>
-                            <span class="toggle-password">👁️</span>
+                            <input type="password" id="input_password" required>
+                            <span class="material-symbols-outlined toggle-password">visibility</span>
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Confirmar Contraseña</label>
                         <div class="password-wrapper">
-                            <input type="password" id="confirm_password" placeholder="••••••••" required>
-                            <span class="toggle-password">👁️</span>
+                            <input type="password" id="confirm_password" required>
+                            <span class="material-symbols-outlined toggle-password">visibility</span>
                         </div>
                     </div>
                     <span id="error-password" class="field-hint" style="color:#ef4444; display:none;">Las contraseñas no coinciden</span>
@@ -92,7 +93,7 @@
                         </div>
                         <div class="review-item">
                             <span>Tipo de Cuenta</span>
-                            <strong class="text-primary">Personal Premium</strong>
+                            <strong class="text-primary">Cuenta Corriente</strong>
                         </div>
                     </div>
                     <div class="form-check">
@@ -106,6 +107,7 @@
                     <button type="submit" id="btnFinish" class="btn-primary" disabled>Finalizar Registro</button>
                 </div>
             </form>
+            <p class="auth-footer"><a href="index.html">Volver al inicio</a></p>
         </div>
 
         <div id="success-screen">
