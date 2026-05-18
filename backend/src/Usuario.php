@@ -107,6 +107,25 @@ class Usuario extends Model
     }
 
     /**
+     * Busca un usuario por dni
+     */
+    public static function findByDni(string $dni): ?self
+    {
+        $db = Database::getInstance()->getConnection();
+        $stmt = $db->prepare("SELECT * FROM usuarios WHERE dni = :dni LIMIT 1");
+        $stmt->execute(['dni' => $dni]);
+        $data = $stmt->fetch();
+
+        if (!$data) {
+            return null;
+        }
+
+        $usuario = new self();
+        $usuario->hydrate($data);
+        return $usuario;
+    }
+
+    /**
      * Busca un usuario por ID
      */
     public static function findById(int $id): ?self
@@ -135,6 +154,10 @@ public static function create(string $dni, string $email, string $password, stri
     // 1. Comprobar si ya existe por email
     if (self::findByEmail($email)) {
         throw new Exception("El email ya está registrado");
+    }
+
+    if (self::findByDni($dni)) {
+        throw new Exception("El dni ya está registrado");
     }
 
     // 1b. Comprobar si el teléfono ya está registrado
