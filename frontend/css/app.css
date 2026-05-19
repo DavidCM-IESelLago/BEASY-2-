@@ -1,9 +1,5 @@
-/* ═══════════════════════════════════════════════════════════════
-   app.css — Estilos globales de la aplicación Beasy
-   Cubre: dashboard, cuentas, misTarjetas, movimientos, seguridad, admin
-   ═══════════════════════════════════════════════════════════════ */
 
-/* ─── 1. VARIABLES ─────────────────────────────────────────────── */
+
 :root {
     --primary:        #005bbf;
     --primary-light:  #1a73e8;
@@ -32,7 +28,6 @@
     --green-bg:       #e8f5e9;
 }
 
-/* ─── 2. RESET ─────────────────────────────────────────────────── */
 * {
     margin: 0;
     padding: 0;
@@ -51,7 +46,6 @@ body {
 a { text-decoration: none; }
 button { font-family: inherit; cursor: pointer; border: none; background: none; }
 
-/* ─── 3. UTILIDADES ────────────────────────────────────────────── */
 .hidden { display: none !important; }
 
 .material-symbols-outlined {
@@ -60,7 +54,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 .icon-fill { font-variation-settings: 'FILL' 1; }
 
-/* ─── 4. SHELL: SIDEBAR ────────────────────────────────────────── */
 .sidebar {
     width: 280px;
     background: var(--surface);
@@ -94,7 +87,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     color: var(--primary);
 }
 
-/* ─── 5. NAVEGACIÓN ────────────────────────────────────────────── */
 .nav-lista {
     flex: 1;
     display: flex;
@@ -136,7 +128,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     margin: 12px 16px;
 }
 
-/* ─── 6. SHELL: MAIN AREA ──────────────────────────────────────── */
 .main-wrapper {
     flex: 1;
     display: flex;
@@ -171,7 +162,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     overflow-y: auto;
 }
 
-/* ─── 7. PERFIL & NOTIFICACIONES ───────────────────────────────── */
 .perfil-btn {
     display: flex;
     align-items: center;
@@ -213,7 +203,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     padding: 0 3px;
 }
 
-/* Panel lateral de notificaciones */
 .notif-panel {
     position: fixed;
     top: 0;
@@ -241,7 +230,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 .notif-panel-body { flex: 1; overflow-y: auto; }
 
-/* Modal de perfil de usuario */
 .user-modal {
     position: fixed;
     inset: 0;
@@ -276,7 +264,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     text-align: right;
 }
 
-/* ─── 8. CARDS ─────────────────────────────────────────────────── */
 .card {
     background: var(--surface);
     border-radius: 16px;
@@ -305,7 +292,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     background: white;
 }
 
-/* ─── 9. GRIDS ─────────────────────────────────────────────────── */
 .app-grid {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
@@ -322,7 +308,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     .col-8, .col-4 { grid-column: span 12; }
 }
 
-/* ─── 10. FORMULARIOS ──────────────────────────────────────────── */
 .form-group {
     margin-bottom: 20px;
     display: flex;
@@ -376,7 +361,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     margin-top: 32px;
 }
 
-/* ─── 11. BOTONES ──────────────────────────────────────────────── */
 .btn {
     padding: 10px 20px;
     border-radius: 8px;
@@ -465,7 +449,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 .btn-destructive:hover { background: #fad7d7; }
 
-/* ─── 12. MODALES GENÉRICOS ────────────────────────────────────── */
 .modal-overlay {
     position: fixed;
     inset: 0;
@@ -487,7 +470,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     animation: zoom 0.25s ease;
 }
 
-/* ─── 13. BADGES ───────────────────────────────────────────────── */
 .badge {
     display: inline-flex;
     align-items: center;
@@ -521,7 +503,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     border: 1px solid var(--border);
 }
 
-/* ─── 14. STEPPER ──────────────────────────────────────────────── */
 .stepper {
     display: flex;
     align-items: center;
@@ -553,7 +534,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .step-inactive > span { font-weight: 500; color: var(--text-muted); font-size: 15px; }
 .step-line { flex: 1; height: 1px; background: var(--border-light); margin: 0 24px; }
 
-/* ─── 15. ANIMACIONES ──────────────────────────────────────────── */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(6px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -579,7 +559,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     to   { opacity: 1; transform: scale(1)   translateY(0); }
 }
 
-/* ─── 16. GRÁFICO DONUT ────────────────────────────────────────── */
 .chart-container {
     position: relative;
     flex: 1;
@@ -618,10 +597,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     text-transform: uppercase;
     margin-bottom: 4px;
 }
-
-/* ════════════════════════════════════════════════
-   SECCIÓN: DASHBOARD
-   ════════════════════════════════════════════════ */
 
 .balance-card { padding: 32px; overflow: hidden; }
 
@@ -686,21 +661,15 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .movement-item:last-child { border: none; }
 .movement-item:hover { background: var(--surface-dim); }
 
-/* Tabla dashboard */
 #tabla-movimientos tr.gasto td:last-child  { color: var(--error);   font-weight: 700; text-align: right; }
 #tabla-movimientos tr.ingreso td:last-child { color: var(--tertiary); font-weight: 700; text-align: right; }
 #tabla-movimientos td { padding: 14px 24px; font-size: 14px; border-bottom: 1px solid var(--border); }
-
-/* ════════════════════════════════════════════════
-   SECCIÓN: CUENTAS
-   ════════════════════════════════════════════════ */
 
 .page-inner  { max-width: 1200px; margin: 0 auto; }
 .page-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px; }
 .page-title  { font-size: 28px; font-weight: 800; color: var(--text); letter-spacing: -0.5px; margin-bottom: 4px; }
 .page-subtitle { font-size: 14px; color: var(--text-muted); }
 
-/* Secciones SPA */
 .page-section { display: none; animation: fadeIn 0.3s ease; }
 .page-section.active { display: block; }
 
@@ -779,10 +748,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
     border-radius: 20px;
 }
 
-/* Formulario nueva cuenta */
 .form-wrapper { max-width: 760px; }
 
-/* Tipo de cuenta */
 .type-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
 .type-option {
@@ -824,12 +791,10 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 .type-option:has(input:checked) .type-option-check { display: block; }
 
-/* Money input */
 .input-money-wrap { position: relative; display: flex; align-items: center; }
 .input-money-wrap span { position: absolute; left: 16px; color: var(--text-muted); font-weight: 600; }
 .input-money-wrap input { padding-left: 36px; }
 
-/* Paso 2 resumen */
 .step-summary {
     background: var(--bg);
     border: 1px solid var(--border-light);
@@ -856,7 +821,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .step-summary-name { font-weight: 700; font-size: 15px; }
 .step-summary-desc { font-size: 12px; color: var(--text-muted); }
 
-/* Checkbox legal */
 .form-check {
     display: flex;
     align-items: flex-start;
@@ -870,7 +834,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .form-check label { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
 .form-check a { color: var(--primary-light); font-weight: 600; }
 
-/* Vista éxito */
 .success-wrapper { max-width: 500px; margin: 60px auto; text-align: center; }
 
 .success-icon {
@@ -932,7 +895,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 .btn-back-primary:hover { background: var(--primary); }
 .btn-pdf { background: none; color: var(--primary-light); font-size: 13px; font-weight: 600; margin-top: 16px; display: inline-block; border: none; }
 
-/* Modal detalle cuenta */
 .modal-account-num { font-size: 12px; font-family: monospace; color: var(--text-muted); letter-spacing: 1px; padding: 0 24px; margin-top: 2px; }
 
 .modal-balance {
@@ -970,10 +932,6 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 .amount-pos { color: var(--tertiary-light); }
 .amount-neg { color: var(--error); }
-
-/* ════════════════════════════════════════════════
-   SECCIÓN: MOVIMIENTOS
-   ════════════════════════════════════════════════ */
 
 .section-header  { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 32px; }
 .section-title   { font-size: 24px; font-weight: 600; margin-bottom: 4px; }
@@ -1024,10 +982,6 @@ tr:hover { background: var(--bg); transition: 0.2s; }
 
 .btn-text  { background: none; border: none; color: var(--primary-light); font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 4px; transition: 0.2s; }
 
-/* ════════════════════════════════════════════════
-   SECCIÓN: TARJETAS
-   ════════════════════════════════════════════════ */
-
 .cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -1057,7 +1011,6 @@ tr:hover { background: var(--bg); transition: 0.2s; }
 .card-blocked  { filter: grayscale(0.6); opacity: 0.7; }
 .card-cancelled { filter: grayscale(1); opacity: 0.5; }
 
-/* Compensa el panel lateral fijo de 400 px en misTarjetas */
 .cards-content { margin-right: 400px; }
 
 .card-badge {
@@ -1138,13 +1091,9 @@ tr:hover { background: var(--bg); transition: 0.2s; }
 .chip-blocked   { background: var(--amber-bg);     color: var(--amber); }
 .chip-cancelled { background: #fdecea;             color: var(--error); }
 
-/* ════════════════════════════════════════════════
-   SECCIÓN: SEGURIDAD
-   ════════════════════════════════════════════════ */
+.form-step {  }
 
-.form-step { /* visible/hidden con JS */ }
-
-.seccion-paso { /* alias mantenido por compatibilidad */ }
+.seccion-paso {  }
 
 .step-circle-sm {
     width: 24px; height: 24px;
@@ -1173,10 +1122,6 @@ tr:hover { background: var(--bg); transition: 0.2s; }
     background: var(--primary-light);
     opacity: 0.2;
 }
-
-/* ════════════════════════════════════════════════
-   SECCIÓN: ADMIN
-   ════════════════════════════════════════════════ */
 
 .app-layout { display: flex; min-height: 100vh; }
 
@@ -1284,5 +1229,113 @@ tr:hover { background: var(--bg); transition: 0.2s; }
 
 .perfil-btn.admin { display: flex; align-items: center; gap: 8px; padding: 4px 12px; border-radius: 50px; cursor: pointer; transition: 0.2s; }
 
-/* Admin sidebar no scroll */
 .sidebar.sticky { position: sticky; top: 0; height: 100vh; }
+
+.sidebar-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    padding: 4px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: 0.2s;
+}
+
+.sidebar-toggle:hover { background: var(--surface-dim); }
+
+.sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 19;
+    backdrop-filter: blur(2px);
+}
+
+.sidebar-backdrop.open { display: block; }
+
+@media (max-width: 768px) {
+    body {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+        overflow: auto;
+    }
+
+    .sidebar {
+        position: fixed;
+        left: 0; top: 0; bottom: 0;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 200;
+        height: 100vh;
+    }
+
+    .sidebar.open { transform: translateX(0); }
+
+    .sidebar-toggle { display: flex; }
+
+    .main-wrapper {
+        width: 100%;
+        min-height: 100vh;
+        height: auto;
+        overflow: visible;
+    }
+
+    .header {
+        padding: 0 16px;
+        position: sticky;
+        top: 0;
+        z-index: 15;
+    }
+
+    .header-title { font-size: 14px; }
+
+    .perfil-name { display: none; }
+
+    .content {
+        padding: 16px;
+        overflow-y: visible;
+        flex: none;
+    }
+
+    .col-12,
+    .col-8,
+    .col-7,
+    .col-5,
+    .col-4 { grid-column: span 12; }
+
+    .quick-actions { grid-template-columns: 1fr 1fr; }
+
+    .page-title { font-size: 22px; }
+
+    .section-options { grid-template-columns: 1fr; }
+
+    .tab-bar { width: 100%; overflow-x: auto; }
+
+    .cards-content { margin-right: 0; }
+
+    .detail-panel {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        width: 100%;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        z-index: 150;
+        top: 72px;
+    }
+
+    .detail-panel.open { transform: translateX(0); }
+
+    .user-modal-box { width: 95vw; margin: 0 auto; }
+
+    .modal-box { width: 95vw !important; }
+
+    .notif-panel { width: 100vw; }
+
+    table { font-size: 13px; }
+    th, td { padding: 10px 12px; }
+}

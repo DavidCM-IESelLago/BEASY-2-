@@ -1,7 +1,4 @@
-/* ═══════════════════════════════════════════════
-   auth.css — Estilos de páginas de autenticación
-   Cubre: inicio_sesion.html, registro.html
-   ═══════════════════════════════════════════════ */
+
 
 * {
     margin: 0;
@@ -19,7 +16,6 @@ body {
     padding: 20px;
 }
 
-/* ─── Tarjeta principal ─────────────────────────── */
 .auth-card {
     background-color: #ffffff;
     padding: 40px;
@@ -30,7 +26,6 @@ body {
     text-align: center;
 }
 
-/* ─── Logo ─────────────────────────────────────── */
 .auth-logo {
     display: flex;
     align-items: center;
@@ -42,7 +37,6 @@ body {
     font-size: 22px;
 }
 
-/* ─── Tipografía ───────────────────────────────── */
 h1 {
     font-size: 24px;
     color: #1a1a1a;
@@ -55,7 +49,6 @@ h1 {
     margin-bottom: 30px;
 }
 
-/* ─── Formulario ───────────────────────────────── */
 .form-group {
     text-align: left;
     margin-bottom: 16px;
@@ -82,7 +75,6 @@ input {
 
 input:focus { border-color: #0056b3; }
 
-/* Password wrapper */
 .password-wrapper {
     display: flex;
     align-items: stretch;
@@ -120,7 +112,6 @@ input:focus { border-color: #0056b3; }
 
 .toggle-password:hover { opacity: 1; }
 
-/* Teléfono */
 .phone-input {
     display: flex;
     border: 1px solid #d1d5db;
@@ -138,7 +129,6 @@ input:focus { border-color: #0056b3; }
 
 .phone-input input { border: none; }
 
-/* ─── Botones ──────────────────────────────────── */
 .btn-auth {
     width: 100%;
     background-color: #005cbd;
@@ -172,7 +162,6 @@ input:focus { border-color: #0056b3; }
     cursor: pointer;
 }
 
-/* ─── Links ────────────────────────────────────── */
 .forgot-password {
     display: block;
     text-align: right;
@@ -196,7 +185,6 @@ input:focus { border-color: #0056b3; }
     font-weight: 600;
 }
 
-/* ─── Registro: cabecera de pasos ──────────────── */
 .auth-step-header {
     display: flex;
     justify-content: space-between;
@@ -221,7 +209,6 @@ input:focus { border-color: #0056b3; }
     letter-spacing: 0.5px;
 }
 
-/* ─── Pasos del formulario ─────────────────────── */
 .auth-step         { display: none; }
 .auth-step.active  { display: block; }
 
@@ -232,7 +219,6 @@ input:focus { border-color: #0056b3; }
     display: block;
 }
 
-/* ─── Resumen (paso 3) ─────────────────────────── */
 .review-box {
     background: #f9fafb;
     padding: 20px;
@@ -266,7 +252,6 @@ input:focus { border-color: #0056b3; }
 .form-check input { width: auto; cursor: pointer; }
 .form-check a { color: #005cbd; text-decoration: none; font-weight: 600; }
 
-/* ─── Pantalla de éxito ────────────────────────── */
 #success-screen {
     display: none;
     padding: 20px 0;

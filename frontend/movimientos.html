@@ -30,6 +30,7 @@
 
     <div class="main-wrapper">
         <header class="header">
+        <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Abrir menú"><span class="material-symbols-outlined">menu</span></button>
             <div class="header-title">Resumen de Movimientos</div>
             <div class="header-actions">
                 <button id="btn-notificaciones" class="notif-btn" onclick="toggleNotificaciones(true)">
@@ -95,7 +96,7 @@
         </main>
     </div>
 
-    <!-- Modal usuario -->
+    
     <div id="modalUser" class="user-modal">
         <div class="user-modal-box">
             <div class="user-modal-header">
@@ -121,7 +122,7 @@
         </div>
     </div>
 
-    <!-- Panel notificaciones -->
+    
     <div id="notifPanel" class="notif-panel">
         <div class="notif-panel-header">
             <h3 style="font-weight:700; font-size:16px;">Notificaciones</h3>
@@ -133,5 +134,6 @@
     <script src="js/api.js"></script>
     <script src="js/notificaciones.js"></script>
     <script src="js/movimientos.js"></script>
+<div class="sidebar-backdrop" onclick="toggleSidebar(false)"></div>
 </body>
 </html>

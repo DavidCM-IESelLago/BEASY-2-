@@ -1,5 +1,5 @@
 <?php
-// Bloquear cualquier salida HTML de errores PHP para no contaminar el JSON
+
 ini_set('display_errors', 0);
 ob_start();
 
@@ -13,7 +13,7 @@ use Fintech\Backend\ResponseHelper;
 use Fintech\Backend\Database;
 
 try {
-    // 1. Extraer token (igual que transferencia.php)
+    
     $headers    = getallheaders();
     $token      = $headers['X-Beasy-Token'] ?? '';
 
@@ -29,12 +29,12 @@ try {
         ResponseHelper::error('No tienes permiso. Token inválido o inexistente.', 401);
     }
 
-    // 2. Solo POST
+    
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         ResponseHelper::error('Método no permitido', 405);
     }
 
-    // 3. Leer y validar body
+    
     $body     = json_decode(file_get_contents('php://input'), true);
     $tipo     = $body['tipo']     ?? '';
     $deposito = (float)($body['deposito'] ?? 0);
@@ -47,14 +47,14 @@ try {
         ResponseHelper::error('El depósito inicial no puede ser negativo.', 400);
     }
 
-    // 4. Conexión (usando el singleton igual que el resto de endpoints)
+    
     $pdo = Database::getInstance()->getConnection();
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // 5. Generar IBAN único (sin dependencias externas)
+    
     $numeroCuenta = generarIBANUnico($pdo);
 
-    // 6. Insertar cuenta
+    
     $stmt = $pdo->prepare("
         INSERT INTO cuentas (usuario_id, numero_cuenta, saldo, tipo, activa)
         VALUES (:usuario_id, :numero_cuenta, :saldo, :tipo, 1)
@@ -68,7 +68,7 @@ try {
 
     $cuentaId = (int) $pdo->lastInsertId();
 
-    // 7. Recuperar cuenta recién creada
+    
     $stmt2 = $pdo->prepare("
         SELECT id, numero_cuenta, saldo, tipo, fecha_creacion
         FROM cuentas
@@ -77,7 +77,7 @@ try {
     $stmt2->execute([':id' => $cuentaId]);
     $cuenta = $stmt2->fetch(PDO::FETCH_ASSOC);
 
-    // 8. Notificación al usuario
+    
     try {
         $tipoTexto = $tipo === 'ahorros' ? 'de ahorros' : 'corriente';
         $nStmt = $pdo->prepare(
@@ -88,7 +88,7 @@ try {
             ':msg' => "¡Tu nueva cuenta {$tipoTexto} ha sido creada! IBAN: {$numeroCuenta}",
         ]);
     } catch (\Exception $e) {
-        // No interrumpir la creación si falla la notificación
+        
     }
 
     ResponseHelper::jsonResponse([
@@ -102,22 +102,15 @@ try {
         ],
     ]);
 
-// Captura tanto Exception como Error (PHP fatal errors, undefined functions, etc.)
 } catch (\Throwable $e) {
     ob_clean();
-    // En desarrollo mostramos el mensaje real; en producción sería genérico
+    
     $debug = ($_ENV['APP_ENV'] ?? 'production') === 'development'
         ? $e->getMessage()
         : 'Error interno del servidor';
     ResponseHelper::error($debug, 500);
 }
 
-// ── HELPERS ──────────────────────────────────────────────────────────────────
-
-/**
- * Genera un IBAN ES válido y único en la tabla cuentas.
- * No usa bcmath: implementa el módulo 97 con aritmética entera pura.
- */
 function generarIBANUnico(PDO $pdo, int $maxIntentos = 20): string
 {
     $check = $pdo->prepare("SELECT COUNT(*) FROM cuentas WHERE numero_cuenta = :num");
@@ -129,9 +122,9 @@ function generarIBANUnico(PDO $pdo, int $maxIntentos = 20): string
         $numCta   = str_pad((string) rand(0, 999999999), 9, '0', STR_PAD_LEFT)
                   . str_pad((string) rand(0, 9),         1, '0', STR_PAD_LEFT);
 
-        $bban        = $banco . $sucursal . $control . $numCta;   // 20 dígitos
+        $bban        = $banco . $sucursal . $control . $numCta;   
         $checkDigits = calcularControlIBAN('ES', $bban);
-        $iban        = 'ES' . $checkDigits . $bban;               // 24 chars
+        $iban        = 'ES' . $checkDigits . $bban;               
 
         $check->execute([':num' => $iban]);
         if ((int) $check->fetchColumn() === 0) {
@@ -142,16 +135,12 @@ function generarIBANUnico(PDO $pdo, int $maxIntentos = 20): string
     throw new \RuntimeException('No se pudo generar un IBAN único.');
 }
 
-/**
- * Calcula los 2 dígitos de control ISO 13616 sin usar bcmath.
- * Procesa el número grande dígito a dígito (long division mod 97).
- */
 function calcularControlIBAN(string $pais, string $bban): string
 {
-    // Reorganizar: BBAN + código país + '00'
+    
     $rearranged = $bban . $pais . '00';
 
-    // Convertir letras a su valor numérico (A=10 … Z=35)
+    
     $numerico = '';
     foreach (str_split($rearranged) as $char) {
         if (ctype_alpha($char)) {
@@ -161,7 +150,7 @@ function calcularControlIBAN(string $pais, string $bban): string
         }
     }
 
-    // Módulo 97 mediante long division (evita bcmath)
+    
     $mod = 0;
     foreach (str_split($numerico) as $digit) {
         $mod = ($mod * 10 + (int)$digit) % 97;

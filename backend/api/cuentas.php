@@ -1,27 +1,27 @@
 <?php
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../src/AuthController.php';
-require_once __DIR__ . '/../src/ResponseHelper.php'; // <--- El nuevo Helper
+require_once __DIR__ . '/../src/ResponseHelper.php'; 
 
 use Fintech\Backend\AuthController;
-use Fintech\Backend\ResponseHelper; // <--- Importante usarlo aquí
+use Fintech\Backend\ResponseHelper; 
 
 try {
-    // 1. Extraer Token de la cabecera
+    
     $headers = getallheaders();
     $authHeader = $headers['Authorization'] ?? $headers['authorization'] ?? '';
     $token = str_replace('Bearer ', '', $authHeader);
 
-    // 2. Validar con tu AuthController
+    
     $auth = new AuthController();
     $usuarioId = $auth->verifyToken($token);
 
-    // Si el token falla, usamos el Helper para dar error 401
+    
     if (!$usuarioId) {
         ResponseHelper::error("No tienes permiso. Token inválido o inexistente.", 401);
     }
 
-    // 3. Lógica del Endpoint
+    
     if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
         ResponseHelper::error('Método no permitido, 405');
     }
@@ -31,7 +31,7 @@ try {
     );
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Cuenta específica por ID
+    
     if (isset($_GET['id'])) {
         $cuentaId = (int) $_GET['id'];
 
@@ -50,7 +50,7 @@ try {
             ResponseHelper::error('Cuenta no encontrada', 404);
         }
 
-        // Tarjeta asociada a la cuenta si existe
+        
         $stmtTarjeta = $pdo->prepare("
             SELECT numero, fecha_expiracion, estado
             FROM tarjetas
@@ -72,7 +72,7 @@ try {
             ]
         ]);
     
-    // Listado de todas las cuentas del usuario
+    
     } else {
         $stmt = $pdo->prepare("
             SELECT id, numero_cuenta, saldo, tipo, fecha_creacion
@@ -83,7 +83,7 @@ try {
         $stmt->execute(['usuario_id' => $usuarioId]);
         $cuentas = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // COnvertir tipos
+        
         foreach ($cuentas as $c) {
             $c['id'] = (int) $c['id'];
             $c['saldo'] = (float) $c['saldo'];
@@ -95,24 +95,7 @@ try {
             'cuentas' => $cuentas
         ]);
     }
-        /* 
-            // ÉXITO: Saldo de una cuenta
-            ResponseHelper::jsonResponse([
-                "status" => "success",
-                "cuenta" => $cuentaId,
-                "saldo" => 1250.75,
-                "usuario_id" => $usuarioId
-            ]);
-        } else {
-            // ÉXITO: Listado de cuentas
-            ResponseHelper::jsonResponse([
-                "status" => "success",
-                "cuentas" => [
-                    ["id" => "ES111", "nombre" => "Nómina", "saldo" => 1250.75],
-                    ["id" => "ES222", "nombre" => "Ahorro", "saldo" => 500.00]
-                ]
-            ]);
-        }*/
+        
 } catch (\PDOException $e) {
     ResponseHelper::error("Error de base de datos: " . $e->getMessage(), 500);
 } catch (\Exception $e) {

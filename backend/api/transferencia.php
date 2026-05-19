@@ -9,7 +9,7 @@ use Fintech\Backend\ResponseHelper;
 use Fintech\Backend\Database;
 
 try {
-    // 1. Validar token
+    
     $headers = getallheaders();
     $token = $headers['X-Beasy-Token'] ?? '';
 
@@ -29,7 +29,7 @@ try {
         ResponseHelper::error("Método no permitido", 405);
     }
 
-    // 2. Leer JSON del body
+    
     $input = json_decode(file_get_contents('php://input'), true);
 
     $cuentaOrigenId = isset($input['cuenta_origen_id']) ? (int) $input['cuenta_origen_id'] : 0;
@@ -37,7 +37,7 @@ try {
     $importe        = isset($input['importe']) ? (float) $input['importe'] : 0;
     $concepto       = trim($input['concepto'] ?? '');
 
-    // 3. Validar campos obligatorios
+    
     if ($cuentaOrigenId <= 0) {
         ResponseHelper::error("Debes seleccionar una cuenta de origen", 400);
     }
@@ -56,7 +56,7 @@ try {
     $pdo = Database::getInstance()->getConnection();
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // 4. Comprobar que la cuenta de origen pertenece al usuario
+    
     $stmtOrigen = $pdo->prepare("
         SELECT id, numero_cuenta, saldo, usuario_id, activa
         FROM cuentas
@@ -76,7 +76,7 @@ try {
         ResponseHelper::error("La cuenta de origen está inactiva", 400);
     }
 
-    // 5. Buscar cuenta destino por IBAN
+    
     $stmtDest = $pdo->prepare("
         SELECT id, numero_cuenta, saldo, usuario_id, activa
         FROM cuentas
@@ -90,34 +90,34 @@ try {
         ResponseHelper::error("La cuenta de destino no existe", 404);
     }
 
-    // 6. No permitir transferencia a la misma cuenta
+    
     if ((int) $cuentaDestino['id'] === (int) $cuentaOrigen['id']) {
         ResponseHelper::error("No puedes transferir a la misma cuenta de origen", 400);
     }
 
-    // 7. Comprobar saldo
+    
     if ((float) $cuentaOrigen['saldo'] < $importe) {
         ResponseHelper::error("Saldo insuficiente para realizar la transferencia", 400);
     }
 
-    // 8. Ejecutar transacción atómica
+    
     $pdo->beginTransaction();
     try {
-        // Restar de origen
+        
         $upd1 = $pdo->prepare("UPDATE cuentas SET saldo = saldo - :monto WHERE id = :id");
         $upd1->execute([
             ':monto' => $importe,
             ':id'    => $cuentaOrigen['id']
         ]);
 
-        // Sumar a destino
+        
         $upd2 = $pdo->prepare("UPDATE cuentas SET saldo = saldo + :monto WHERE id = :id");
         $upd2->execute([
             ':monto' => $importe,
             ':id'    => $cuentaDestino['id']
         ]);
 
-        // Insertar transacción
+        
         $ins = $pdo->prepare("
             INSERT INTO transacciones (cuenta_origen_id, cuenta_destino_id, monto, tipo, descripcion, fecha)
             VALUES (:origen, :destino, :monto, 'transferencia', :desc, NOW())
@@ -131,7 +131,7 @@ try {
 
         $transaccionId = (int) $pdo->lastInsertId();
 
-        // Notificaciones (opcional, replicando lo que ya hacía el modelo)
+        
         try {
             $nOrigen = $pdo->prepare("INSERT INTO notificaciones (usuario_id, mensaje) VALUES (:uid, :msg)");
             $nOrigen->execute([
@@ -145,7 +145,7 @@ try {
                 ':msg' => "Has recibido " . number_format($importe, 2, ',', '.') . " € desde la cuenta " . $cuentaOrigen['numero_cuenta']
             ]);
         } catch (\Exception $e) {
-            // Si fallan las notificaciones no abortamos la transferencia
+            
         }
 
         $pdo->commit();

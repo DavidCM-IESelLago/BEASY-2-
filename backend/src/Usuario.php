@@ -21,7 +21,7 @@ class Usuario extends Model
     private bool $activo;
     private string $rol;
 
-    // Getters y setters
+    
     public function getId(): int
     {
         return $this->id;
@@ -87,9 +87,7 @@ class Usuario extends Model
         $this->rol = $rol;
     }
 
-    /**
-     * Busca un usuario por email
-     */
+    
     public static function findByEmail(string $email): ?self
     {
         $db = Database::getInstance()->getConnection();
@@ -106,9 +104,7 @@ class Usuario extends Model
         return $usuario;
     }
 
-    /**
-     * Busca un usuario por dni
-     */
+    
     public static function findByDni(string $dni): ?self
     {
         $db = Database::getInstance()->getConnection();
@@ -125,9 +121,7 @@ class Usuario extends Model
         return $usuario;
     }
 
-    /**
-     * Busca un usuario por ID
-     */
+    
     public static function findById(int $id): ?self
     {
         $db = Database::getInstance()->getConnection();
@@ -144,14 +138,12 @@ class Usuario extends Model
         return $usuario;
     }
 
-    /**
-     * Crea un nuevo usuario
-     */
+    
 public static function create(string $dni, string $email, string $password, string $nombre, string $apellidos, ?string $telefono = null): ?self
 {
     $db = Database::getInstance()->getConnection();
 
-    // 1. Comprobar si ya existe por email
+    
     if (self::findByEmail($email)) {
         throw new Exception("El email ya está registrado");
     }
@@ -160,7 +152,7 @@ public static function create(string $dni, string $email, string $password, stri
         throw new Exception("El dni ya está registrado");
     }
 
-    // 1b. Comprobar si el teléfono ya está registrado
+    
     if ($telefono !== null && $telefono !== '') {
         $stmtTel = $db->prepare("SELECT id FROM usuarios WHERE telefono = :tel LIMIT 1");
         $stmtTel->execute(['tel' => $telefono]);
@@ -171,13 +163,13 @@ public static function create(string $dni, string $email, string $password, stri
 
     $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
-    // 2. Preparamos la sentencia
+    
     $stmt = $db->prepare("
         INSERT INTO usuarios (dni, email, password_hash, nombre, apellidos, telefono, activo, rol)
         VALUES (:dni, :email, :password_hash, :nombre, :apellidos, :telefono, 1, 'usuario')
     ");
 
-    // 3. Ejecutamos pasando los datos en el nuevo orden
+    
     $result = $stmt->execute([
         'dni'           => $dni,
         'email'         => $email,
@@ -195,9 +187,7 @@ public static function create(string $dni, string $email, string $password, stri
     return self::findById($id);
 }
 
-    /**
-     * Actualiza los datos del usuario
-     */
+    
     public function update(): bool
     {
         $stmt = $this->db->prepare("
@@ -213,9 +203,7 @@ public static function create(string $dni, string $email, string $password, stri
         ]);
     }
 
-    /**
-     * Cambia la contraseña
-     */
+    
     public function updatePassword(string $newPassword): bool
     {
         $hash = password_hash($newPassword, PASSWORD_DEFAULT);
@@ -223,26 +211,20 @@ public static function create(string $dni, string $email, string $password, stri
         return $stmt->execute(['hash' => $hash, 'id' => $this->id]);
     }
 
-    /**
-     * Actualiza el último acceso
-     */
+    
     public function updateLastAccess(): bool
     {
         $stmt = $this->db->prepare("UPDATE usuarios SET ultimo_acceso = NOW() WHERE id = :id");
         return $stmt->execute(['id' => $this->id]);
     }
 
-    /**
-     * Verifica la contraseña
-     */
+    
     public function verifyPassword(string $password): bool
     {
         return password_verify($password, $this->password_hash);
     }
 
-    /**
-     * Hidrata el objeto con datos de la BD
-     */
+    
     private function hydrate(array $data): void
     {
         $this->id = $data['id'];

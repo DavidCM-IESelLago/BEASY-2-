@@ -1,11 +1,11 @@
-// frontend/js/api.js
+
 const API_BASE = 'http://localhost/api/';
 
 async function apiFetch(endpoint, opciones = {}) {
     const token = localStorage.getItem('jwt_token');
     const cabeceras = {
         'Content-Type': 'application/json',
-        // Cambiamos esto para que InfinityFree no lo bloquee
+        
         ...(token && { 
         'Authorization': `Bearer ${token}`,
         'X-Beasy-Token': localStorage.getItem('jwt_token')
@@ -16,7 +16,7 @@ async function apiFetch(endpoint, opciones = {}) {
     try {
         const respuesta = await fetch(API_BASE + endpoint, { ...opciones, headers: cabeceras });
         
-        // Aquí estaba el fallo de tu captura:
+        
         const datos = await respuesta.json(); 
 
         if (!respuesta.ok) {
@@ -26,7 +26,7 @@ async function apiFetch(endpoint, opciones = {}) {
         
         return datos; 
     } catch (error) {
-        // Este catch atrapa el error de la imagen 49b2db (SyntaxError)
+        
         console.error('Error detallado: ', error);
         return null;
     }
@@ -41,7 +41,7 @@ function gestionarErrorHTTP(status, mensaje) {
         case 401:
             mostrarNotificacion('Sesión expirada.Redirigiendo...', 'error');
             localStorage.removeItem('jwt_token');
-            //setTimeout(() => window.location.href = '/index.html', 1500);
+            
             break;
 
         case 404:
@@ -57,7 +57,6 @@ function gestionarErrorHTTP(status, mensaje) {
     }
 }
 
-// Notificaciones toast para el usuario
 function mostrarNotificacion(mensaje, tipo = 'info') {
     const toast = document.createElement('div');
     const colores = {
@@ -81,5 +80,14 @@ function mostrarNotificacion(mensaje, tipo = 'info') {
     });
     toast.textContent = mensaje;
     document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 3500); // Auto-desaparecer
+    setTimeout(() => toast.remove(), 3500);
+}
+
+function toggleSidebar(force) {
+    const sidebar = document.querySelector('.sidebar');
+    const backdrop = document.querySelector('.sidebar-backdrop');
+    if (!sidebar) return;
+    const open = force !== undefined ? force : !sidebar.classList.contains('open');
+    sidebar.classList.toggle('open', open);
+    if (backdrop) backdrop.classList.toggle('open', open);
 }

@@ -22,17 +22,17 @@ class Database
         $options = [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES => true, // <--Cambiar a false por seguridad. Con true habilitamos emulación de prepares para evitar problemas con ciertos tipos de datos
+            PDO::ATTR_EMULATE_PREPARES => true, 
         ];
 
         try {
             $this->connection = new PDO($dsn, $user, $pass, $options);
         } catch (PDOException $e) {
-            // En desarrollo, podemos mostrar el error; en producción, loguear
+            
             http_response_code(500);
             echo json_encode([
                 'error' => 'Error de conexión a la base de datos',
-                'debug_message' => $e->getMessage(), // <-- ESTA LÍNEA ES LA CLAVE
+                'debug_message' => $e->getMessage(), 
                 'host_intentado' => $host,
                 'usuario_intentado' => $user
             ]);

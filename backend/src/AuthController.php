@@ -7,7 +7,7 @@ use Firebase\JWT\Key;
 use Exception;
 
 require_once __DIR__ . '/Usuario.php';
-//require_once __DIR__ . '/Usuario.php'; // No es necesario porque el autoload de Composer ya lo carga
+
 class AuthController
 {
     private string $key;
@@ -26,7 +26,7 @@ class AuthController
             throw new Exception("Credenciales incorrectas");
         }
 
-        $exp = time() + (defined('JWT_EXPIRATION') ? JWT_EXPIRATION : 3600); // 1 hora por defecto
+        $exp = time() + (defined('JWT_EXPIRATION') ? JWT_EXPIRATION : 3600); 
         $payload = [
             'iss' => "fintech_api",
             'iat' => time(),
@@ -43,7 +43,7 @@ public function verifyToken(string $token): ?int
         $decoded = JWT::decode($token, new Key($this->key, $this->alg));
         return (int)$decoded->sub;
     } catch (Exception $e) {
-        // Esto imprimirá el error real en el log/respuesta para que lo veamos
+        
         error_log("Error de JWT: " . $e->getMessage()); 
         return null;
     }

@@ -1,6 +1,5 @@
-// js/seguridad.js
 
-// ── Inicialización ────────────────────────────────────────────────────────────
+
 document.addEventListener('DOMContentLoaded', async () => {
     const token = localStorage.getItem('jwt_token');
     if (!token) { window.location.href = 'inicio_sesion.html'; return; }
@@ -19,7 +18,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-// ── Perfil ────────────────────────────────────────────────────────────────────
 async function cargarPerfil() {
     const datos = await apiFetch('perfil.php');
     if (!datos || datos.status !== 'success') return;
@@ -35,7 +33,6 @@ async function cargarPerfil() {
     document.getElementById('modal-id').textContent      = '#' + String(datos.id).padStart(6, '0');
 }
 
-// ── Modal usuario ─────────────────────────────────────────────────────────────
 function toggleModal(show) {
     document.getElementById('modalUser').style.display = show ? 'flex' : 'none';
 }
@@ -45,7 +42,6 @@ function cerrarSesion() {
     window.location.href = 'inicio_sesion.html';
 }
 
-// ── Stepper del formulario ────────────────────────────────────────────────────
 function irAlPaso(n) {
     document.querySelectorAll('.form-step').forEach(sec => sec.classList.add('hidden'));
     const paso = document.getElementById('paso-' + n);
@@ -57,7 +53,6 @@ function irAlPaso(n) {
     }
 }
 
-// ── Enviar reporte ────────────────────────────────────────────────────────────
 async function enviarReporte() {
     const tipo    = document.getElementById('select_tipo').value;
     const mensaje = document.getElementById('textarea_mensaje').value;

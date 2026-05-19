@@ -1,10 +1,8 @@
-// js/tarjetas.js
 
-// ── Estado ────────────────────────────────────────────────────────────────────
+
 let tarjetaSeleccionada = null;
 let todasLasTarjetas    = [];
 
-// ── Inicialización ────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
     const token = localStorage.getItem('jwt_token');
     if (!token) { window.location.href = 'inicio_sesion.html'; return; }
@@ -20,7 +18,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     await Promise.all([cargarPerfil(), cargarTarjetas()]);
 });
 
-// ── Perfil ────────────────────────────────────────────────────────────────────
 async function cargarPerfil() {
     const datos = await apiFetch('perfil.php');
     if (!datos || datos.status !== 'success') return;
@@ -36,7 +33,6 @@ async function cargarPerfil() {
     document.getElementById('modal-id').textContent      = '#' + String(datos.id).padStart(6, '0');
 }
 
-// ── Modal usuario ─────────────────────────────────────────────────────────────
 function toggleModal(show) {
     document.getElementById('modalUser').style.display = show ? 'flex' : 'none';
 }
@@ -46,7 +42,6 @@ function cerrarSesion() {
     window.location.href = 'inicio_sesion.html';
 }
 
-// ── Helper: logo de tarjeta ───────────────────────────────────────────────────
 function _crearLogo(clase) {
     if (clase === 'card-blue') {
         const span = document.createElement('span');
@@ -65,7 +60,6 @@ function _crearLogo(clase) {
     return wrap;
 }
 
-// ── Cargar tarjetas ───────────────────────────────────────────────────────────
 async function cargarTarjetas() {
     const res  = await apiFetch('tarjeta.php');
     const grid = document.getElementById('tarjeta-grid');
@@ -96,16 +90,15 @@ async function cargarTarjetas() {
         const badgeClass  = t.estado === 'activa'     ? 'card-badge-active'
                           : t.estado === 'bloqueada'  ? 'card-badge-blocked' : 'card-badge-cancelled';
 
-
         const el = document.createElement('div');
         el.className   = `card-visual ${clase} ${estadoClass}`.trim();
         el.dataset.id  = t.id;
-        // Badge de estado
+        
         const badge = document.createElement('span');
         badge.className = `card-badge ${badgeClass}`;
         badge.textContent = t.estado;
 
-        // Fila: contactless + logo
+        
         const fila = document.createElement('div');
         fila.style.cssText = 'display:flex;justify-content:space-between;';
         const spanContactless = document.createElement('span');
@@ -115,7 +108,7 @@ async function cargarTarjetas() {
         fila.appendChild(spanContactless);
         fila.appendChild(_crearLogo(clase));
 
-        // Bloque inferior: saldo + número
+        
         const info = document.createElement('div');
         const pBalance = document.createElement('p');
         pBalance.style.cssText = 'font-size:11px;opacity:0.8;font-weight:600;text-transform:uppercase;';
@@ -144,7 +137,6 @@ async function cargarTarjetas() {
     });
 }
 
-// ── Selección de tarjeta ──────────────────────────────────────────────────────
 function seleccionarTarjeta(t, el, clase) {
     document.querySelectorAll('.card-visual').forEach(c => c.classList.remove('card-selected'));
     el.classList.add('card-selected');
@@ -152,6 +144,7 @@ function seleccionarTarjeta(t, el, clase) {
 
     document.getElementById('panel-placeholder').style.display = 'none';
     document.getElementById('panel-contenido').style.display   = 'block';
+    document.getElementById('panel').classList.add('open');
 
     const visual = document.getElementById('panel-tarjeta-visual');
     visual.className = `card-visual ${clase}`;
@@ -199,11 +192,11 @@ function actualizarBotonesEstado(estado) {
 function cerrarPanel() {
     document.getElementById('panel-placeholder').style.display = 'flex';
     document.getElementById('panel-contenido').style.display   = 'none';
+    document.getElementById('panel').classList.remove('open');
     document.querySelectorAll('.card-visual').forEach(c => c.classList.remove('card-selected'));
     tarjetaSeleccionada = null;
 }
 
-// ── Modal datos de tarjeta ────────────────────────────────────────────────────
 function abrirModalDatos() {
     if (!tarjetaSeleccionada) return;
     const t = tarjetaSeleccionada;
@@ -223,14 +216,12 @@ function cerrarModalDatos() {
     document.getElementById('modalDatos').style.display = 'none';
 }
 
-// ── Freeze / Unfreeze ─────────────────────────────────────────────────────────
 async function toggleFreeze() {
     if (!tarjetaSeleccionada) return;
     const nuevoEstado = tarjetaSeleccionada.estado === 'bloqueada' ? 'activa' : 'bloqueada';
     await cambiarEstado(nuevoEstado);
 }
 
-// ── Cancelar tarjeta ──────────────────────────────────────────────────────────
 function cancelarTarjeta() {
     if (!tarjetaSeleccionada || tarjetaSeleccionada.estado === 'cancelada') return;
     document.getElementById('modalCancelar').style.display = 'flex';
@@ -245,7 +236,6 @@ async function confirmarCancelacion() {
     await cambiarEstado('cancelada');
 }
 
-// ── Cambiar estado ────────────────────────────────────────────────────────────
 async function cambiarEstado(nuevoEstado) {
     const res = await apiFetch('tarjeta.php', {
         method: 'PUT',

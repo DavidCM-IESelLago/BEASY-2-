@@ -9,12 +9,12 @@ use Fintech\Backend\ResponseHelper;
 use Fintech\Backend\Database;
 
 try {
-    // 1. Solo aceptamos POST
+    
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         ResponseHelper::error("Método no permitido", 405);
     }
 
-    // 2. Extraer y validar el token (igual que el resto de endpoints)
+    
     $headers = getallheaders();
     $token = $headers['X-Beasy-Token'] ?? '';
 
@@ -30,7 +30,7 @@ try {
         ResponseHelper::error("No tienes permiso. Token inválido o inexistente.", 401);
     }
 
-    // 3. Leer y validar los datos del body JSON
+    
     $input = json_decode(file_get_contents('php://input'), true);
 
     $tipo        = trim($input['tipo']    ?? '');
@@ -40,7 +40,7 @@ try {
         ResponseHelper::error("Datos incompletos: tipo y descripción son obligatorios", 400);
     }
 
-    // 4. Insertar en la BD usando Database::getInstance() como el resto del proyecto
+    
     $db = Database::getInstance()->getConnection();
 
     $stmt = $db->prepare("

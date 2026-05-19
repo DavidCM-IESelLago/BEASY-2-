@@ -1,21 +1,16 @@
-// js/notificaciones.js — funcionalidad unificada de notificaciones
+
 
 let _notifPolling = null;
 
-// ── Inicialización ──────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
     _inicializarPanel();
     cargarNotificaciones();
-    // Actualizar badge en segundo plano cada 60 segundos
+    
     _notifPolling = setInterval(cargarNotificaciones, 60000);
 });
 
-/**
- * Crea el overlay y el botón "marcar todas" de forma dinámica,
- * así no hay que tocar cada HTML.
- */
 function _inicializarPanel() {
-    // Overlay oscuro detrás del panel
+    
     if (!document.getElementById('notif-overlay')) {
         const overlay = document.createElement('div');
         overlay.id = 'notif-overlay';
@@ -32,21 +27,20 @@ function _inicializarPanel() {
 
 }
 
-// ── Carga y renderizado ─────────────────────────────────────────────────────
 async function cargarNotificaciones() {
     const datos = await apiFetch('notificaciones.php');
     if (!datos || datos.status !== 'success') return;
 
     const noLeidas = datos.data.filter(n => !n.leida).length;
 
-    // Badge del botón de campana
+    
     const badge = document.getElementById('badge-notificaciones');
     if (badge) {
         badge.textContent = noLeidas > 9 ? '9+' : noLeidas;
         badge.style.display = noLeidas > 0 ? 'flex' : 'none';
     }
 
-    // Lista de notificaciones
+    
     const lista = document.getElementById('lista-notificaciones');
     if (!lista) return;
 
@@ -73,9 +67,6 @@ async function cargarNotificaciones() {
     });
 }
 
-/**
- * Devuelve el elemento DOM de una notificación individual.
- */
 function _crearItemNotificacion(notif) {
     const esNoLeida = !notif.leida;
 
@@ -91,7 +82,7 @@ function _crearItemNotificacion(notif) {
         day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit',
     });
 
-    // Icono contextual según el contenido del mensaje
+    
     const iconColor = esNoLeida ? '#1a73e8' : '#727785';
     const iconBg    = esNoLeida ? 'rgba(26,115,232,0.12)' : '#f3f4f5';
     const iconName  = _iconoPorMensaje(notif.mensaje);
@@ -144,9 +135,6 @@ function _crearItemNotificacion(notif) {
     return item;
 }
 
-/**
- * Devuelve el nombre del icono de Material Symbols según el texto del mensaje.
- */
 function _iconoPorMensaje(mensaje) {
     const m = (mensaje || '').toLowerCase();
     if (m.includes('transferid'))                    return 'swap_horiz';
@@ -161,7 +149,6 @@ function _iconoPorMensaje(mensaje) {
     return 'notifications';
 }
 
-// ── Acciones ────────────────────────────────────────────────────────────────
 async function marcarLeida(notificacionId) {
     const datos = await apiFetch('notificaciones.php', {
         method: 'PUT',
@@ -171,7 +158,6 @@ async function marcarLeida(notificacionId) {
     cargarNotificaciones();
 }
 
-// ── Toggle del panel ────────────────────────────────────────────────────────
 function toggleNotificaciones(show) {
     const panel   = document.getElementById('notifPanel');
     const overlay = document.getElementById('notif-overlay');
@@ -180,7 +166,7 @@ function toggleNotificaciones(show) {
     if (show) {
         panel.style.transform = 'translateX(0)';
         if (overlay) overlay.style.display = 'block';
-        cargarNotificaciones(); // Datos frescos cada vez que se abre
+        cargarNotificaciones(); 
         setTimeout(() => document.addEventListener('click', _cerrarNotifFuera), 50);
     } else {
         panel.style.transform = 'translateX(100%)';

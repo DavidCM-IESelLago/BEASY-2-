@@ -1,9 +1,7 @@
-// js/admin.js
 
-// ── Estado ────────────────────────────────────────────────────────────────────
+
 let datosCargados = false;
 
-// ── Inicialización ────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
     const token = localStorage.getItem('jwt_token');
     if (!token) { window.location.href = 'inicio_sesion.html'; return; }
@@ -38,7 +36,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     datosCargados = true;
 });
 
-// ── Modal usuario ─────────────────────────────────────────────────────────────
 function toggleModal(show) {
     document.getElementById('modalUser').style.display = show ? 'flex' : 'none';
 }
@@ -48,7 +45,6 @@ function cerrarSesion() {
     window.location.href = 'inicio_sesion.html';
 }
 
-// ── Selección de sección ──────────────────────────────────────────────────────
 async function seleccionar(opcion) {
     ['datos', 'incidencias'].forEach(o => {
         document.getElementById(`card-${o}`).classList.toggle('active', o === opcion);
@@ -66,7 +62,6 @@ async function seleccionar(opcion) {
     if (opcion === 'incidencias') await cargarIncidencias();
 }
 
-// ── Tabs de datos ─────────────────────────────────────────────────────────────
 function mostrarTab(tab) {
     ['usuarios', 'cuentas', 'tarjetas'].forEach((t, i) => {
         document.getElementById(`tab-${t}`).style.display = t === tab ? 'block' : 'none';
@@ -74,7 +69,6 @@ function mostrarTab(tab) {
     });
 }
 
-// ── Helpers DOM para tablas admin ─────────────────────────────────────────────
 function _td(texto, estilo = '') {
     const td = document.createElement('td');
     td.textContent = texto ?? '—';
@@ -99,12 +93,11 @@ function _tdStrong(texto1, texto2 = '') {
     return td;
 }
 
-// ── Cargar datos de la BD ─────────────────────────────────────────────────────
 async function cargarDatos() {
     const res = await apiFetch('admin.php?accion=datos');
     if (!res || res.status !== 'success') return;
 
-    // Usuarios
+    
     document.getElementById('count-usuarios').textContent       = res.usuarios.length;
     document.getElementById('loading-usuarios').style.display   = 'none';
     document.getElementById('tabla-usuarios').style.display     = 'table';
@@ -123,7 +116,7 @@ async function cargarDatos() {
         tbodyU.appendChild(tr);
     });
 
-    // Cuentas
+    
     document.getElementById('count-cuentas').textContent        = res.cuentas.length;
     const tbodyC = document.getElementById('body-cuentas');
     tbodyC.innerHTML = '';
@@ -140,7 +133,7 @@ async function cargarDatos() {
         tbodyC.appendChild(tr);
     });
 
-    // Tarjetas
+    
     document.getElementById('count-tarjetas').textContent       = res.tarjetas.length;
     const tbodyT = document.getElementById('body-tarjetas');
     tbodyT.innerHTML = '';
@@ -158,7 +151,6 @@ async function cargarDatos() {
     });
 }
 
-// ── Incidencias ───────────────────────────────────────────────────────────────
 async function cargarIncidencias() {
     document.getElementById('loading-incidencias').style.display = 'block';
     document.getElementById('tabla-incidencias').style.display   = 'none';
@@ -217,7 +209,6 @@ function contarIncidencias(incidencias) {
     document.getElementById('badge-nav-abiertas').textContent  = abiertas > 0 ? abiertas : '';
 }
 
-// ── Cerrar incidencia ─────────────────────────────────────────────────────────
 async function cerrarIncidencia(id) {
     const btn = document.getElementById(`btn-${id}`);
     btn.disabled    = true;

@@ -12,17 +12,14 @@ class Notificacion extends Model
     private bool $leida;
     private string $fecha;
 
-    // Getters
+    
     public function getId(): int { return $this->id; }
     public function getUsuarioId(): int { return $this->usuario_id; }
     public function getMensaje(): string { return $this->mensaje; }
     public function isLeida(): bool { return $this->leida; }
     public function getFecha(): string { return $this->fecha; }
 
-    /**
-     * Obtiene notificaciones de un usuario
-     * @param bool $soloNoLeidas Si true, solo devuelve las no leídas
-     */
+    
     public static function findByUsuarioId(int $usuarioId, bool $soloNoLeidas = false): array
     {
         $db = Database::getInstance()->getConnection();
@@ -45,9 +42,7 @@ class Notificacion extends Model
         return $notificaciones;
     }
 
-    /**
-     * Crea una nueva notificación
-     */
+    
     public static function create(int $usuarioId, string $mensaje): ?self
     {
         $db = Database::getInstance()->getConnection();
@@ -80,9 +75,7 @@ class Notificacion extends Model
         return $n;
     }
 
-    /**
-     * Marca la notificación como leída
-     */
+    
     public function marcarLeida(): bool
     {
         if ($this->leida) return true;

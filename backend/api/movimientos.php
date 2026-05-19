@@ -9,7 +9,7 @@ use Fintech\Backend\ResponseHelper;
 use Fintech\Backend\Database;
 
 try {
-    // 1. Extraer y validar el token (igual que CrearIncidencia y el resto)
+    
     $headers = getallheaders();
     $token = $headers['X-Beasy-Token'] ?? '';
 
@@ -29,12 +29,12 @@ try {
         ResponseHelper::error("Método no permitido", 405);
     }
 
-    // 2. Paginación
+    
     $page  = max(1, (int)($_GET['page']  ?? 1));
     $limit = max(1, (int)($_GET['limit'] ?? 10));
     $offset = ($page - 1) * $limit;
 
-    // 3. Conexión real via singleton (igual que el resto del proyecto)
+    
     $pdo = Database::getInstance()->getConnection();
 
     $sql = "
@@ -63,20 +63,19 @@ try {
 
     $transaccionesDB = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// 4. Formatear: lógica de signo por TIPO semántico, no solo por cuenta
 $movimientosFinales = [];
 foreach ($transaccionesDB as $mov) {
     switch ($mov['tipo']) {
         case 'ingreso':
-            // Siempre beneficia al receptor — siempre positivo
+            
             $cantidad_final = (float)$mov['monto'];
             break;
         case 'compra':
-            // Siempre es un gasto para el comprador — siempre negativo
+            
             $cantidad_final = -(float)$mov['monto'];
             break;
         default:
-            // transferencia / bizum — depende de si eres origen o destino
+            
             $es_ingreso = ((int)$mov['destino_usuario_id'] === $usuarioId);
             $cantidad_final = $es_ingreso ? (float)$mov['monto'] : -(float)$mov['monto'];
             break;

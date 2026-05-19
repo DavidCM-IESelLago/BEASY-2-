@@ -9,7 +9,7 @@ use Fintech\Backend\ResponseHelper;
 use Fintech\Backend\Database;
 
 try {
-    // 1. Validar token
+    
     $headers = getallheaders();
     $token = $headers['X-Beasy-Token'] ?? '';
 
@@ -29,7 +29,7 @@ try {
         ResponseHelper::error("Método no permitido", 405);
     }
 
-    // 2. Obtener teléfono
+    
     $telefono = trim($_GET['telefono'] ?? '');
     $telefonoLimpio = preg_replace('/\s+/', '', $telefono);
 
@@ -37,7 +37,7 @@ try {
         ResponseHelper::error("Debes indicar un teléfono", 400);
     }
 
-    // 3. Buscar usuario por teléfono
+    
     $pdo = Database::getInstance()->getConnection();
     $stmt = $pdo->prepare("
         SELECT u.id, u.nombre, u.apellidos
@@ -55,7 +55,7 @@ try {
         ]);
     }
 
-    // 4. Comprobar que ese usuario tenga al menos una cuenta activa
+    
     $stmtC = $pdo->prepare("
         SELECT id FROM cuentas
         WHERE usuario_id = :uid AND activa = 1

@@ -76,7 +76,7 @@ try {
         $stmt = $pdo->prepare("UPDATE tarjetas SET estado = :estado WHERE id = :id");
         $stmt->execute(['estado' => $nuevo_estado, 'id' => $tarjeta_id]);
 
-        // Notificación al usuario según el nuevo estado
+        
         try {
             $ultimos4 = substr($tarjeta['numero'], -4);
             $mensajes = [
@@ -92,7 +92,7 @@ try {
                 ':msg' => $mensajes[$nuevo_estado] ?? "Estado de tarjeta actualizado.",
             ]);
         } catch (\Exception $e) {
-            // No interrumpir si falla la notificación
+            
         }
 
         ResponseHelper::jsonResponse(['status' => 'success', 'message' => 'Estado actualizado', 'estado' => $nuevo_estado]);

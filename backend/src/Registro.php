@@ -17,12 +17,11 @@ if (!isset($data['dni'], $data['nombre'], $data['apellidos'], $data['email'], $d
     ResponseHelper::error("Faltan datos obligatorios: dni, nombre, apellidos, email, password", 400);
 }
 
-// Telefono: opcional pero recomendado (necesario para Bizum)
 $telefono = isset($data['telefono']) ? trim(preg_replace('/\s+/', '', $data['telefono'])) : null;
 if ($telefono === '') $telefono = null;
 
 try {
-    // 1. Crear usuario
+    
     $nuevoUsuario = Usuario::create(
         $data['dni'], $data['email'], $data['password'],
         $data['nombre'], $data['apellidos'], $telefono
@@ -30,13 +29,13 @@ try {
 
     if (!$nuevoUsuario) ResponseHelper::error("No se pudo crear el usuario", 500);
 
-    // 2. Crear cuenta corriente
+    
     $numeroCuenta = "ES" . str_pad(mt_rand(1, 9999999999), 18, '0', STR_PAD_LEFT);
     $cuenta = Cuenta::create($nuevoUsuario->getId(), $numeroCuenta, 'corriente', 0.0);
 
     if (!$cuenta) ResponseHelper::error("Usuario creado pero no se pudo crear la cuenta", 500);
 
-    // 3. Crear tarjeta con PDO directo
+    
     $pdo = new PDO(
         "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4",
         DB_USER, DB_PASS

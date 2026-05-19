@@ -41,6 +41,7 @@
 
     <div class="main-wrapper">
         <header class="header">
+        <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Abrir menú"><span class="material-symbols-outlined">menu</span></button>
             <div class="header-title">Dashboard</div>
             <div class="header-actions">
                 <button id="btn-notificaciones" class="notif-btn" onclick="toggleNotificaciones(true)">
@@ -115,7 +116,7 @@
                 </div>
             </div>
 
-            <!-- Formulario Transferencia -->
+            
             <div id="transfer-form" class="hidden" style="max-width:700px; margin:0 auto;">
                 <button onclick="showSection('dashboard-content')"
                     style="background:none; border:none; color:var(--text-muted); cursor:pointer; margin-bottom:24px; display:flex; align-items:center; gap:8px; font-weight:700;">
@@ -158,7 +159,7 @@
                 </div>
             </div>
 
-            <!-- Formulario Bizum -->
+            
             <div id="bizum-form" class="hidden" style="max-width:700px; margin:0 auto;">
                 <button onclick="showSection('dashboard-content')"
                     style="background:none; border:none; color:var(--text-muted); cursor:pointer; margin-bottom:24px; display:flex; align-items:center; gap:8px; font-weight:700;">
@@ -197,7 +198,7 @@
         </main>
     </div>
 
-    <!-- Modal usuario -->
+    
     <div id="modalUser" class="user-modal">
         <div class="user-modal-box">
             <div class="user-modal-header">
@@ -226,7 +227,7 @@
         </div>
     </div>
 
-    <!-- Panel notificaciones -->
+    
     <div id="notifPanel" class="notif-panel">
         <div class="notif-panel-header">
             <h3 style="font-weight:700; font-size:16px;">Notificaciones</h3>
@@ -238,6 +239,7 @@
     <script src="js/api.js"></script>
     <script src="js/notificaciones.js"></script>
     <script src="js/dashboard.js"></script>
+<div class="sidebar-backdrop" onclick="toggleSidebar(false)"></div>
 </body>
 
 </html>

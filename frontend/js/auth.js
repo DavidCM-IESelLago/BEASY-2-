@@ -1,4 +1,4 @@
-// ── Toggle visibilidad de contraseña ─────────────────────────────────────────
+
 document.querySelectorAll('.toggle-password').forEach(icon => {
     icon.addEventListener('click', () => {
         const input = icon.previousElementSibling;
@@ -24,7 +24,7 @@ document.getElementById('form-login').addEventListener('submit', async (e) => {
     console.log('ROL RECIBIDO:', datos.rol);
     document.getElementById('msg-login').textContent = datos.message;
 
-    // Redirigir según rol
+    
     setTimeout(() => {
         if (datos.rol === 'admin') {
             window.location.href = 'admin.html';

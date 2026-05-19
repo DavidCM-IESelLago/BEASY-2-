@@ -1,9 +1,7 @@
-// js/registro.js
 
-// ── Estado ────────────────────────────────────────────────────────────────────
+
 let currentStep = 1;
 
-// ── Toggle visibilidad de contraseña ─────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.toggle-password').forEach(icon => {
         icon.addEventListener('click', () => {
@@ -15,7 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// ── Navegación de pasos ───────────────────────────────────────────────────────
 function validateAndNext(modifier) {
     const currentStepEl = document.getElementById(`step${currentStep}`);
     const inputs        = currentStepEl.querySelectorAll('input[required]');
@@ -76,7 +73,6 @@ function validateCheckboxes() {
     document.getElementById('btnFinish').disabled = !(terms && privacy);
 }
 
-// ── Registro ──────────────────────────────────────────────────────────────────
 async function showSuccess() {
     const btn     = document.getElementById('btnFinish');
     btn.disabled  = true;

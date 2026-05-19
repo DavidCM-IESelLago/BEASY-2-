@@ -9,7 +9,7 @@ use Fintech\Backend\ResponseHelper;
 use Fintech\Backend\Database;
 
 try {
-    // 1. Validar token
+    
     $headers = getallheaders();
     $token = $headers['X-Beasy-Token'] ?? '';
 
@@ -29,13 +29,13 @@ try {
         ResponseHelper::error("Método no permitido", 405);
     }
 
-    // 2. Leer JSON
+    
     $input = json_decode(file_get_contents('php://input'), true);
     $telefonoDestino = trim($input['telefono'] ?? '');
     $importe         = isset($input['importe']) ? (float) $input['importe'] : 0;
     $concepto        = trim($input['concepto'] ?? '');
 
-    // 3. Validar
+    
     if (empty($telefonoDestino)) {
         ResponseHelper::error("El teléfono del destinatario es obligatorio", 400);
     }
@@ -51,7 +51,7 @@ try {
     $pdo = Database::getInstance()->getConnection();
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // 4. Buscar usuario destino por teléfono
+    
     $stmtU = $pdo->prepare("
         SELECT id, nombre, apellidos
         FROM usuarios
@@ -69,7 +69,7 @@ try {
         ResponseHelper::error("No puedes enviarte un Bizum a ti mismo", 400);
     }
 
-    // 5. Primera cuenta del usuario origen
+    
     $stmtO = $pdo->prepare("
         SELECT id, numero_cuenta, saldo, usuario_id
         FROM cuentas
@@ -84,7 +84,7 @@ try {
         ResponseHelper::error("No tienes ninguna cuenta activa para enviar Bizum", 400);
     }
 
-    // 6. Primera cuenta del usuario destino
+    
     $stmtD = $pdo->prepare("
         SELECT id, numero_cuenta, saldo, usuario_id
         FROM cuentas
@@ -99,12 +99,12 @@ try {
         ResponseHelper::error("El destinatario no tiene ninguna cuenta activa", 404);
     }
 
-    // 7. Comprobar saldo
+    
     if ((float) $cuentaOrigen['saldo'] < $importe) {
         ResponseHelper::error("Saldo insuficiente para realizar el Bizum", 400);
     }
 
-    // 8. Transacción atómica
+    
     $pdo->beginTransaction();
     try {
         $u1 = $pdo->prepare("UPDATE cuentas SET saldo = saldo - :m WHERE id = :id");
@@ -126,7 +126,7 @@ try {
 
         $transaccionId = (int) $pdo->lastInsertId();
 
-        // Notificaciones
+        
         try {
             $nO = $pdo->prepare("INSERT INTO notificaciones (usuario_id, mensaje) VALUES (:uid, :msg)");
             $nO->execute([
@@ -140,7 +140,7 @@ try {
                 ':msg' => "Has recibido un Bizum de " . number_format($importe, 2, ',', '.') . " €"
             ]);
         } catch (\Exception $e) {
-            // no abortar por fallo de notificaciones
+            
         }
 
         $pdo->commit();

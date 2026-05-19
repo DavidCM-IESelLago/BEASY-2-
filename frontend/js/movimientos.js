@@ -1,10 +1,8 @@
-// js/movimientos.js
 
-// ── Estado ────────────────────────────────────────────────────────────────────
+
 const LIMITE     = 3;
 let paginaActual = 1;
 
-// ── Inicialización ────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
     const token = localStorage.getItem('jwt_token');
     if (!token) { window.location.href = 'inicio_sesion.html'; return; }
@@ -30,7 +28,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-// ── Perfil ────────────────────────────────────────────────────────────────────
 async function cargarPerfil() {
     const datos = await apiFetch('perfil.php');
     if (!datos || datos.status !== 'success') return;
@@ -46,7 +43,6 @@ async function cargarPerfil() {
     document.getElementById('modal-id').textContent      = '#' + String(datos.id).padStart(6, '0');
 }
 
-// ── Modal usuario ─────────────────────────────────────────────────────────────
 function toggleModal(show) {
     document.getElementById('modalUser').style.display = show ? 'flex' : 'none';
 }
@@ -56,7 +52,6 @@ function cerrarSesion() {
     window.location.href = 'inicio_sesion.html';
 }
 
-// ── Datos del mes (gráfico) ───────────────────────────────────────────────────
 async function cargarDatosMes() {
     const data = await apiFetch('movimientos.php?page=1&limit=1000');
     if (!data || data.status !== 'success') return;
@@ -69,7 +64,6 @@ async function cargarDatosMes() {
     actualizarGrafico(delMes);
 }
 
-// ── Paginación ────────────────────────────────────────────────────────────────
 async function cargarPagina(pagina) {
     const tbody = document.getElementById('contenedor-transacciones');
     const boton = document.getElementById('btn-ver-mas');
@@ -120,7 +114,6 @@ async function cargarPagina(pagina) {
     }
 }
 
-// ── Renderizado de filas ──────────────────────────────────────────────────────
 function pintarMovimientos(movimientos) {
     const tbody = document.getElementById('contenedor-transacciones');
     movimientos.forEach(mov => {
@@ -135,7 +128,7 @@ function pintarMovimientos(movimientos) {
         const importe      = (esPositivo ? '+' : '') + mov.cantidad.toFixed(2) + '€';
         const fecha        = new Date(mov.fecha);
 
-        // Celda 1: info de transacción
+        
         const spanIcono = document.createElement('span');
         spanIcono.className = 'material-symbols-outlined';
         spanIcono.textContent = icono;
@@ -158,14 +151,14 @@ function pintarMovimientos(movimientos) {
         const td1 = document.createElement('td');
         td1.appendChild(divInfo);
 
-        // Celda 2: badge tipo
+        
         const spanBadge = document.createElement('span');
         spanBadge.className = `badge badge-${mov.tipo}`;
         spanBadge.textContent = mov.tipo;
         const td2 = document.createElement('td');
         td2.appendChild(spanBadge);
 
-        // Celda 3: fecha y hora
+        
         const pFecha = document.createElement('p');
         pFecha.className = 'tx-date';
         pFecha.textContent = fecha.toLocaleDateString('es-ES');
@@ -176,7 +169,7 @@ function pintarMovimientos(movimientos) {
         td3.appendChild(pFecha);
         td3.appendChild(pHora);
 
-        // Celda 4: importe
+        
         const td4 = document.createElement('td');
         td4.className = `tx-amount ${claseImporte}`;
         td4.textContent = importe;
@@ -190,7 +183,6 @@ function pintarMovimientos(movimientos) {
     });
 }
 
-// ── Donut Chart ───────────────────────────────────────────────────────────────
 function actualizarGrafico(movimientos) {
     const CIRCUNFERENCIA = 251.2;
     const COLORES = { compra: '#1a73e8', transferencia: '#005bbf', bizum: '#006d2c', ingreso: '#89fa9b' };

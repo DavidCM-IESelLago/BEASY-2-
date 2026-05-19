@@ -9,7 +9,7 @@ use Fintech\Backend\ResponseHelper;
 use Fintech\Backend\Database;
 
 try {
-    // 1. Validar token
+    
     $headers = getallheaders();
     $token = $headers['X-Beasy-Token'] ?? '';
 
@@ -29,16 +29,16 @@ try {
         ResponseHelper::error("Método no permitido", 405);
     }
 
-    // 2. Obtener IBAN
+    
     $iban = trim($_GET['iban'] ?? '');
-    // Quitar espacios para comparar
+    
     $ibanLimpio = preg_replace('/\s+/', '', $iban);
 
     if (empty($ibanLimpio)) {
         ResponseHelper::error("Debes indicar un IBAN", 400);
     }
 
-    // 3. Comprobar si existe en BD
+    
     $pdo = Database::getInstance()->getConnection();
     $stmt = $pdo->prepare("
         SELECT id, numero_cuenta, usuario_id, activa

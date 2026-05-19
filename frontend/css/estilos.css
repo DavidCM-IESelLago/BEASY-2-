@@ -1,11 +1,9 @@
-/* ==========================================
-   VARIABLES GLOBALES (Colores y medidas)
-========================================== */
+
 :root {
     --color-fondo: #f8f9fa;
     --color-blanco: #ffffff;
     
-    /* Azules */
+    
     --color-primario: #1a73e8;
     --color-primario-hover: #005bbf;
     --color-primario-suave: #d8e2ff;
@@ -13,26 +11,23 @@
     --color-azul-logo: #1d4ed8;
     --color-azul-fuerte: #005bbf;
     
-    /* Grises */
+    
     --color-texto-principal: #191c1d;
     --color-texto-secundario: #414754;
     --color-texto-claro: #6b7280;
     --color-gris-fondo: #f3f4f5;
     --color-borde: #e1e3e4;
     
-    /* Acentos */
+    
     --color-verde: #89fa9b;
     --color-verde-oscuro: #002108;
     
-    /* Sombras y medidas */
+    
     --sombra-suave: 0px 4px 20px rgba(0, 0, 0, 0.04);
     --sombra-media: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     --ancho-maximo: 1440px;
 }
 
-/* ==========================================
-   RESETEO BÁSICO
-========================================== */
 * {
     margin: 0;
     padding: 0;
@@ -54,9 +49,6 @@ button { cursor: pointer; border: none; font-family: inherit; }
 input { outline: none; }
 strong { font-weight: 600; color: var(--color-primario); }
 
-/* ==========================================
-   1. BARRA DE NAVEGACIÓN
-========================================== */
 .barra-navegacion {
     background-color: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(16px);
@@ -116,7 +108,6 @@ strong { font-weight: 600; color: var(--color-primario); }
 }
 .icono-accion:hover { background-color: var(--color-gris-fondo); }
 
-/* Botones comunes */
 .boton-texto {
     background: transparent;
     color: var(--color-primario);
@@ -136,9 +127,6 @@ strong { font-weight: 600; color: var(--color-primario); }
 }
 .boton-primario:hover { background-color: var(--color-primario-hover); }
 
-/* ==========================================
-   2. SECCIÓN HERO
-========================================== */
 .contenedor-principal {
     flex-grow: 1;
     width: 100%;
@@ -211,13 +199,11 @@ strong { font-weight: 600; color: var(--color-primario); }
 }
 .boton-secundario:hover { background-color: var(--color-gris-fondo); }
 
-/* Gráfico abstracto Hero */
-/* Gráfico abstracto Hero */
 .grafico-hero {
     margin-top: 60px;
     width: 100%;
-    max-width: 1000px; /* ANTES ERA 400px. Lo ensanchamos a formato panorámico */
-    height: 450px; /* Le damos más altura para que respire */
+    max-width: 1000px; 
+    height: 450px; 
     background-color: var(--color-blanco);
     border-radius: 24px;
     box-shadow: var(--sombra-suave);
@@ -225,12 +211,11 @@ strong { font-weight: 600; color: var(--color-primario); }
     padding: 8px;
 }
 
-/* Estilo para la nueva imagen del Hero */
 .imagen-dashboard-hero {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Llena el espacio sin aplastar la imagen */
-    object-position: center; /* NUEVO: Asegura que siempre se vea el centro de la imagen aunque se recorte un poco por los bordes */
+    object-fit: cover; 
+    object-position: center; 
     border-radius: 16px; 
     display: block;
 }
@@ -261,9 +246,6 @@ strong { font-weight: 600; color: var(--color-primario); }
 .linea-falsa.corta { width: 50%; }
 .linea-falsa.larga { width: 80%; background-color: var(--color-texto-secundario); }
 
-/* ==========================================
-   3. SECCIÓN CARACTERÍSTICAS
-========================================== */
 .seccion-caracteristicas { width: 100%; padding-top: 60px; padding-bottom: 60px; }
 
 .cabecera-caracteristicas { text-align: center; margin-bottom: 60px; }
@@ -321,9 +303,6 @@ strong { font-weight: 600; color: var(--color-primario); }
 .fila-horizontal { flex-direction: row; align-items: center; }
 .contenido-mitad { width: 60%; }
 
-/* ==========================================
-   4. SECCIÓN FAQ (Acordeón)
-========================================== */
 .seccion-faq {
     width: 100%;
     max-width: 800px;
@@ -361,32 +340,29 @@ strong { font-weight: 600; color: var(--color-primario); }
     color: var(--color-texto-principal);
     cursor: pointer;
     list-style: none; 
-    /* Quitamos el flex y usamos posicionamiento relativo para el texto */
+    
     display: block; 
     position: relative;
-    padding-right: 40px; /* Dejamos hueco a la derecha para que el texto no pise el + */
+    padding-right: 40px; 
 }
 
-/* Añadir nuestro propio icono de + al acordeón */
 .faq-pregunta::after {
     content: '+';
     font-size: 24px;
     color: var(--color-primario);
     font-weight: 400;
     transition: transform 0.3s ease;
-    /* Lo fijamos a la derecha y lo centramos verticalmente */
+    
     position: absolute;
     right: 0;
     top: 50%;
     transform: translateY(-50%);
 }
 
-/* Cambiar el + por una X cuando está abierto */
 .faq-item[open] .faq-pregunta::after {
     transform: translateY(-50%) rotate(45deg);
 }
 
-/* Quitar el marcador por defecto en Chrome/Safari */
 .faq-pregunta::-webkit-details-marker {
     display: none;
 }
@@ -400,9 +376,6 @@ strong { font-weight: 600; color: var(--color-primario); }
     border-top: 1px solid var(--color-gris-fondo);
 }
 
-/* ==========================================
-   5. PIE DE PÁGINA
-========================================== */
 .pie-pagina {
     background-color: var(--color-fondo);
     border-top: 1px solid var(--color-borde);
@@ -431,12 +404,29 @@ strong { font-weight: 600; color: var(--color-primario); }
 }
 .enlace-pie:hover { color: var(--color-primario); }
 
-/* Adaptación para móviles (Responsivo) */
 @media (max-width: 768px) {
     .nav-centro, .caja-buscador { display: none; }
+
+    .barra-navegacion { padding: 0 16px; }
+
+    .titulo-principal { font-size: 32px; }
+    .subtitulo-hero { font-size: 16px; }
+
+    .seccion-hero { padding-top: 60px; padding-bottom: 48px; }
+
+    .grupo-botones-hero { flex-direction: column; align-items: center; }
+    .boton-grande { width: 100%; max-width: 300px; justify-content: center; }
+
+    .grafico-hero { height: 220px; }
+
     .cuadricula-tarjetas { grid-template-columns: 1fr; }
     .tarjeta-ancha, .tarjeta-estrecha { grid-column: span 1; }
     .fila-horizontal { flex-direction: column; }
     .contenido-mitad { width: 100%; }
-    .contenedor-pie { grid-template-columns: 1fr; }
+
+    .contenedor-pie { grid-template-columns: 1fr 1fr; gap: 24px; }
+
+    .contenedor-principal { padding: 0 16px 60px; }
+
+    .seccion-faq { padding: 24px 16px; }
 }

@@ -22,7 +22,7 @@ try {
     $auth  = new AuthController();
     $token = $auth->login($email, $password);
 
-    // Obtener rol para redirigir en el frontend
+    
     $usuario = Usuario::findByEmail($email);
     $rol     = $usuario ? $usuario->getRol() : 'usuario';
 
@@ -36,6 +36,6 @@ try {
 } catch (\PDOException $e) {
     ResponseHelper::error("Error de conexión: " . $e->getMessage(), 500);
 } catch (\Exception $e) {
-    // Credenciales incorrectas → 400 (no 401, que se reserva para token expirado)
+    
     ResponseHelper::error($e->getMessage(), 400);
 }

@@ -1,19 +1,14 @@
 <?php
-//ini_set('display_errors', 1);
-//ini_set('display_startup_errors', 1);
-//error_reporting(E_ALL);
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Dotenv\Dotenv;
 
-//Detectar si se ejecuta en consola
 define('IS_CLI', php_sapi_name() === 'cli' || defined('STDIN'));
 
-// Cargar variables de entorno
 $dotenv = Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
 
-// Configuración de errores según entorno
 if ($_ENV['APP_ENV'] === 'development') {
     error_reporting(E_ALL);
     ini_set('display_errors', 1);
@@ -22,9 +17,8 @@ if ($_ENV['APP_ENV'] === 'development') {
     ini_set('display_errors', 0);
 }
 
-// Configuraciones específicas para web (no CLI)
 if (!IS_CLI) {
-    // Configuración de CORS dinámica desde el .env
+    
     header("Access-Control-Allow-Origin: " . ($_ENV['CORS_ALLOWED_ORIGINS'] ?? 'http://localhost:8081'));
     header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
     header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With, X-Beasy-Token");
@@ -36,15 +30,12 @@ if (!IS_CLI) {
     }
 }
 
-
-// Configuración de zona horaria
 date_default_timezone_set('Europe/Madrid');
 
-// Definir constantes para acceso rápido
 define('DB_HOST', $_ENV['DB_HOST']);
 define('DB_NAME', $_ENV['DB_NAME']);
 define('DB_USER', $_ENV['DB_USER']);
 define('DB_PASS', $_ENV['DB_PASS']);
-// Usa la variable del .env para que coincida con el Login y el Validador
+
 define('JWT_SECRET', $_ENV['JWT_SECRET_KEY']); 
 define('JWT_EXPIRATION', (int)$_ENV['JWT_EXPIRATION']);

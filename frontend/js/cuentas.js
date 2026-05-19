@@ -1,12 +1,10 @@
-// js/cuentas.js
 
-// ── Estado ────────────────────────────────────────────────────────────────────
+
 let cuentasData     = [];
 let movimientosData = [];
 let nuevaCuenta     = {};
 let cuentaCreada    = {};
 
-// ── Inicialización ────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
     const token = localStorage.getItem('jwt_token');
     if (!token) { window.location.href = 'inicio_sesion.html'; return; }
@@ -27,7 +25,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 });
 
-// ── Perfil ────────────────────────────────────────────────────────────────────
 async function cargarPerfil() {
     const datos = await apiFetch('perfil.php');
     if (!datos || datos.status !== 'success') return;
@@ -43,7 +40,6 @@ async function cargarPerfil() {
     document.getElementById('modal-id').textContent      = '#' + String(datos.id).padStart(6, '0');
 }
 
-// ── Modal usuario ─────────────────────────────────────────────────────────────
 function toggleModal(show) {
     document.getElementById('modalUser').style.display = show ? 'flex' : 'none';
 }
@@ -53,7 +49,6 @@ function cerrarSesion() {
     window.location.href = 'inicio_sesion.html';
 }
 
-// ── Datos ─────────────────────────────────────────────────────────────────────
 async function cargarCuentas() {
     const data = await apiFetch('cuentas.php');
     if (data && data.status === 'success') cuentasData = data.cuentas;
@@ -64,7 +59,6 @@ async function cargarMovimientos() {
     if (data && data.status === 'success') movimientosData = data.movimientos;
 }
 
-// ── Renderizado de cuentas ────────────────────────────────────────────────────
 function pintarCuentas() {
     const grid = document.getElementById('accounts-grid');
     grid.innerHTML = '';
@@ -89,7 +83,7 @@ function pintarCuentas() {
         const card = document.createElement('div');
         card.className  = 'account-card';
         card.dataset.id = cuenta.id;
-        // Fila superior: nombre + icono
+        
         const headerRow = document.createElement('div');
         headerRow.className = 'card-header-row';
         const headerLeft = document.createElement('div');
@@ -109,7 +103,7 @@ function pintarCuentas() {
         iconWrap.appendChild(iconSpan);
         headerRow.appendChild(headerLeft);
         headerRow.appendChild(iconWrap);
-        // Bloque saldo
+        
         const balanceDiv = document.createElement('div');
         balanceDiv.style.cssText = 'margin-top:24px;';
         const pHint = document.createElement('p');
@@ -127,7 +121,6 @@ function pintarCuentas() {
     });
 }
 
-// ── Modal de cuenta ───────────────────────────────────────────────────────────
 function abrirModal(cuenta) {
     const esHucha = cuenta.tipo === 'ahorros';
     document.getElementById('modal-cuenta-nombre').textContent = esHucha ? 'Hucha (Ahorro)' : 'Cuenta Corriente';
@@ -190,14 +183,12 @@ function pintarMovimientosModal(movimientos) {
     });
 }
 
-// ── Navegación de vistas ──────────────────────────────────────────────────────
 function mostrarVista(id) {
     document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
     window.scrollTo(0, 0);
 }
 
-// ── Utilidades ────────────────────────────────────────────────────────────────
 function enmascararNumero(num) {
     if (!num) return '•••• •••• •••• ••••';
     const limpio = num.replace(/\s/g, '');
@@ -213,7 +204,6 @@ function copiarNumero() {
     navigator.clipboard.writeText(num).then(() => mostrarNotificacion('Número copiado al portapapeles', 'exito'));
 }
 
-// ── Event Listeners ───────────────────────────────────────────────────────────
 function _initEventListeners() {
     document.getElementById('modal-close').addEventListener('click', () =>
         document.getElementById('modal-cuenta').classList.remove('open'));

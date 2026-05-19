@@ -1,11 +1,9 @@
-// js/dashboard.js
 
-// ── Estado ────────────────────────────────────────────────────────────────────
+
 let _cuentasUsuario   = [];
 let _ibanValidoCache  = { iban: '', existe: false };
 let _timerIban        = null;
 
-// ── Inicialización ────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
     const token = localStorage.getItem('jwt_token');
     if (!token) { window.location.href = 'inicio_sesion.html'; return; }
@@ -28,7 +26,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     _initBizumForm();
 });
 
-// ── Navegación de secciones ───────────────────────────────────────────────────
 function showSection(id) {
     ['dashboard-content', 'transfer-form', 'bizum-form'].forEach(s =>
         document.getElementById(s).classList.add('hidden'));
@@ -36,7 +33,6 @@ function showSection(id) {
     if (id === 'transfer-form') cargarCuentasOrigen();
 }
 
-// ── Perfil ────────────────────────────────────────────────────────────────────
 async function cargarPerfil() {
     const datos = await apiFetch('perfil.php');
     if (!datos || datos.status !== 'success') return;
@@ -52,7 +48,6 @@ async function cargarPerfil() {
     document.getElementById('modal-id').textContent      = '#' + String(datos.id).padStart(6, '0');
 }
 
-// ── Modal usuario ─────────────────────────────────────────────────────────────
 function toggleModal(show) {
     document.getElementById('modalUser').style.display = show ? 'flex' : 'none';
 }
@@ -62,7 +57,6 @@ function cerrarSesion() {
     window.location.href = 'inicio_sesion.html';
 }
 
-// ── Dashboard principal ───────────────────────────────────────────────────────
 async function cargarDashboard() {
     const datos = await apiFetch('dashboard.php');
     if (!datos) return;
@@ -96,7 +90,6 @@ async function cargarDashboard() {
     actualizarGrafico(dash.estadisticas_gastos);
 }
 
-// ── Formulario de transferencia ───────────────────────────────────────────────
 function _opcionSelect(texto, valor = '') {
     const opt = document.createElement('option');
     opt.value = valor;
@@ -196,7 +189,6 @@ function _initTransferForm() {
     }
 }
 
-// ── Formulario de Bizum ───────────────────────────────────────────────────────
 function _initBizumForm() {
     const inputTel = document.getElementById('bizum-tel');
     const errorTel = document.getElementById('bizum-tel-error');
@@ -263,7 +255,6 @@ function _initBizumForm() {
     }
 }
 
-// ── Donut Chart ───────────────────────────────────────────────────────────────
 function actualizarGrafico(porTipo) {
     const CIRCUNFERENCIA = 251.2;
     const COLORES = {

@@ -14,7 +14,7 @@ class Cuenta extends Model
     private string $fecha_creacion;
     private bool $activa;
 
-    // Getters y setters
+    
     public function getId(): int { return $this->id; }
     public function getUsuarioId(): int { return $this->usuario_id; }
     public function getNumeroCuenta(): string { return $this->numero_cuenta; }
@@ -25,9 +25,7 @@ class Cuenta extends Model
     public function setSaldo(float $saldo): void { $this->saldo = $saldo; }
     public function setFechaCreacion(string $fechaCreacion): void { $this->fecha_creacion = $fechaCreacion; }
 
-    /**
-     * Obtiene todas las cuentas de un usuario
-     */
+    
     public static function findByUsuarioId(int $usuarioId): array
     {
         $db = Database::getInstance()->getConnection();
@@ -44,9 +42,7 @@ class Cuenta extends Model
         return $cuentas;
     }
 
-    /**
-     * Obtiene saldo total de todas las cuentas de un usuario
-     */
+    
     public static function getSaldoTotalByUsuario(int $usuarioId): float
     {
         $db = Database::getInstance()->getConnection();
@@ -56,9 +52,7 @@ class Cuenta extends Model
         return (float)($result['total'] ?? 0);
     }
 
-    /**
-     * Busca una cuenta por su número
-     */
+    
     public static function findByNumero(string $numero): ?self
     {
         $db = Database::getInstance()->getConnection();
@@ -73,9 +67,7 @@ class Cuenta extends Model
         return $cuenta;
     }
 
-    /**
-     * Crea una nueva cuenta asociada a un usuario (se usa al registrar)
-     */
+    
     public static function create(int $usuarioId, string $numeroCuenta, string $tipo = 'corriente', float $saldoInicial = 0.0): ?self
     {
         $db = Database::getInstance()->getConnection();
@@ -110,9 +102,7 @@ class Cuenta extends Model
         return $cuenta;
     }
 
-    /**
-     * Actualiza el saldo de la cuenta
-     */
+    
     public function updateSaldo(float $nuevoSaldo): bool
     {
         $this->saldo = $nuevoSaldo;

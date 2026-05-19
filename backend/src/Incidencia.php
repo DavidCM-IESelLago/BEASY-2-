@@ -12,7 +12,7 @@ class Incidencia extends Model {
     private string $estado;
     private string $fecha_creacion;
 
-    // Getters
+    
     public function getId(): int { return $this->id; }
     public function getUsuarioId(): int { return $this->usuario_id; }
     public function getTipo(): string { return $this->tipo; }
@@ -20,7 +20,7 @@ class Incidencia extends Model {
     public function getEstado(): string { return $this->estado; }
     public function getFechaCreacion(): string { return $this->fecha_creacion; }
 
-    /* Crea una nueva incidencia */
+    
     public static function crear(int $usuario_id, string $tipo, string $descripcion): ?self {
         
         $db = Database::getInstance()->getConnection();
@@ -41,7 +41,7 @@ class Incidencia extends Model {
         return self::findById($db->lastInsertId());
     }
 
-    /* Busca incidencias de un usuario */
+    
     public static function findByUsuarioId(int $usuarioId): array {
         $db = Database::getInstance()->getConnection();
         $stmt = $db->prepare("

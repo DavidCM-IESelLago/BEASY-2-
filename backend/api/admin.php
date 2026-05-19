@@ -7,7 +7,7 @@ use Fintech\Backend\AuthController;
 use Fintech\Backend\ResponseHelper;
 
 try {
-    // 1. Validar token
+    
     $headers = getallheaders();
     $token   = $headers['X-Beasy-Token'] ?? '';
     if (empty($token)) {
@@ -19,7 +19,7 @@ try {
     $usuario_id = $auth->verifyToken($token);
     if (!$usuario_id) ResponseHelper::error("Token inválido", 401);
 
-    // 2. Verificar que es admin
+    
     $pdo = new PDO(
         "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4",
         DB_USER, DB_PASS
@@ -36,8 +36,8 @@ try {
 
     $accion = $_GET['accion'] ?? $_SERVER['REQUEST_METHOD'];
 
-    // ── GET ?accion=datos ─────────────────────────────────────────
-    // Devuelve usuarios + cuentas + tarjetas
+    
+    
     if ($_SERVER['REQUEST_METHOD'] === 'GET' && ($_GET['accion'] ?? '') === 'datos') {
 
         $usuarios = $pdo->query("
@@ -75,7 +75,7 @@ try {
         ]);
     }
 
-    // ── GET ?accion=incidencias ───────────────────────────────────
+    
     elseif ($_SERVER['REQUEST_METHOD'] === 'GET' && ($_GET['accion'] ?? '') === 'incidencias') {
 
         $incidencias = $pdo->query("
@@ -91,7 +91,7 @@ try {
         ResponseHelper::jsonResponse(['status' => 'success', 'incidencias' => $incidencias]);
     }
 
-    // ── PUT — Cerrar incidencia ───────────────────────────────────
+    
     elseif ($_SERVER['REQUEST_METHOD'] === 'PUT') {
         $input = json_decode(file_get_contents('php://input'), true);
         $incidencia_id = $input['incidencia_id'] ?? null;

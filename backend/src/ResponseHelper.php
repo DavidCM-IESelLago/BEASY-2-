@@ -21,15 +21,13 @@ class ResponseHelper
         ], $code);
     }
 
-    /**
-     * NUEVO: Obtiene el token de forma segura en hostings restrictivos
-     */
+    
     public static function getBearerToken(): ?string
     {
         $headers = apache_request_headers();
         $authHeader = null;
 
-        // Buscamos en la cabecera estándar y en la personalizada por si acaso
+        
         if (isset($headers['Authorization'])) {
             $authHeader = $headers['Authorization'];
         } elseif (isset($headers['X-Authorization'])) {

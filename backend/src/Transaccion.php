@@ -16,7 +16,7 @@ class Transaccion extends Model
     private string $fecha;
     private string $estado;
 
-    // Getters
+    
     public function getId(): int { return $this->id; }
     public function getCuentaOrigenId(): int { return $this->cuenta_origen_id; }
     public function getCuentaDestinoId(): int { return $this->cuenta_destino_id; }
@@ -26,9 +26,7 @@ class Transaccion extends Model
     public function getFecha(): string { return $this->fecha; }
     public function getEstado(): string { return $this->estado; }
 
-    /**
-     * Obtiene las últimas transacciones de una cuenta (ordenadas por fecha)
-     */
+    
     public static function getUltimasByCuenta(int $cuentaId, int $limite = 10): array
     {
         $db = Database::getInstance()->getConnection();
@@ -53,9 +51,7 @@ class Transaccion extends Model
         return $transacciones;
     }
 
-    /**
-     * Obtiene transacciones de un usuario (a través de sus cuentas)
-     */
+    
     public static function getByUsuarioId(int $usuarioId, int $page = 1, int $perPage = 10): array
     {
         $db = Database::getInstance()->getConnection();
@@ -83,18 +79,16 @@ class Transaccion extends Model
         return $transacciones;
     }
 
-    /**
-     * Realiza una transferencia entre cuentas con control de concurrencia
-     */
+    
     public static function transferir(int $cuentaOrigenId, int $cuentaDestinoId, float $monto, string $descripcion = ''): bool
     {
         $db = Database::getInstance()->getConnection();
 
-        // Iniciamos la transacción
+        
         $db->beginTransaction();
 
         try {
-            // Bloquear las filas para evitar condiciones de carrera
+            
             $stmtOrigen = $db->prepare("SELECT * FROM cuentas WHERE id = :id FOR UPDATE");
             $stmtOrigen->execute(['id' => $cuentaOrigenId]);
             $cuentaOrigen = $stmtOrigen->fetch();
@@ -115,18 +109,18 @@ class Transaccion extends Model
                 throw new Exception("Saldo insuficiente");
             }
 
-            // Calcular nuevos saldos
+            
             $nuevoSaldoOrigen = $cuentaOrigen['saldo'] - $monto;
             $nuevoSaldoDestino = $cuentaDestino['saldo'] + $monto;
 
-            // Actualizar saldos
+            
             $updateOrigen = $db->prepare("UPDATE cuentas SET saldo = :saldo WHERE id = :id");
             $updateOrigen->execute(['saldo' => $nuevoSaldoOrigen, 'id' => $cuentaOrigenId]);
 
             $updateDestino = $db->prepare("UPDATE cuentas SET saldo = :saldo WHERE id = :id");
             $updateDestino->execute(['saldo' => $nuevoSaldoDestino, 'id' => $cuentaDestinoId]);
 
-            // Registrar la transacción
+            
             $insert = $db->prepare("
                 INSERT INTO transacciones (cuenta_origen_id, cuenta_destino_id, monto, tipo, descripcion, estado, fecha)
                 VALUES (:origen, :destino, :monto, 'transferencia', :descripcion, 'completada', NOW())
@@ -138,8 +132,8 @@ class Transaccion extends Model
                 'descripcion' => $descripcion
             ]);
 
-            // Insertar notificaciones para ambos usuarios
-            // Primero obtenemos los usuarios asociados a las cuentas
+            
+            
             $usuarioOrigen = $cuentaOrigen['usuario_id'];
             $usuarioDestino = $cuentaDestino['usuario_id'];
 
@@ -160,14 +154,12 @@ class Transaccion extends Model
 
         } catch (Exception $e) {
             $db->rollBack();
-            // Podríamos loguear el error, pero lanzamos excepción para que el controlador la gestione
+            
             throw $e;
         }
     }
 
-    /**
-     * Crea una transacción (sin actualizar saldos, para registros manuales)
-     */
+    
     public static function create(int $origenId, int $destinoId, float $monto, string $tipo, string $descripcion = '', string $estado = 'pendiente'): ?self
     {
         $db = Database::getInstance()->getConnection();

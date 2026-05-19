@@ -15,7 +15,7 @@ class Tarjeta extends Model
     private string $estado;
     private string $fecha_creacion;
 
-    // Getters
+    
     public function getId(): int { return $this->id; }
     public function getCuentaId(): int { return $this->cuenta_id; }
     public function getNumero(): string { return $this->numero; }
@@ -24,9 +24,7 @@ class Tarjeta extends Model
     public function getEstado(): string { return $this->estado; }
     public function getFechaCreacion(): string { return $this->fecha_creacion; }
 
-    /**
-     * Obtiene todas las tarjetas de una cuenta
-     */
+    
     public static function findByCuentaId(int $cuentaId): array
     {
         $db = Database::getInstance()->getConnection();
@@ -43,9 +41,7 @@ class Tarjeta extends Model
         return $tarjetas;
     }
 
-    /**
-     * Obtiene todas las tarjetas de un usuario (a través de sus cuentas)
-     */
+    
     public static function findByUsuarioId(int $usuarioId): array
     {
         $db = Database::getInstance()->getConnection();
@@ -67,9 +63,7 @@ class Tarjeta extends Model
         return $tarjetas;
     }
 
-    /**
-     * Crea una nueva tarjeta virtual
-     */
+    
     public static function create(int $cuentaId, string $numero, string $cvv, string $fechaExpiracion): ?self
     {
         $db = Database::getInstance()->getConnection();
@@ -104,9 +98,7 @@ class Tarjeta extends Model
         return $t;
     }
 
-    /**
-     * Actualiza el estado de la tarjeta (activa, bloqueada, cancelada)
-     */
+    
     public function updateEstado(string $nuevoEstado): bool
     {
         $this->estado = $nuevoEstado;

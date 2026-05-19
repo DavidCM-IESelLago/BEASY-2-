@@ -13,7 +13,7 @@ try {
         ResponseHelper::error("Método no permitido", 405);
     }
 
-    // Extraer y validar token (igual que cuentas.php)
+    
     $headers = getallheaders();
     $token = $headers['X-Beasy-Token'] ?? '';
 

@@ -13,7 +13,7 @@ $usuarioId = validateToken();
 $metodo    = $_SERVER['REQUEST_METHOD'];
 
 try {
-    // GET — obtener notificaciones del usuario autenticado
+    
     if ($metodo === 'GET') {
         $notificaciones = Notificacion::findByUsuarioId($usuarioId);
 
@@ -32,11 +32,11 @@ try {
         ]);
     }
 
-    // PUT — marcar notificación/es como leídas
+    
     elseif ($metodo === 'PUT') {
         $body = json_decode(file_get_contents('php://input'), true);
 
-        // Marcar TODAS las no leídas del usuario de una vez
+        
         if (!empty($body['marcar_todas'])) {
             $db   = Database::getInstance()->getConnection();
             $stmt = $db->prepare(
@@ -50,7 +50,7 @@ try {
             ]);
         }
 
-        // Marcar UNA notificación concreta
+        
         if (empty($body['notificacion_id'])) {
             ResponseHelper::error("Falta el parámetro 'notificacion_id'", 400);
         }
@@ -61,7 +61,7 @@ try {
             ResponseHelper::error('Notificación no encontrada', 404);
         }
 
-        // Verificar que la notificación pertenece al usuario autenticado
+        
         if ($notif->getUsuarioId() !== $usuarioId) {
             ResponseHelper::error('Sin permiso para esta notificación', 403);
         }
