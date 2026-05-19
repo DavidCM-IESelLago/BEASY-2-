@@ -30,36 +30,6 @@ function _inicializarPanel() {
         document.body.appendChild(overlay);
     }
 
-    // Botón "Marcar todas" en la cabecera del panel
-    const panel = document.getElementById('notifPanel');
-    if (!panel || document.getElementById('btn-marcar-todas')) return;
-
-    const header = panel.querySelector('div:first-child');
-    if (!header) return;
-
-    const btn = document.createElement('button');
-    btn.id = 'btn-marcar-todas';
-    btn.textContent = 'Marcar todas';
-    btn.title = 'Marcar todas las notificaciones como leídas';
-    btn.style.cssText = [
-        'font-size:12px', 'font-weight:600',
-        'color:#1a73e8', 'background:none',
-        'border:1px solid rgba(26,115,232,0.3)',
-        'border-radius:6px', 'cursor:pointer',
-        'padding:4px 10px', 'font-family:inherit',
-        'display:none', 'margin-right:8px',
-        'transition:background 0.15s',
-    ].join(';');
-    btn.addEventListener('mouseenter', () => { btn.style.background = 'rgba(26,115,232,0.08)'; });
-    btn.addEventListener('mouseleave', () => { btn.style.background = 'none'; });
-    btn.addEventListener('click', marcarTodasLeidas);
-
-    const closeBtn = header.querySelector('.material-symbols-outlined');
-    if (closeBtn) {
-        header.insertBefore(btn, closeBtn);
-    } else {
-        header.appendChild(btn);
-    }
 }
 
 // ── Carga y renderizado ─────────────────────────────────────────────────────
@@ -74,12 +44,6 @@ async function cargarNotificaciones() {
     if (badge) {
         badge.textContent = noLeidas > 9 ? '9+' : noLeidas;
         badge.style.display = noLeidas > 0 ? 'flex' : 'none';
-    }
-
-    // Botón "Marcar todas" — solo visible si hay no leídas
-    const btnTodas = document.getElementById('btn-marcar-todas');
-    if (btnTodas) {
-        btnTodas.style.display = noLeidas > 0 ? 'inline-block' : 'none';
     }
 
     // Lista de notificaciones
@@ -190,20 +154,6 @@ async function marcarLeida(notificacionId) {
         method: 'PUT',
         body: JSON.stringify({ notificacion_id: notificacionId }),
     });
-    if (!datos) return;
-    cargarNotificaciones();
-}
-
-async function marcarTodasLeidas() {
-    const btn = document.getElementById('btn-marcar-todas');
-    if (btn) { btn.disabled = true; btn.textContent = 'Marcando...'; }
-
-    const datos = await apiFetch('notificaciones.php', {
-        method: 'PUT',
-        body: JSON.stringify({ marcar_todas: true }),
-    });
-
-    if (btn) { btn.disabled = false; btn.textContent = 'Marcar todas'; }
     if (!datos) return;
     cargarNotificaciones();
 }
