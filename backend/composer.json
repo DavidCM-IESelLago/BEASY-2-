@@ -12,6 +12,14 @@
         {
             "name": "MarioAFdev",
             "email": "marioantunez.dev@gmail.com"
+        },
+        {
+            "name": "David Cuesta",
+            "email": "davidcuesta23.06@gmail.com"
+        },
+        {
+            "name": "Adrián Carrasco",
+            "email": ""
         }
     ],
     "minimum-stability": "stable",
