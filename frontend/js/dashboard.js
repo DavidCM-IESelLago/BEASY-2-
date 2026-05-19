@@ -97,25 +97,30 @@ async function cargarDashboard() {
 }
 
 // ── Formulario de transferencia ───────────────────────────────────────────────
+function _opcionSelect(texto, valor = '') {
+    const opt = document.createElement('option');
+    opt.value = valor;
+    opt.textContent = texto;
+    return opt;
+}
+
 async function cargarCuentasOrigen() {
     const select = document.getElementById('trans-origen');
     if (!select) return;
 
-    select.innerHTML = '<option value="">Cargando cuentas...</option>';
+    select.replaceChildren(_opcionSelect('Cargando cuentas...'));
     const data = await apiFetch('cuentas.php');
 
     if (!data || data.status !== 'success' || !Array.isArray(data.cuentas) || data.cuentas.length === 0) {
-        select.innerHTML = '<option value="">No tienes cuentas disponibles</option>';
+        select.replaceChildren(_opcionSelect('No tienes cuentas disponibles'));
         return;
     }
 
     _cuentasUsuario = data.cuentas;
-    select.innerHTML = '<option value="">Selecciona una cuenta...</option>';
+    select.replaceChildren(_opcionSelect('Selecciona una cuenta...'));
     _cuentasUsuario.forEach(c => {
         const saldo = Number(c.saldo).toLocaleString('es-ES', { style: 'currency', currency: 'EUR' });
-        const opt   = document.createElement('option');
-        opt.value   = c.id;
-        opt.textContent = `${c.numero_cuenta} (${saldo})`;
+        const opt   = _opcionSelect(`${c.numero_cuenta} (${saldo})`, c.id);
         select.appendChild(opt);
     });
 }
@@ -302,13 +307,27 @@ function actualizarGrafico(porTipo) {
         const porcentaje = ((importe / totalGastos) * 100).toFixed(0);
         const item = document.createElement('div');
         item.style.cssText = 'display:flex;align-items:center;justify-content:space-between;font-size:13px;';
-        item.innerHTML = `
-            <div style="display:flex;align-items:center;gap:8px;">
-                <span style="width:10px;height:10px;border-radius:50%;background:${COLORES[tipo] || '#c1c6d6'};flex-shrink:0;"></span>
-                <span style="text-transform:capitalize;color:var(--on-surface-variant);">${tipo}</span>
-            </div>
-            <span style="font-weight:600;">${importe.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })} <span style="font-weight:400;color:var(--on-surface-variant);">(${porcentaje}%)</span></span>
-        `;
+
+        const left = document.createElement('div');
+        left.style.cssText = 'display:flex;align-items:center;gap:8px;';
+        const dot = document.createElement('span');
+        dot.style.cssText = `width:10px;height:10px;border-radius:50%;background:${COLORES[tipo] || '#c1c6d6'};flex-shrink:0;`;
+        const labelTipo = document.createElement('span');
+        labelTipo.style.cssText = 'text-transform:capitalize;color:var(--on-surface-variant);';
+        labelTipo.textContent = tipo;
+        left.appendChild(dot);
+        left.appendChild(labelTipo);
+
+        const right = document.createElement('span');
+        right.style.cssText = 'font-weight:600;';
+        right.textContent = importe.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' }) + ' ';
+        const pct = document.createElement('span');
+        pct.style.cssText = 'font-weight:400;color:var(--on-surface-variant);';
+        pct.textContent = `(${porcentaje}%)`;
+        right.appendChild(pct);
+
+        item.appendChild(left);
+        item.appendChild(right);
         leyenda.appendChild(item);
     });
 }

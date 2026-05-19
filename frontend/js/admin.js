@@ -74,6 +74,31 @@ function mostrarTab(tab) {
     });
 }
 
+// ── Helpers DOM para tablas admin ─────────────────────────────────────────────
+function _td(texto, estilo = '') {
+    const td = document.createElement('td');
+    td.textContent = texto ?? '—';
+    if (estilo) td.style.cssText = estilo;
+    return td;
+}
+
+function _tdBadge(texto, claseExtra) {
+    const td = document.createElement('td');
+    const span = document.createElement('span');
+    span.className = `badge ${claseExtra}`;
+    span.textContent = texto;
+    td.appendChild(span);
+    return td;
+}
+
+function _tdStrong(texto1, texto2 = '') {
+    const td = document.createElement('td');
+    const strong = document.createElement('strong');
+    strong.textContent = texto2 ? texto1 + ' ' + texto2 : texto1;
+    td.appendChild(strong);
+    return td;
+}
+
 // ── Cargar datos de la BD ─────────────────────────────────────────────────────
 async function cargarDatos() {
     const res = await apiFetch('admin.php?accion=datos');
@@ -83,46 +108,54 @@ async function cargarDatos() {
     document.getElementById('count-usuarios').textContent       = res.usuarios.length;
     document.getElementById('loading-usuarios').style.display   = 'none';
     document.getElementById('tabla-usuarios').style.display     = 'table';
-    document.getElementById('body-usuarios').innerHTML = res.usuarios.map(u => `
-        <tr>
-            <td style="font-weight:700; color:var(--text-muted); font-size:12px;">#${u.id}</td>
-            <td><strong>${u.nombre} ${u.apellidos}</strong></td>
-            <td style="color:var(--text-muted); font-size:12px;">${u.email}</td>
-            <td style="font-family:monospace; font-size:12px;">${u.dni}</td>
-            <td><span class="badge badge-${u.rol}">${u.rol}</span></td>
-            <td><span class="badge ${u.activo == 1 ? 'badge-activa' : 'badge-cancelada'}">${u.activo == 1 ? 'Activo' : 'Inactivo'}</span></td>
-            <td style="color:var(--text-muted); font-size:12px;">${u.fecha_registro}</td>
-            <td style="color:var(--text-muted); font-size:12px;">${u.ultimo_acceso ?? '—'}</td>
-        </tr>
-    `).join('');
+    const tbodyU = document.getElementById('body-usuarios');
+    tbodyU.innerHTML = '';
+    res.usuarios.forEach(u => {
+        const tr = document.createElement('tr');
+        tr.appendChild(_td('#' + u.id,        'font-weight:700;color:var(--text-muted);font-size:12px;'));
+        tr.appendChild(_tdStrong(u.nombre, u.apellidos));
+        tr.appendChild(_td(u.email,           'color:var(--text-muted);font-size:12px;'));
+        tr.appendChild(_td(u.dni,             'font-family:monospace;font-size:12px;'));
+        tr.appendChild(_tdBadge(u.rol,        `badge-${u.rol}`));
+        tr.appendChild(_tdBadge(u.activo == 1 ? 'Activo' : 'Inactivo', u.activo == 1 ? 'badge-activa' : 'badge-cancelada'));
+        tr.appendChild(_td(u.fecha_registro,  'color:var(--text-muted);font-size:12px;'));
+        tr.appendChild(_td(u.ultimo_acceso ?? '—', 'color:var(--text-muted);font-size:12px;'));
+        tbodyU.appendChild(tr);
+    });
 
     // Cuentas
     document.getElementById('count-cuentas').textContent        = res.cuentas.length;
-    document.getElementById('body-cuentas').innerHTML = res.cuentas.map(c => `
-        <tr>
-            <td style="font-weight:700; color:var(--text-muted); font-size:12px;">#${c.id}</td>
-            <td><strong>${c.nombre} ${c.apellidos}</strong></td>
-            <td style="font-family:monospace; font-size:12px;">${c.numero_cuenta}</td>
-            <td><strong>$${parseFloat(c.saldo).toLocaleString('en-US', { minimumFractionDigits: 2 })}</strong></td>
-            <td><span class="badge badge-${c.tipo}">${c.tipo}</span></td>
-            <td><span class="badge ${c.activa == 1 ? 'badge-activa' : 'badge-cancelada'}">${c.activa == 1 ? 'Activa' : 'Inactiva'}</span></td>
-            <td style="color:var(--text-muted); font-size:12px;">${c.fecha_creacion}</td>
-        </tr>
-    `).join('');
+    const tbodyC = document.getElementById('body-cuentas');
+    tbodyC.innerHTML = '';
+    res.cuentas.forEach(c => {
+        const saldoFmt = '$' + parseFloat(c.saldo).toLocaleString('en-US', { minimumFractionDigits: 2 });
+        const tr = document.createElement('tr');
+        tr.appendChild(_td('#' + c.id,       'font-weight:700;color:var(--text-muted);font-size:12px;'));
+        tr.appendChild(_tdStrong(c.nombre, c.apellidos));
+        tr.appendChild(_td(c.numero_cuenta,  'font-family:monospace;font-size:12px;'));
+        tr.appendChild(_tdStrong(saldoFmt));
+        tr.appendChild(_tdBadge(c.tipo,      `badge-${c.tipo}`));
+        tr.appendChild(_tdBadge(c.activa == 1 ? 'Activa' : 'Inactiva', c.activa == 1 ? 'badge-activa' : 'badge-cancelada'));
+        tr.appendChild(_td(c.fecha_creacion, 'color:var(--text-muted);font-size:12px;'));
+        tbodyC.appendChild(tr);
+    });
 
     // Tarjetas
     document.getElementById('count-tarjetas').textContent       = res.tarjetas.length;
-    document.getElementById('body-tarjetas').innerHTML = res.tarjetas.map(t => `
-        <tr>
-            <td style="font-weight:700; color:var(--text-muted); font-size:12px;">#${t.id}</td>
-            <td><strong>${t.nombre} ${t.apellidos}</strong></td>
-            <td style="font-family:monospace; font-size:12px;">•••• •••• •••• ${t.numero.slice(-4)}</td>
-            <td style="font-family:monospace;">${t.cvv}</td>
-            <td style="font-weight:600;">${t.expiracion}</td>
-            <td><span class="badge badge-${t.estado}">${t.estado}</span></td>
-            <td style="color:var(--text-muted); font-size:12px;">${t.fecha_creacion}</td>
-        </tr>
-    `).join('');
+    const tbodyT = document.getElementById('body-tarjetas');
+    tbodyT.innerHTML = '';
+    res.tarjetas.forEach(t => {
+        const numMask = '•••• •••• •••• ' + String(t.numero).slice(-4);
+        const tr = document.createElement('tr');
+        tr.appendChild(_td('#' + t.id,       'font-weight:700;color:var(--text-muted);font-size:12px;'));
+        tr.appendChild(_tdStrong(t.nombre, t.apellidos));
+        tr.appendChild(_td(numMask,          'font-family:monospace;font-size:12px;'));
+        tr.appendChild(_td(t.cvv,            'font-family:monospace;'));
+        tr.appendChild(_td(t.expiracion,     'font-weight:600;'));
+        tr.appendChild(_tdBadge(t.estado,    `badge-${t.estado}`));
+        tr.appendChild(_td(t.fecha_creacion, 'color:var(--text-muted);font-size:12px;'));
+        tbodyT.appendChild(tr);
+    });
 }
 
 // ── Incidencias ───────────────────────────────────────────────────────────────
@@ -138,24 +171,42 @@ async function cargarIncidencias() {
     document.getElementById('loading-incidencias').style.display = 'none';
     document.getElementById('tabla-incidencias').style.display   = 'table';
 
-    document.getElementById('body-incidencias').innerHTML = res.incidencias.map(i => `
-        <tr id="fila-${i.id}">
-            <td style="font-weight:700; color:var(--text-muted); font-size:12px;">#${i.id}</td>
-            <td><strong>${i.nombre} ${i.apellidos}</strong></td>
-            <td style="font-size:12px; color:var(--text-muted);">${i.email}</td>
-            <td style="font-size:12px; max-width:130px;">${i.tipo}</td>
-            <td style="font-size:12px; color:var(--text-muted); max-width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${i.descripcion}">${i.descripcion}</td>
-            <td style="font-size:12px; color:var(--text-muted);">${i.fecha_incidencia}</td>
-            <td><span class="badge badge-${i.estado}" id="badge-${i.id}">${i.estado}</span></td>
-            <td>
-                <button class="btn-close-issue" id="btn-${i.id}"
-                    ${i.estado === 'resuelta' ? 'disabled' : ''}
-                    onclick="cerrarIncidencia(${i.id})">
-                    ${i.estado === 'resuelta' ? 'Cerrada' : 'Cerrar'}
-                </button>
-            </td>
-        </tr>
-    `).join('');
+    const tbodyI = document.getElementById('body-incidencias');
+    tbodyI.innerHTML = '';
+    res.incidencias.forEach(i => {
+        const tr = document.createElement('tr');
+        tr.id = `fila-${i.id}`;
+
+        tr.appendChild(_td('#' + i.id,         'font-weight:700;color:var(--text-muted);font-size:12px;'));
+        tr.appendChild(_tdStrong(i.nombre, i.apellidos));
+        tr.appendChild(_td(i.email,            'font-size:12px;color:var(--text-muted);'));
+        tr.appendChild(_td(i.tipo,             'font-size:12px;max-width:130px;'));
+
+        const tdDesc = _td(i.descripcion,      'font-size:12px;color:var(--text-muted);max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;');
+        tdDesc.title = i.descripcion;
+        tr.appendChild(tdDesc);
+
+        tr.appendChild(_td(i.fecha_incidencia, 'font-size:12px;color:var(--text-muted);'));
+
+        const tdBadge = document.createElement('td');
+        const spanBadge = document.createElement('span');
+        spanBadge.className = `badge badge-${i.estado}`;
+        spanBadge.id = `badge-${i.id}`;
+        spanBadge.textContent = i.estado;
+        tdBadge.appendChild(spanBadge);
+        tr.appendChild(tdBadge);
+
+        const btn = document.createElement('button');
+        btn.className = 'btn-close-issue';
+        btn.id = `btn-${i.id}`;
+        btn.disabled = i.estado === 'resuelta';
+        btn.textContent = i.estado === 'resuelta' ? 'Cerrada' : 'Cerrar';
+        const tdBtn = document.createElement('td');
+        tdBtn.appendChild(btn);
+        tr.appendChild(tdBtn);
+
+        tbodyI.appendChild(tr);
+    });
 }
 
 function contarIncidencias(incidencias) {

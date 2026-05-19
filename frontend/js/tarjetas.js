@@ -46,17 +46,43 @@ function cerrarSesion() {
     window.location.href = 'inicio_sesion.html';
 }
 
+// ── Helper: logo de tarjeta ───────────────────────────────────────────────────
+function _crearLogo(clase) {
+    if (clase === 'card-blue') {
+        const span = document.createElement('span');
+        span.style.cssText = 'font-weight:900;font-style:italic;font-size:20px;';
+        span.textContent = 'VISA';
+        return span;
+    }
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'display:flex;';
+    const c1 = document.createElement('div');
+    c1.style.cssText = 'width:24px;height:24px;background:#eb001b;border-radius:50%;opacity:0.9;';
+    const c2 = document.createElement('div');
+    c2.style.cssText = 'width:24px;height:24px;background:#f79e1b;border-radius:50%;margin-left:-12px;opacity:0.9;';
+    wrap.appendChild(c1);
+    wrap.appendChild(c2);
+    return wrap;
+}
+
 // ── Cargar tarjetas ───────────────────────────────────────────────────────────
 async function cargarTarjetas() {
     const res  = await apiFetch('tarjeta.php');
     const grid = document.getElementById('tarjeta-grid');
 
     if (!res || res.status !== 'success' || res.data.length === 0) {
-        grid.innerHTML = `
-            <div style="grid-column:1/-1; text-align:center; padding:60px; color:var(--text-muted);">
-                <span class="material-symbols-outlined" style="font-size:48px;opacity:0.3;">credit_card_off</span>
-                <p style="margin-top:12px;font-weight:600;">No cards found</p>
-            </div>`;
+        const divEmpty = document.createElement('div');
+        divEmpty.style.cssText = 'grid-column:1/-1;text-align:center;padding:60px;color:var(--text-muted);';
+        const spanEmpty = document.createElement('span');
+        spanEmpty.className = 'material-symbols-outlined';
+        spanEmpty.style.cssText = 'font-size:48px;opacity:0.3;';
+        spanEmpty.textContent = 'credit_card_off';
+        const pEmpty = document.createElement('p');
+        pEmpty.style.cssText = 'margin-top:12px;font-weight:600;';
+        pEmpty.textContent = 'No cards found';
+        divEmpty.appendChild(spanEmpty);
+        divEmpty.appendChild(pEmpty);
+        grid.appendChild(divEmpty);
         return;
     }
 
@@ -69,30 +95,50 @@ async function cargarTarjetas() {
                           : t.estado === 'cancelada'  ? 'card-cancelled' : '';
         const badgeClass  = t.estado === 'activa'     ? 'card-badge-active'
                           : t.estado === 'bloqueada'  ? 'card-badge-blocked' : 'card-badge-cancelled';
-        const logo = i % 2 === 0
-            ? `<span style="font-weight:900;font-style:italic;font-size:20px;">VISA</span>`
-            : `<div style="display:flex;">
-                   <div style="width:24px;height:24px;background:#eb001b;border-radius:50%;opacity:0.9;"></div>
-                   <div style="width:24px;height:24px;background:#f79e1b;border-radius:50%;margin-left:-12px;opacity:0.9;"></div>
-               </div>`;
+
 
         const el = document.createElement('div');
         el.className   = `card-visual ${clase} ${estadoClass}`.trim();
         el.dataset.id  = t.id;
-        el.innerHTML   = `
-            <span class="card-badge ${badgeClass}">${t.estado}</span>
-            <div style="display:flex;justify-content:space-between;">
-                <span class="material-symbols-outlined" style="font-size:32px;">contactless</span>
-                ${logo}
-            </div>
-            <div>
-                <p style="font-size:11px;opacity:0.8;font-weight:600;text-transform:uppercase;">Available Balance</p>
-                <h3 style="font-size:26px;font-weight:700;margin:4px 0 10px;">$${t.saldo}</h3>
-                <div style="display:flex;justify-content:space-between;font-family:monospace;letter-spacing:2px;margin-top:8px;">
-                    <span>${t.numero_oculto}</span>
-                    <span style="font-size:12px;">${t.expiracion}</span>
-                </div>
-            </div>`;
+        // Badge de estado
+        const badge = document.createElement('span');
+        badge.className = `card-badge ${badgeClass}`;
+        badge.textContent = t.estado;
+
+        // Fila: contactless + logo
+        const fila = document.createElement('div');
+        fila.style.cssText = 'display:flex;justify-content:space-between;';
+        const spanContactless = document.createElement('span');
+        spanContactless.className = 'material-symbols-outlined';
+        spanContactless.style.cssText = 'font-size:32px;';
+        spanContactless.textContent = 'contactless';
+        fila.appendChild(spanContactless);
+        fila.appendChild(_crearLogo(clase));
+
+        // Bloque inferior: saldo + número
+        const info = document.createElement('div');
+        const pBalance = document.createElement('p');
+        pBalance.style.cssText = 'font-size:11px;opacity:0.8;font-weight:600;text-transform:uppercase;';
+        pBalance.textContent = 'Available Balance';
+        const h3 = document.createElement('h3');
+        h3.style.cssText = 'font-size:26px;font-weight:700;margin:4px 0 10px;';
+        h3.textContent = '$' + t.saldo;
+        const numRow = document.createElement('div');
+        numRow.style.cssText = 'display:flex;justify-content:space-between;font-family:monospace;letter-spacing:2px;margin-top:8px;';
+        const spanNum = document.createElement('span');
+        spanNum.textContent = t.numero_oculto;
+        const spanExp = document.createElement('span');
+        spanExp.style.cssText = 'font-size:12px;';
+        spanExp.textContent = t.expiracion;
+        numRow.appendChild(spanNum);
+        numRow.appendChild(spanExp);
+        info.appendChild(pBalance);
+        info.appendChild(h3);
+        info.appendChild(numRow);
+
+        el.appendChild(badge);
+        el.appendChild(fila);
+        el.appendChild(info);
         el.addEventListener('click', () => seleccionarTarjeta(t, el, clase));
         grid.appendChild(el);
     });

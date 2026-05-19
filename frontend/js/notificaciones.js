@@ -55,10 +55,15 @@ async function cargarNotificaciones() {
     if (datos.data.length === 0) {
         const vacio = document.createElement('div');
         vacio.style.cssText = 'display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px;gap:12px;color:#727785;';
-        vacio.innerHTML = `
-            <span class="material-symbols-outlined" style="font-size:40px;opacity:0.3;">notifications_off</span>
-            <p style="font-size:13px;font-weight:500;">Sin notificaciones</p>
-        `;
+        const spanVacio = document.createElement('span');
+        spanVacio.className = 'material-symbols-outlined';
+        spanVacio.style.cssText = 'font-size:40px;opacity:0.3;';
+        spanVacio.textContent = 'notifications_off';
+        const pVacio = document.createElement('p');
+        pVacio.style.cssText = 'font-size:13px;font-weight:500;';
+        pVacio.textContent = 'Sin notificaciones';
+        vacio.appendChild(spanVacio);
+        vacio.appendChild(pVacio);
         lista.appendChild(vacio);
         return;
     }
@@ -101,14 +106,22 @@ function _crearItemNotificacion(notif) {
         'align-items:center', 'justify-content:center',
         `background:${iconBg}`, `color:${iconColor}`,
     ].join(';');
-    icono.innerHTML = `<span class="material-symbols-outlined" style="font-size:18px;">${iconName}</span>`;
+    const spanIcon = document.createElement('span');
+    spanIcon.className = 'material-symbols-outlined';
+    spanIcon.style.cssText = 'font-size:18px;';
+    spanIcon.textContent = iconName;
+    icono.appendChild(spanIcon);
 
     const contenido = document.createElement('div');
     contenido.style.cssText = 'flex:1;min-width:0;';
-    contenido.innerHTML = `
-        <p style="font-size:13px;font-weight:${esNoLeida ? '600' : '400'};color:#191c1d;line-height:1.4;margin-bottom:4px;">${notif.mensaje}</p>
-        <p style="font-size:11px;color:#727785;">${fecha}</p>
-    `;
+    const pMensaje = document.createElement('p');
+    pMensaje.style.cssText = `font-size:13px;font-weight:${esNoLeida ? '600' : '400'};color:#191c1d;line-height:1.4;margin-bottom:4px;`;
+    pMensaje.textContent = notif.mensaje;
+    const pFecha = document.createElement('p');
+    pFecha.style.cssText = 'font-size:11px;color:#727785;';
+    pFecha.textContent = fecha;
+    contenido.appendChild(pMensaje);
+    contenido.appendChild(pFecha);
 
     if (esNoLeida) {
         const btnLeer = document.createElement('button');

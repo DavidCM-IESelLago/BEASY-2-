@@ -70,7 +70,10 @@ function pintarCuentas() {
     grid.innerHTML = '';
 
     if (!cuentasData.length) {
-        grid.innerHTML = '<p style="color:var(--text-muted); font-size:14px;">No tienes cuentas aún. ¡Crea la primera!</p>';
+        const pVacio = document.createElement('p');
+        pVacio.style.cssText = 'color:var(--text-muted);font-size:14px;';
+        pVacio.textContent = 'No tienes cuentas aún. ¡Crea la primera!';
+        grid.appendChild(pVacio);
         return;
     }
 
@@ -86,21 +89,39 @@ function pintarCuentas() {
         const card = document.createElement('div');
         card.className  = 'account-card';
         card.dataset.id = cuenta.id;
-        card.innerHTML  = `
-            <div class="card-header-row">
-                <div>
-                    <h3 class="card-name">${titulo}</h3>
-                    <p class="card-number">${numMask}</p>
-                </div>
-                <div class="account-icon ${iconClass}">
-                    <span class="material-symbols-outlined icon-fill">${iconName}</span>
-                </div>
-            </div>
-            <div style="margin-top:24px;">
-                <p class="balance-hint">${label}</p>
-                <p class="balance-value">${saldoFmt}</p>
-            </div>
-        `;
+        // Fila superior: nombre + icono
+        const headerRow = document.createElement('div');
+        headerRow.className = 'card-header-row';
+        const headerLeft = document.createElement('div');
+        const h3 = document.createElement('h3');
+        h3.className = 'card-name';
+        h3.textContent = titulo;
+        const pNum = document.createElement('p');
+        pNum.className = 'card-number';
+        pNum.textContent = numMask;
+        headerLeft.appendChild(h3);
+        headerLeft.appendChild(pNum);
+        const iconWrap = document.createElement('div');
+        iconWrap.className = `account-icon ${iconClass}`;
+        const iconSpan = document.createElement('span');
+        iconSpan.className = 'material-symbols-outlined icon-fill';
+        iconSpan.textContent = iconName;
+        iconWrap.appendChild(iconSpan);
+        headerRow.appendChild(headerLeft);
+        headerRow.appendChild(iconWrap);
+        // Bloque saldo
+        const balanceDiv = document.createElement('div');
+        balanceDiv.style.cssText = 'margin-top:24px;';
+        const pHint = document.createElement('p');
+        pHint.className = 'balance-hint';
+        pHint.textContent = label;
+        const pValue = document.createElement('p');
+        pValue.className = 'balance-value';
+        pValue.textContent = saldoFmt;
+        balanceDiv.appendChild(pHint);
+        balanceDiv.appendChild(pValue);
+        card.appendChild(headerRow);
+        card.appendChild(balanceDiv);
         card.addEventListener('click', () => abrirModal(cuenta));
         grid.appendChild(card);
     });
@@ -121,7 +142,10 @@ function abrirModal(cuenta) {
 function pintarMovimientosModal(movimientos) {
     const lista = document.getElementById('modal-mov-list');
     if (!movimientos.length) {
-        lista.innerHTML = '<div class="modal-mov-empty">Sin movimientos recientes</div>';
+        const divVacio = document.createElement('div');
+        divVacio.className = 'modal-mov-empty';
+        divVacio.textContent = 'Sin movimientos recientes';
+        lista.appendChild(divVacio);
         return;
     }
     lista.innerHTML = '';
@@ -137,16 +161,32 @@ function pintarMovimientosModal(movimientos) {
         const signo    = esPos ? '+' : '';
         const fecha    = new Date(mov.fecha).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' });
 
-        lista.innerHTML += `
-            <div class="modal-mov-item">
-                <div class="modal-mov-icon"><span class="material-symbols-outlined" style="font-size:18px;">${icono}</span></div>
-                <div class="modal-mov-info">
-                    <div class="modal-mov-name">${mov.concepto}</div>
-                    <div class="modal-mov-date">${fecha}</div>
-                </div>
-                <div class="modal-mov-amount ${claseAmt}">${signo}${Math.abs(mov.cantidad).toFixed(2)}€</div>
-            </div>
-        `;
+        const spanIco = document.createElement('span');
+        spanIco.className = 'material-symbols-outlined';
+        spanIco.style.cssText = 'font-size:18px;';
+        spanIco.textContent = icono;
+        const divIco = document.createElement('div');
+        divIco.className = 'modal-mov-icon';
+        divIco.appendChild(spanIco);
+        const divNombre = document.createElement('div');
+        divNombre.className = 'modal-mov-name';
+        divNombre.textContent = mov.concepto;
+        const divFecha = document.createElement('div');
+        divFecha.className = 'modal-mov-date';
+        divFecha.textContent = fecha;
+        const divMovInfo = document.createElement('div');
+        divMovInfo.className = 'modal-mov-info';
+        divMovInfo.appendChild(divNombre);
+        divMovInfo.appendChild(divFecha);
+        const divAmt = document.createElement('div');
+        divAmt.className = `modal-mov-amount ${claseAmt}`;
+        divAmt.textContent = signo + Math.abs(mov.cantidad).toFixed(2) + '€';
+        const divItem = document.createElement('div');
+        divItem.className = 'modal-mov-item';
+        divItem.appendChild(divIco);
+        divItem.appendChild(divMovInfo);
+        divItem.appendChild(divAmt);
+        lista.appendChild(divItem);
     });
 }
 
@@ -203,7 +243,12 @@ function _initEventListeners() {
         const esHucha = tipo === 'ahorros';
         document.getElementById('resumen-nombre').textContent = esHucha ? 'Hucha (Ahorro)' : 'Cuenta Corriente';
         document.getElementById('resumen-desc').textContent   = esHucha ? 'Meta de ahorro personalizada' : 'Sin comisiones de mantenimiento';
-        document.getElementById('resumen-icon').innerHTML     = `<span class="material-symbols-outlined icon-fill">${esHucha ? 'savings' : 'account_balance_wallet'}</span>`;
+        const resumenIcon = document.getElementById('resumen-icon');
+        resumenIcon.replaceChildren();
+        const spanResumen = document.createElement('span');
+        spanResumen.className = 'material-symbols-outlined icon-fill';
+        spanResumen.textContent = esHucha ? 'savings' : 'account_balance_wallet';
+        resumenIcon.appendChild(spanResumen);
         mostrarVista('section-form-step2');
     });
 
@@ -214,7 +259,13 @@ function _initEventListeners() {
 
         const btn = document.getElementById('btn-submit-final');
         btn.disabled  = true;
-        btn.innerHTML = 'Creando cuenta... <span class="material-symbols-outlined" style="font-size:18px;animation:spin 1s linear infinite;">sync</span>';
+        btn.replaceChildren();
+        btn.append('Creando cuenta... ');
+        const spinSpan = document.createElement('span');
+        spinSpan.className = 'material-symbols-outlined';
+        spinSpan.style.cssText = 'font-size:18px;animation:spin 1s linear infinite;';
+        spinSpan.textContent = 'sync';
+        btn.appendChild(spinSpan);
 
         const respuesta = await apiFetch('crearCuenta.php', {
             method: 'POST',
@@ -222,7 +273,13 @@ function _initEventListeners() {
         });
 
         btn.disabled  = false;
-        btn.innerHTML = 'Completar Apertura <span class="material-symbols-outlined" style="font-size:18px;">check</span>';
+        btn.replaceChildren();
+        btn.append('Completar Apertura ');
+        const checkSpan = document.createElement('span');
+        checkSpan.className = 'material-symbols-outlined';
+        checkSpan.style.cssText = 'font-size:18px;';
+        checkSpan.textContent = 'check';
+        btn.appendChild(checkSpan);
 
         if (!respuesta || respuesta.status !== 'success') return;
 

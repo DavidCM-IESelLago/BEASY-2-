@@ -78,7 +78,15 @@ async function cargarPagina(pagina) {
 
     const data = await apiFetch(`movimientos.php?page=${pagina}&limit=${LIMITE}`);
     if (!data) {
-        if (pagina === 1) tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:40px;">No se pudo conectar con el servidor</td></tr>';
+        if (pagina === 1) {
+            const trErr = document.createElement('tr');
+            const tdErr = document.createElement('td');
+            tdErr.colSpan = 4;
+            tdErr.style.cssText = 'text-align:center;padding:40px;';
+            tdErr.textContent = 'No se pudo conectar con el servidor';
+            trErr.appendChild(tdErr);
+            tbody.replaceChildren(trErr);
+        }
         boton.innerText = 'Reintentar';
         boton.disabled  = false;
         return;
@@ -87,7 +95,13 @@ async function cargarPagina(pagina) {
     if (data.status === 'success') {
         const nuevos = data.movimientos;
         if (pagina === 1 && nuevos.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:40px;color:var(--text-muted);">Sin movimientos registrados</td></tr>';
+            const trVacio = document.createElement('tr');
+            const tdVacio = document.createElement('td');
+            tdVacio.colSpan = 4;
+            tdVacio.style.cssText = 'text-align:center;padding:40px;color:var(--text-muted);';
+            tdVacio.textContent = 'Sin movimientos registrados';
+            trVacio.appendChild(tdVacio);
+            tbody.replaceChildren(trVacio);
             boton.style.display = 'none';
             return;
         }
@@ -119,26 +133,60 @@ function pintarMovimientos(movimientos) {
         const esPositivo   = mov.cantidad > 0;
         const claseImporte = esPositivo ? 'amount-pos' : 'amount-neg';
         const importe      = (esPositivo ? '+' : '') + mov.cantidad.toFixed(2) + '€';
+        const fecha        = new Date(mov.fecha);
 
-        tbody.insertAdjacentHTML('beforeend', `
-            <tr>
-                <td>
-                    <div class="tx-info">
-                        <div class="tx-icon"><span class="material-symbols-outlined">${icono}</span></div>
-                        <div>
-                            <p class="tx-name">${mov.concepto}</p>
-                            <p class="tx-method">${mov.tipo.toUpperCase()}</p>
-                        </div>
-                    </div>
-                </td>
-                <td><span class="badge badge-${mov.tipo}">${mov.tipo}</span></td>
-                <td>
-                    <p class="tx-date">${new Date(mov.fecha).toLocaleDateString('es-ES')}</p>
-                    <p class="tx-time">${new Date(mov.fecha).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-                </td>
-                <td class="tx-amount ${claseImporte}">${importe}</td>
-            </tr>
-        `);
+        // Celda 1: info de transacción
+        const spanIcono = document.createElement('span');
+        spanIcono.className = 'material-symbols-outlined';
+        spanIcono.textContent = icono;
+        const divIcono = document.createElement('div');
+        divIcono.className = 'tx-icon';
+        divIcono.appendChild(spanIcono);
+        const pNombre = document.createElement('p');
+        pNombre.className = 'tx-name';
+        pNombre.textContent = mov.concepto;
+        const pMetodo = document.createElement('p');
+        pMetodo.className = 'tx-method';
+        pMetodo.textContent = mov.tipo.toUpperCase();
+        const divTexto = document.createElement('div');
+        divTexto.appendChild(pNombre);
+        divTexto.appendChild(pMetodo);
+        const divInfo = document.createElement('div');
+        divInfo.className = 'tx-info';
+        divInfo.appendChild(divIcono);
+        divInfo.appendChild(divTexto);
+        const td1 = document.createElement('td');
+        td1.appendChild(divInfo);
+
+        // Celda 2: badge tipo
+        const spanBadge = document.createElement('span');
+        spanBadge.className = `badge badge-${mov.tipo}`;
+        spanBadge.textContent = mov.tipo;
+        const td2 = document.createElement('td');
+        td2.appendChild(spanBadge);
+
+        // Celda 3: fecha y hora
+        const pFecha = document.createElement('p');
+        pFecha.className = 'tx-date';
+        pFecha.textContent = fecha.toLocaleDateString('es-ES');
+        const pHora = document.createElement('p');
+        pHora.className = 'tx-time';
+        pHora.textContent = fecha.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const td3 = document.createElement('td');
+        td3.appendChild(pFecha);
+        td3.appendChild(pHora);
+
+        // Celda 4: importe
+        const td4 = document.createElement('td');
+        td4.className = `tx-amount ${claseImporte}`;
+        td4.textContent = importe;
+
+        const tr = document.createElement('tr');
+        tr.appendChild(td1);
+        tr.appendChild(td2);
+        tr.appendChild(td3);
+        tr.appendChild(td4);
+        tbody.appendChild(tr);
     });
 }
 
@@ -185,13 +233,27 @@ function actualizarGrafico(movimientos) {
         const porcentaje = ((importe / totalGastos) * 100).toFixed(0);
         const item = document.createElement('div');
         item.style.cssText = 'display:flex;align-items:center;justify-content:space-between;font-size:13px;';
-        item.innerHTML = `
-            <div style="display:flex;align-items:center;gap:8px;">
-                <span style="width:10px;height:10px;border-radius:50%;background:${COLORES[tipo] || '#c1c6d6'};flex-shrink:0;"></span>
-                <span style="text-transform:capitalize;color:var(--text-muted);">${tipo}</span>
-            </div>
-            <span style="font-weight:600;">${importe.toFixed(2)}€ <span style="font-weight:400;color:var(--text-muted);">(${porcentaje}%)</span></span>
-        `;
+
+        const left = document.createElement('div');
+        left.style.cssText = 'display:flex;align-items:center;gap:8px;';
+        const dot = document.createElement('span');
+        dot.style.cssText = `width:10px;height:10px;border-radius:50%;background:${COLORES[tipo] || '#c1c6d6'};flex-shrink:0;`;
+        const labelTipo = document.createElement('span');
+        labelTipo.style.cssText = 'text-transform:capitalize;color:var(--text-muted);';
+        labelTipo.textContent = tipo;
+        left.appendChild(dot);
+        left.appendChild(labelTipo);
+
+        const right = document.createElement('span');
+        right.style.cssText = 'font-weight:600;';
+        right.textContent = importe.toFixed(2) + '€ ';
+        const pct = document.createElement('span');
+        pct.style.cssText = 'font-weight:400;color:var(--text-muted);';
+        pct.textContent = `(${porcentaje}%)`;
+        right.appendChild(pct);
+
+        item.appendChild(left);
+        item.appendChild(right);
         leyenda.appendChild(item);
     });
 }
