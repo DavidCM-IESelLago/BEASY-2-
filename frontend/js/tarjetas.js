@@ -174,19 +174,55 @@ function actualizarBotonesEstado(estado) {
     const label = document.getElementById('freeze-label');
 
     const cancelada = estado === 'cancelada';
-    btnCancelar.disabled = cancelada;
-    btnFreeze.disabled   = cancelada;
+    btnFreeze.disabled = cancelada;
+
+    if (cancelada) {
+        btnCancelar.disabled  = false;
+        btnCancelar.onclick   = eliminarTarjeta;
+        btnCancelar.innerHTML = '<span class="material-symbols-outlined" style="vertical-align:middle; font-size:18px;">delete_forever</span> Eliminar tarjeta';
+    } else {
+        btnCancelar.disabled  = false;
+        btnCancelar.onclick   = cancelarTarjeta;
+        btnCancelar.innerHTML = '<span class="material-symbols-outlined" style="vertical-align:middle; font-size:18px;">cancel</span> Cancelar tarjeta permanentemente';
+    }
 
     if (estado === 'bloqueada') {
         wrap.style.background = '#e8f0fe';
         wrap.style.color      = 'var(--primary)';
         icon.textContent      = 'lock_open';
-        label.textContent     = 'Descongelar';
+        label.textContent     = 'Desbloquear';
     } else {
         wrap.style.background = '#ffdad6';
         wrap.style.color      = 'var(--error)';
         icon.textContent      = 'block';
-        label.textContent     = 'Congelar';
+        label.textContent     = 'Bloquear';
+    }
+}
+
+function eliminarTarjeta() {
+    if (!tarjetaSeleccionada || tarjetaSeleccionada.estado !== 'cancelada') return;
+
+    const cardEl = document.querySelector(`.card-visual[data-id="${tarjetaSeleccionada.id}"]`);
+    if (cardEl) cardEl.remove();
+
+    todasLasTarjetas = todasLasTarjetas.filter(t => t.id !== tarjetaSeleccionada.id);
+
+    cerrarPanel();
+
+    const grid = document.getElementById('tarjeta-grid');
+    if (grid.querySelectorAll('.card-visual').length === 0) {
+        const divEmpty = document.createElement('div');
+        divEmpty.style.cssText = 'grid-column:1/-1;text-align:center;padding:60px;color:var(--text-muted);';
+        const spanEmpty = document.createElement('span');
+        spanEmpty.className = 'material-symbols-outlined';
+        spanEmpty.style.cssText = 'font-size:48px;opacity:0.3;';
+        spanEmpty.textContent = 'credit_card_off';
+        const pEmpty = document.createElement('p');
+        pEmpty.style.cssText = 'margin-top:12px;font-weight:600;';
+        pEmpty.textContent = 'No se encontraron tarjetas';
+        divEmpty.appendChild(spanEmpty);
+        divEmpty.appendChild(pEmpty);
+        grid.appendChild(divEmpty);
     }
 }
 
