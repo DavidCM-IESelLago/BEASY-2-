@@ -11,6 +11,31 @@ document.addEventListener('DOMContentLoaded', () => {
             icon.textContent = visible ? 'visibility' : 'visibility_off';
         });
     });
+
+    // Validación DNI en tiempo real
+    const dniInput = document.getElementById('input_dni');
+    const dniError = document.getElementById('error-dni');
+    const dniRegex = /^[0-9]{8}[A-Z]$/;
+
+    dniInput.addEventListener('input', () => {
+        const val = dniInput.value.trim();
+
+        if (val === '') {
+            dniInput.classList.remove('input-error', 'input-ok');
+            dniError.textContent = '';
+            dniError.className   = 'field-hint-dni';
+        } else if (!dniRegex.test(val)) {
+            dniInput.classList.add('input-error');
+            dniInput.classList.remove('input-ok');
+            dniError.textContent = 'Formato de DNI inválido (ej: 12345678A)';
+            dniError.className   = 'field-hint-dni error';
+        } else {
+            dniInput.classList.add('input-ok');
+            dniInput.classList.remove('input-error');
+            dniError.textContent = 'DNI válido';
+            dniError.className   = 'field-hint-dni ok';
+        }
+    });
 });
 
 function validateAndNext(modifier) {
@@ -33,6 +58,20 @@ function validateAndNext(modifier) {
     });
 
     if (!allValid) return;
+
+    // Validación extra: DNI en paso 1
+    if (currentStep === 1) {
+        const dniInput = document.getElementById('input_dni');
+        const dniError = document.getElementById('error-dni');
+        const dniRegex = /^[0-9]{8}[A-Z]$/;
+        if (!dniRegex.test(dniInput.value.trim().toUpperCase())) {
+            dniInput.classList.add('input-error');
+            dniInput.classList.remove('input-ok');
+            dniError.textContent = 'Formato de DNI inválido (ej: 12345678A)';
+            dniError.className   = 'field-hint-dni error';
+            return;
+        }
+    }
 
     if (currentStep === 2) {
         const pass        = document.getElementById('input_password').value;

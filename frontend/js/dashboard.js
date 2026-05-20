@@ -143,7 +143,7 @@ function _initTransferForm() {
     }
 
     if (form) {
-        form.addEventListener('submit', async (e) => {
+        form.addEventListener('submit', (e) => {
             e.preventDefault();
             const cuentaOrigenId = document.getElementById('trans-origen').value;
             const ibanDestino    = document.getElementById('trans-iban').value.trim();
@@ -161,10 +161,47 @@ function _initTransferForm() {
                 return;
             }
 
-            const btn = document.getElementById('btn-realizar-transferencia');
-            btn.disabled = true;
-            const txtOriginal = btn.textContent;
-            btn.textContent = 'Procesando...';
+            // Rellenar resumen del paso 2
+            const selectOrigen = document.getElementById('trans-origen');
+            const textoOrigen  = selectOrigen.options[selectOrigen.selectedIndex]?.text || cuentaOrigenId;
+            document.getElementById('resumen-trans-origen').textContent  = textoOrigen;
+            document.getElementById('resumen-trans-iban').textContent    = ibanDestino;
+            document.getElementById('resumen-trans-concepto').textContent = concepto;
+            document.getElementById('resumen-trans-importe').textContent = importe.toFixed(2) + ' €';
+
+            // Mostrar paso 2 y ocultar paso 1
+            document.getElementById('transfer-step1').style.display = 'none';
+            document.getElementById('transfer-step2').style.display = 'block';
+
+            // Actualizar stepper
+            const c1 = document.getElementById('trans-circle-1');
+            c1.style.background = 'var(--tertiary-light)';
+            c1.innerHTML = '<span class="material-symbols-outlined" style="font-size:14px;">check</span>';
+            document.getElementById('trans-ind-2').style.opacity = '1';
+            const c2 = document.getElementById('trans-circle-2');
+            c2.style.background = 'var(--primary-light)';
+            c2.style.color = 'white';
+            c2.style.border = 'none';
+            c2.textContent = '2';
+
+            // Scroll automático al botón confirmar
+            document.getElementById('paso-confirmacion').scrollIntoView({
+                behavior: 'smooth', block: 'start'
+            });
+        });
+    }
+
+    // Botón confirmar transferencia (paso 2)
+    const btnConfirmar = document.getElementById('btn-confirmar-transferencia');
+    if (btnConfirmar) {
+        btnConfirmar.addEventListener('click', async () => {
+            const cuentaOrigenId = document.getElementById('trans-origen').value;
+            const ibanDestino    = document.getElementById('trans-iban').value.trim();
+            const importe        = parseFloat(document.getElementById('trans-importe').value);
+            const concepto       = document.getElementById('trans-concepto').value.trim();
+
+            btnConfirmar.disabled    = true;
+            btnConfirmar.textContent = 'Procesando...';
 
             const respuesta = await apiFetch('transferencia.php', {
                 method: 'POST',
@@ -176,18 +213,35 @@ function _initTransferForm() {
                 })
             });
 
-            btn.disabled = false;
-            btn.textContent = txtOriginal;
+            btnConfirmar.disabled    = false;
+            btnConfirmar.innerHTML   = '<span class="material-symbols-outlined" style="font-size:18px;">check</span> Confirmar transferencia';
 
             if (respuesta && respuesta.status === 'success') {
                 mostrarNotificacion('Transferencia realizada con éxito', 'exito');
                 form.reset();
-                errorIban.style.display = 'none';
+                document.getElementById('trans-iban-error').style.display = 'none';
+                volverPaso1Transfer();
                 await cargarDashboard();
                 showSection('dashboard-content');
             }
         });
     }
+}
+
+function volverPaso1Transfer() {
+    document.getElementById('transfer-step2').style.display = 'none';
+    document.getElementById('transfer-step1').style.display = 'block';
+
+    // Restaurar stepper
+    const c1 = document.getElementById('trans-circle-1');
+    c1.style.background = 'var(--primary-light)';
+    c1.textContent = '1';
+    document.getElementById('trans-ind-2').style.opacity = '0.45';
+    const c2 = document.getElementById('trans-circle-2');
+    c2.style.background = 'transparent';
+    c2.style.color = 'var(--text-muted)';
+    c2.style.border = '2px solid var(--border)';
+    c2.textContent = '2';
 }
 
 function _initBizumForm() {

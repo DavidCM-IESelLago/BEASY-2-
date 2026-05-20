@@ -122,40 +122,111 @@
                     style="background:none; border:none; color:var(--text-muted); cursor:pointer; margin-bottom:24px; display:flex; align-items:center; gap:8px; font-weight:700;">
                     <span class="material-symbols-outlined">arrow_back</span> Volver al Dashboard
                 </button>
-                <div class="card">
-                    <div style="display:flex; gap:16px; align-items:center; margin-bottom:32px; border-bottom:1px solid var(--border); padding-bottom:24px;">
-                        <div class="icon-circle" style="background:rgba(26,115,232,0.1); color:var(--primary-light);">
-                            <span class="material-symbols-outlined">swap_horiz</span>
+
+                <!-- STEPPER -->
+                <div style="display:flex; align-items:center; margin-bottom:28px; padding-bottom:20px; border-bottom:1px solid var(--border);">
+                    <div id="trans-ind-1" style="display:flex; align-items:center; gap:10px;">
+                        <div id="trans-circle-1" style="width:28px; height:28px; border-radius:50%; background:var(--primary-light); color:white; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; flex-shrink:0;">1</div>
+                        <span id="trans-label-1" style="font-size:14px; font-weight:700; color:var(--text);">Datos</span>
+                    </div>
+                    <div style="flex:1; height:1px; background:var(--border); margin:0 20px;"></div>
+                    <div id="trans-ind-2" style="display:flex; align-items:center; gap:10px; opacity:0.45;">
+                        <div id="trans-circle-2" style="width:28px; height:28px; border-radius:50%; border:2px solid var(--border); color:var(--text-muted); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; flex-shrink:0; background:transparent;">2</div>
+                        <span style="font-size:14px; font-weight:500; color:var(--text-muted);">Confirmación</span>
+                    </div>
+                </div>
+
+                <!-- PASO 1: FORMULARIO -->
+                <div id="transfer-step1">
+                    <div class="card">
+                        <div style="display:flex; gap:16px; align-items:center; margin-bottom:32px; border-bottom:1px solid var(--border); padding-bottom:24px;">
+                            <div class="icon-circle" style="background:rgba(26,115,232,0.1); color:var(--primary-light);">
+                                <span class="material-symbols-outlined">swap_horiz</span>
+                            </div>
+                            <div>
+                                <h2 style="font-size:20px; font-weight:700;">Nueva Transferencia</h2>
+                                <p style="font-size:14px; color:var(--text-muted);">Envía dinero de forma segura</p>
+                            </div>
                         </div>
-                        <div>
-                            <h2 style="font-size:20px; font-weight:700;">Nueva Transferencia</h2>
-                            <p style="font-size:14px; color:var(--text-muted);">Envía dinero de forma segura</p>
+                        <form id="form-transferencia" novalidate>
+                            <div class="form-group">
+                                <label class="form-label" for="trans-origen">Cuenta de origen</label>
+                                <select id="trans-origen" class="form-select" required>
+                                    <option value="">Cargando cuentas...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="trans-iban">IBAN del destinatario</label>
+                                <input type="text" id="trans-iban" class="form-input" placeholder="ESXX XXXX XXXX XXXX XXXX" required autocomplete="off">
+                                <small id="trans-iban-error" style="display:none; color:var(--error); font-size:12px; margin-top:4px;">No existe esa cuenta</small>
+                            </div>
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                                <div class="form-group">
+                                    <label class="form-label" for="trans-importe">Importe (€)</label>
+                                    <input type="number" id="trans-importe" class="form-input" placeholder="0.00" min="0.01" step="0.01" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="trans-concepto">Concepto</label>
+                                    <input type="text" id="trans-concepto" class="form-input" placeholder="Ej: Alquiler" required>
+                                </div>
+                            </div>
+                            <button type="submit" id="btn-realizar-transferencia" class="btn-submit btn-blue">Siguiente: Revisar →</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- PASO 2: CONFIRMACIÓN -->
+                <div id="transfer-step2" style="display:none;">
+                    <div class="card">
+                        <div style="display:flex; gap:16px; align-items:center; margin-bottom:24px; border-bottom:1px solid var(--border); padding-bottom:20px;">
+                            <div class="icon-circle" style="background:rgba(26,115,232,0.1); color:var(--primary-light);">
+                                <span class="material-symbols-outlined">swap_horiz</span>
+                            </div>
+                            <div>
+                                <h2 style="font-size:20px; font-weight:700;">Confirma los datos</h2>
+                                <p style="font-size:14px; color:var(--text-muted);">Revisa la transferencia antes de enviarla</p>
+                            </div>
+                        </div>
+
+                        <!-- RESUMEN -->
+                        <div style="background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:20px; margin-bottom:20px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border); font-size:14px;">
+                                <span style="color:var(--text-muted); font-weight:500;">Cuenta origen</span>
+                                <span id="resumen-trans-origen" style="font-weight:700;"></span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border); font-size:14px;">
+                                <span style="color:var(--text-muted); font-weight:500;">IBAN destino</span>
+                                <span id="resumen-trans-iban" style="font-weight:700; font-family:monospace;"></span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid var(--border); font-size:14px;">
+                                <span style="color:var(--text-muted); font-weight:500;">Concepto</span>
+                                <span id="resumen-trans-concepto" style="font-weight:700;"></span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; align-items:center; padding:10px 0; font-size:14px;">
+                                <span style="color:var(--text-muted); font-weight:500;">Importe</span>
+                                <span id="resumen-trans-importe" style="font-weight:800; font-size:22px; color:var(--primary-light);"></span>
+                            </div>
+                        </div>
+
+                        <!-- AVISO -->
+                        <div style="background:#eff4ff; border:1px solid #d9e2ff; border-radius:10px; padding:14px 16px; display:flex; align-items:flex-start; gap:10px; margin-bottom:20px;">
+                            <span class="material-symbols-outlined" style="color:var(--primary-light); font-size:18px; flex-shrink:0; margin-top:1px;">info</span>
+                            <p style="font-size:13px; color:var(--text-muted); line-height:1.5;">
+                                Esta operación es <strong style="color:var(--text);">irreversible</strong>. Comprueba que los datos son correctos antes de confirmar.
+                            </p>
+                        </div>
+
+                        <!-- BOTONES -->
+                        <div id="paso-confirmacion" style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:24px; margin-top:8px;">
+                            <button onclick="volverPaso1Transfer()" style="display:flex; align-items:center; gap:4px; font-size:14px; color:var(--text-muted); background:none; border:none; cursor:pointer; padding:10px 16px; border-radius:8px; font-family:inherit;">
+                                <span class="material-symbols-outlined" style="font-size:16px;">arrow_back</span> Atrás
+                            </button>
+                            <button id="btn-confirmar-transferencia" class="btn-submit btn-blue" style="margin-top:0; display:flex; align-items:center; gap:8px;">
+                                <span class="material-symbols-outlined" style="font-size:18px;">check</span>
+                                Confirmar transferencia
+                            </button>
                         </div>
                     </div>
-                    <form id="form-transferencia" novalidate>
-                        <div class="form-group">
-                            <label class="form-label" for="trans-origen">Cuenta de origen</label>
-                            <select id="trans-origen" class="form-select" required>
-                                <option value="">Cargando cuentas...</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label" for="trans-iban">IBAN del destinatario</label>
-                            <input type="text" id="trans-iban" class="form-input" placeholder="ESXX XXXX XXXX XXXX XXXX" required autocomplete="off">
-                            <small id="trans-iban-error" style="display:none; color:var(--error); font-size:12px; margin-top:4px;">No existe esa cuenta</small>
-                        </div>
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-                            <div class="form-group">
-                                <label class="form-label" for="trans-importe">Importe (€)</label>
-                                <input type="number" id="trans-importe" class="form-input" placeholder="0.00" min="0.01" step="0.01" required>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label" for="trans-concepto">Concepto</label>
-                                <input type="text" id="trans-concepto" class="form-input" placeholder="Ej: Alquiler" required>
-                            </div>
-                        </div>
-                        <button type="submit" id="btn-realizar-transferencia" class="btn-submit btn-blue">Realizar Transferencia</button>
-                    </form>
                 </div>
             </div>
 

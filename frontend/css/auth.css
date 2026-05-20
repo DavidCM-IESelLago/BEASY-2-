@@ -75,6 +75,18 @@ input {
 
 input:focus { border-color: #0056b3; }
 
+input.input-error { border-color: #ef4444 !important; }
+input.input-ok    { border-color: #22c55e !important; }
+
+.field-hint-dni {
+    font-size: 12px;
+    margin-top: 4px;
+    min-height: 16px;
+    display: block;
+}
+.field-hint-dni.error { color: #ef4444; }
+.field-hint-dni.ok    { color: #22c55e; }
+
 .password-wrapper {
     display: flex;
     align-items: stretch;
