@@ -116,7 +116,7 @@ async function cargarTarjetas() {
         pBalance.textContent = 'Saldo disponible';
         const h3 = document.createElement('h3');
         h3.style.cssText = 'font-size:26px;font-weight:700;margin:4px 0 10px;';
-        h3.textContent = '$' + t.saldo;
+        h3.textContent = t.saldo + ' €';
         const numRow = document.createElement('div');
         numRow.style.cssText = 'display:flex;justify-content:space-between;font-family:monospace;letter-spacing:2px;margin-top:8px;';
         const spanNum = document.createElement('span');

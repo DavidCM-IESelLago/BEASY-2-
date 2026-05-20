@@ -218,7 +218,7 @@ function enmascararNumero(num) {
 }
 
 function formatearEuros(valor) {
-    return '€' + parseFloat(valor).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return parseFloat(valor).toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
 }
 
 function copiarNumero() {
