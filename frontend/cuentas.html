@@ -254,32 +254,16 @@
                     <span class="material-symbols-outlined">close</span>
                 </button>
             </div>
-            <p class="modal-account-num" id="modal-cuenta-num">ES91 •••• •••• 4892</p>
+            <div style="display:flex; align-items:center; gap:8px; padding:4px 24px 0;">
+                <p class="modal-account-num" id="modal-cuenta-num" style="margin:0;">ES91 •••• •••• 4892</p>
+                <button id="btn-toggle-iban" title="Mostrar/ocultar IBAN completo" style="background:none; border:none; cursor:pointer; padding:4px; display:flex; align-items:center; color:var(--text-muted); transition:color 0.2s;">
+                    <span class="material-symbols-outlined" id="icon-toggle-iban" style="font-size:20px;">visibility</span>
+                </button>
+            </div>
 
             <div class="modal-balance">
                 <div class="modal-balance-hint">SALDO ACTUAL</div>
                 <div class="modal-balance-value" id="modal-saldo">€0.00</div>
-            </div>
-
-            <div class="modal-actions" id="modal-actions-corriente">
-                <button class="modal-btn-primary">
-                    <span class="material-symbols-outlined" style="font-size:16px;">swap_horiz</span> Transferir
-                </button>
-                <button class="modal-btn-secondary">
-                    <span class="material-symbols-outlined" style="font-size:16px;">receipt_long</span> Extracto
-                </button>
-            </div>
-
-            <div class="modal-actions" id="modal-actions-hucha" style="display:none;">
-                <button class="modal-btn-green">
-                    <span class="material-symbols-outlined" style="font-size:16px;">add</span> Ingresar
-                </button>
-                <button class="modal-btn-red">
-                    <span class="material-symbols-outlined" style="font-size:16px;">remove</span> Retirar
-                </button>
-                <button class="modal-btn-secondary">
-                    <span class="material-symbols-outlined" style="font-size:16px;">receipt_long</span> Extracto
-                </button>
             </div>
 
             <div class="modal-section-title">Últimos movimientos</div>

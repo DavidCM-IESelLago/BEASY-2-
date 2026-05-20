@@ -38,12 +38,14 @@ try {
     $pdo = Database::getInstance()->getConnection();
 
     $sql = "
-        SELECT 
+        SELECT
             t.id,
             t.tipo,
-            t.descripcion  AS concepto,
+            t.descripcion        AS concepto,
             t.fecha,
             t.monto,
+            t.cuenta_origen_id,
+            t.cuenta_destino_id,
             c_origen.usuario_id  AS origen_usuario_id,
             c_destino.usuario_id AS destino_usuario_id
         FROM transacciones t
@@ -82,11 +84,13 @@ foreach ($transaccionesDB as $mov) {
     }
 
     $movimientosFinales[] = [
-        "id"       => $mov['id'],
-        "tipo"     => $mov['tipo'],
-        "cantidad" => $cantidad_final,
-        "concepto" => $mov['concepto'],
-        "fecha"    => $mov['fecha']
+        "id"                 => $mov['id'],
+        "tipo"               => $mov['tipo'],
+        "cantidad"           => $cantidad_final,
+        "concepto"           => $mov['concepto'],
+        "fecha"              => $mov['fecha'],
+        "cuenta_origen_id"   => $mov['cuenta_origen_id']  ? (int)$mov['cuenta_origen_id']  : null,
+        "cuenta_destino_id"  => $mov['cuenta_destino_id'] ? (int)$mov['cuenta_destino_id'] : null
     ];
 }
     ResponseHelper::jsonResponse([

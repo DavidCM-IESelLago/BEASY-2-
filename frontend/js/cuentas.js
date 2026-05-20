@@ -4,6 +4,8 @@ let cuentasData     = [];
 let movimientosData = [];
 let nuevaCuenta     = {};
 let cuentaCreada    = {};
+let ibanCompleto    = '';
+let ibanVisible     = false;
 
 document.addEventListener('DOMContentLoaded', async () => {
     const token = localStorage.getItem('jwt_token');
@@ -116,7 +118,7 @@ function pintarCuentas() {
         balanceDiv.appendChild(pValue);
         card.appendChild(headerRow);
         card.appendChild(balanceDiv);
-        card.addEventListener('click', () => abrirModal(cuenta));
+        card.onclick = () => abrirModal(cuenta);
         grid.appendChild(card);
     });
 }
@@ -124,16 +126,36 @@ function pintarCuentas() {
 function abrirModal(cuenta) {
     const esHucha = cuenta.tipo === 'ahorros';
     document.getElementById('modal-cuenta-nombre').textContent = esHucha ? 'Hucha (Ahorro)' : 'Cuenta Corriente';
-    document.getElementById('modal-cuenta-num').textContent    = enmascararNumero(cuenta.numero_cuenta);
-    document.getElementById('modal-saldo').textContent         = formatearEuros(cuenta.saldo);
-    document.getElementById('modal-actions-corriente').style.display = esHucha ? 'none' : 'flex';
-    document.getElementById('modal-actions-hucha').style.display     = esHucha ? 'flex' : 'none';
-    pintarMovimientosModal(movimientosData.slice(0, 3));
+
+    
+    ibanCompleto = cuenta.numero_cuenta || '';
+    ibanVisible  = false;
+    document.getElementById('modal-cuenta-num').textContent = enmascararNumero(ibanCompleto);
+    document.getElementById('icon-toggle-iban').textContent = 'visibility';
+
+    document.getElementById('modal-saldo').textContent = formatearEuros(cuenta.saldo);
+
+    
+    const movsCuenta = movimientosData
+        .filter(m => m.cuenta_origen_id === cuenta.id || m.cuenta_destino_id === cuenta.id)
+        .map(m => {
+            if (m.tipo === 'transferencia' || m.tipo === 'bizum') {
+                const cantidad = m.cuenta_origen_id === cuenta.id
+                    ? -Math.abs(m.cantidad)   // esta cuenta envió → negativo
+                    :  Math.abs(m.cantidad);  // esta cuenta recibió → positivo
+                return { ...m, cantidad };
+            }
+            return m;
+        });
+    pintarMovimientosModal(movsCuenta.slice(0, 5));
+
     document.getElementById('modal-cuenta').classList.add('open');
 }
 
 function pintarMovimientosModal(movimientos) {
     const lista = document.getElementById('modal-mov-list');
+    lista.innerHTML = ''; 
+
     if (!movimientos.length) {
         const divVacio = document.createElement('div');
         divVacio.className = 'modal-mov-empty';
@@ -141,7 +163,6 @@ function pintarMovimientosModal(movimientos) {
         lista.appendChild(divVacio);
         return;
     }
-    lista.innerHTML = '';
     movimientos.forEach(mov => {
         let icono = 'payments';
         if (mov.tipo === 'compra')        icono = 'shopping_cart';
@@ -210,6 +231,20 @@ function _initEventListeners() {
 
     document.getElementById('modal-cuenta').addEventListener('click', function (e) {
         if (e.target === this) this.classList.remove('open');
+    });
+
+    document.getElementById('btn-toggle-iban').addEventListener('click', () => {
+        ibanVisible = !ibanVisible;
+        const numEl  = document.getElementById('modal-cuenta-num');
+        const iconEl = document.getElementById('icon-toggle-iban');
+        if (ibanVisible) {
+            const limpio  = ibanCompleto.replace(/\s/g, '');
+            numEl.textContent  = limpio.match(/.{1,4}/g)?.join(' ') ?? ibanCompleto;
+            iconEl.textContent = 'visibility_off';
+        } else {
+            numEl.textContent  = enmascararNumero(ibanCompleto);
+            iconEl.textContent = 'visibility';
+        }
     });
 
     document.getElementById('btn-show-form').addEventListener('click', () => mostrarVista('section-form-step1'));
