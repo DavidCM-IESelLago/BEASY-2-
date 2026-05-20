@@ -32,7 +32,7 @@
     <div class="main-wrapper">
         <header class="header">
         <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Abrir menú"><span class="material-symbols-outlined">menu</span></button>
-            <div class="header-title">Cards Overview</div>
+            <div class="header-title">Tarjetas</div>
             <div class="header-actions">
                 <button id="btn-notificaciones" class="notif-btn" onclick="toggleNotificaciones(true)">
                     <span class="material-symbols-outlined">notifications</span>
@@ -49,8 +49,8 @@
         <main class="content cards-content">
             <div class="page-header">
                 <div>
-                    <h2 class="page-title" style="font-size:44px; letter-spacing:-1.5px;">My Cards</h2>
-                    <p class="page-subtitle">Manage your virtual cards and settings.</p>
+                    <h2 class="page-title" style="font-size:44px; letter-spacing:-1.5px;">Mis Tarjetas</h2>
+                    <p class="page-subtitle">Gestiona tus tarjetas virtuales y su configuración.</p>
                 </div>
             </div>
 
@@ -64,14 +64,14 @@
         <aside class="detail-panel" id="panel">
             <div class="detail-panel-empty" id="panel-placeholder">
                 <span class="material-symbols-outlined" style="font-size:48px; opacity:0.3;">credit_card</span>
-                <p style="font-weight:600;">Select a card</p>
-                <p style="font-size:13px; opacity:0.6;">Click on any card to see its details</p>
+                <p style="font-weight:600;">Selecciona una tarjeta</p>
+                <p style="font-size:13px; opacity:0.6;">Haz clic en cualquier tarjeta para ver sus detalles</p>
             </div>
 
             <div id="panel-contenido" style="display:none;">
                 
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                    <h3 style="font-size:18px; font-weight:700;">Card Details</h3>
+                    <h3 style="font-size:18px; font-weight:700;">Detalles de tarjeta</h3>
                     <button onclick="cerrarPanel()">
                         <span class="material-symbols-outlined" style="color:var(--text-muted);">close</span>
                     </button>
@@ -95,28 +95,28 @@
                         <div style="width:40px;height:40px;border-radius:50%;background:#e8f0fe;color:var(--primary);display:flex;align-items:center;justify-content:center;">
                             <span class="material-symbols-outlined">visibility</span>
                         </div>
-                        <span style="font-size:11px; font-weight:700;">View Data</span>
+                        <span style="font-size:11px; font-weight:700;">Ver datos</span>
                     </button>
                     <button class="panel-btn" id="btn-freeze" onclick="toggleFreeze()">
                         <div id="freeze-icon-wrap" style="width:40px;height:40px;border-radius:50%;background:#ffdad6;color:var(--error);display:flex;align-items:center;justify-content:center;">
                             <span class="material-symbols-outlined" id="freeze-icon">block</span>
                         </div>
-                        <span style="font-size:11px; font-weight:700;" id="freeze-label">Freeze</span>
+                        <span style="font-size:11px; font-weight:700;" id="freeze-label">Congelar</span>
                     </button>
                 </div>
 
                 
                 <div style="background:var(--bg); border-radius:16px; padding:16px; margin-bottom:20px;">
                     <div class="data-row">
-                        <span style="color:var(--text-muted);">Status</span>
+                        <span style="color:var(--text-muted);">Estado</span>
                         <span class="status-chip" id="panel-estado-chip">activa</span>
                     </div>
                     <div class="data-row">
-                        <span style="color:var(--text-muted);">Card number</span>
+                        <span style="color:var(--text-muted);">Número de tarjeta</span>
                         <span id="panel-numero-corto" style="font-family:monospace; font-weight:600;"></span>
                     </div>
                     <div class="data-row" style="border-bottom:none;">
-                        <span style="color:var(--text-muted);">Expires</span>
+                        <span style="color:var(--text-muted);">Vence</span>
                         <span id="panel-exp-dato" style="font-weight:600;"></span>
                     </div>
                 </div>
@@ -124,7 +124,7 @@
                 
                 <button class="btn-destructive" id="btn-cancelar" onclick="cancelarTarjeta()">
                     <span class="material-symbols-outlined" style="vertical-align:middle; font-size:18px;">cancel</span>
-                    Cancel card permanently
+                    Cancelar tarjeta permanentemente
                 </button>
             </div>
         </aside>
@@ -134,7 +134,7 @@
     <div class="modal-overlay" id="modalDatos">
         <div class="modal-box" style="width:420px;">
             <div style="padding:20px 24px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
-                <h3 style="font-weight:700;">Card Data</h3>
+                <h3 style="font-weight:700;">Datos de tarjeta</h3>
                 <span class="material-symbols-outlined" style="cursor:pointer;" onclick="cerrarModalDatos()">close</span>
             </div>
             <div style="padding:24px;">
@@ -149,7 +149,7 @@
                     </div>
                 </div>
                 <div class="data-row">
-                    <span style="color:var(--text-muted);">Full number</span>
+                    <span style="color:var(--text-muted);">Número completo</span>
                     <span id="modal-num" style="font-family:monospace; font-weight:700; font-size:15px;"></span>
                 </div>
                 <div class="data-row">
@@ -157,16 +157,16 @@
                     <span id="modal-cvv" style="font-family:monospace; font-weight:700; font-size:18px; letter-spacing:4px;"></span>
                 </div>
                 <div class="data-row">
-                    <span style="color:var(--text-muted);">Expiry date</span>
+                    <span style="color:var(--text-muted);">Fecha de vencimiento</span>
                     <span id="modal-exp" style="font-weight:600;"></span>
                 </div>
                 <div class="data-row">
-                    <span style="color:var(--text-muted);">Status</span>
+                    <span style="color:var(--text-muted);">Estado</span>
                     <span class="status-chip" id="modal-estado"></span>
                 </div>
             </div>
             <div style="padding:16px 24px; background:var(--surface-dim); text-align:right;">
-                <button onclick="cerrarModalDatos()" style="padding:8px 20px; background:var(--primary-light); color:white; border:none; border-radius:8px; font-weight:600; cursor:pointer; font-family:inherit;">Close</button>
+                <button onclick="cerrarModalDatos()" style="padding:8px 20px; background:var(--primary-light); color:white; border:none; border-radius:8px; font-weight:600; cursor:pointer; font-family:inherit;">Cerrar</button>
             </div>
         </div>
     </div>
@@ -178,12 +178,12 @@
                 <div style="width:56px;height:56px;border-radius:50%;background:var(--error-bg);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
                     <span class="material-symbols-outlined" style="color:var(--error); font-size:28px;">warning</span>
                 </div>
-                <h3 style="font-weight:700; margin-bottom:8px;">Cancel this card?</h3>
-                <p style="color:var(--text-muted); font-size:14px;">This action is permanent and cannot be undone. The card will be deactivated immediately.</p>
+                <h3 style="font-weight:700; margin-bottom:8px;">¿Cancelar esta tarjeta?</h3>
+                <p style="color:var(--text-muted); font-size:14px;">Esta acción es permanente y no se puede deshacer. La tarjeta será desactivada de inmediato.</p>
             </div>
             <div style="padding:16px 24px; display:flex; gap:12px; border-top:1px solid var(--border);">
-                <button onclick="cerrarModalCancelar()" style="flex:1;padding:10px;border:1px solid var(--border);background:white;border-radius:10px;font-weight:600;cursor:pointer;font-family:inherit;">Keep card</button>
-                <button onclick="confirmarCancelacion()" style="flex:1;padding:10px;background:var(--error);color:white;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-family:inherit;">Yes, cancel</button>
+                <button onclick="cerrarModalCancelar()" style="flex:1;padding:10px;border:1px solid var(--border);background:white;border-radius:10px;font-weight:600;cursor:pointer;font-family:inherit;">Conservar tarjeta</button>
+                <button onclick="confirmarCancelacion()" style="flex:1;padding:10px;background:var(--error);color:white;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-family:inherit;">Sí, cancelar</button>
             </div>
         </div>
     </div>
@@ -201,8 +201,9 @@
                     <div><p id="modal-nombre" style="font-weight:700; font-size:16px;">...</p></div>
                 </div>
                 <div style="font-size:14px; color:var(--text-muted); display:grid; gap:12px;">
+                    <p><strong>Móvil:</strong> <span id="modal-movil">...</span></p>
                     <p><strong>Email:</strong> <span id="modal-email">...</span></p>
-                    <p><strong>ID:</strong> <span id="modal-id">...</span></p>
+                    <p><strong>Documento de identificación:</strong> <span id="modal-id">...</span></p>
                 </div>
                 <button onclick="cerrarSesion()" style="color:var(--error);border:1px solid var(--error);width:100%;margin-top:20px;display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 20px;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;background:white;font-family:inherit;">
                     <span class="material-symbols-outlined">logout</span> Cerrar Sesión

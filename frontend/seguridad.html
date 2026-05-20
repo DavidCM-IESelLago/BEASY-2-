@@ -30,7 +30,7 @@
     <div class="main-wrapper">
         <header class="header">
         <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Abrir menú"><span class="material-symbols-outlined">menu</span></button>
-            <div class="header-title">Security & Help Center</div>
+            <div class="header-title">Seguridad y Centro de Ayuda</div>
             <div class="header-actions">
                 <button id="btn-notificaciones" class="notif-btn" onclick="toggleNotificaciones(true)">
                     <span class="material-symbols-outlined">notifications</span>
@@ -49,7 +49,7 @@
 
                 <div style="margin-bottom:32px;">
                     <h2 class="page-title">Reportar Incidencia</h2>
-                    <p class="page-subtitle">Manage your account security, report issues, and find assistance.</p>
+                    <p class="page-subtitle">Gestiona la seguridad de tu cuenta, reporta incidencias y encuentra asistencia.</p>
                 </div>
 
                 <div class="app-grid">
@@ -58,7 +58,7 @@
                             <div class="card-header">
                                 <div style="display:flex; align-items:center; gap:12px;">
                                     <span class="material-symbols-outlined" style="color:var(--primary);">warning</span>
-                                    <h3 style="font-size:18px; font-weight:700;">File a Detailed Report</h3>
+                                    <h3 style="font-size:18px; font-weight:700;">Registrar Informe Detallado</h3>
                                 </div>
                                 <span class="material-symbols-outlined">expand_less</span>
                             </div>
@@ -69,37 +69,37 @@
                                     <div class="stepper" style="border-bottom:none; padding-bottom:0; gap:8px; margin-bottom:32px;">
                                         <div class="step-circle-sm step-active">1</div>
                                         <span style="margin-left:8px; font-size:14px; color:var(--text-muted);">
-                                            Step 1: Incident Details
+                                            Paso 1: Detalles del Incidente
                                         </span>
                                     </div>
 
                                     <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:24px;">
                                         <div class="form-group">
-                                            <label class="form-label">Issue Type</label>
+                                            <label class="form-label">Tipo de Incidencia</label>
                                             <select class="form-input" id="select_tipo">
-                                                <option>Suspicious Account Activity</option>
-                                                <option>Phishing Attempt</option>
-                                                <option>Identity Theft</option>
-                                                <option>Other</option>
+                                                <option>Actividad Sospechosa en la Cuenta</option>
+                                                <option>Intento de Phishing</option>
+                                                <option>Robo de Identidad</option>
+                                                <option>Otro</option>
                                             </select>
                                         </div>
 
                                         <div class="form-group">
-                                            <label class="form-label">Date of Occurrence</label>
+                                            <label class="form-label">Fecha del Incidente</label>
                                             <input type="date" class="form-input">
                                         </div>
                                     </div>
 
                                     <div class="form-group">
-                                        <label class="form-label">Incident Description</label>
+                                        <label class="form-label">Descripción del Incidente</label>
                                         <textarea id="textarea_mensaje" class="form-input" rows="4"
-                                            placeholder="Please provide specific details..."></textarea>
+                                            placeholder="Por favor, proporciona detalles específicos..."></textarea>
                                     </div>
 
                                     <div style="margin-top:24px; padding-top:24px; border-top:1px solid var(--border-light); display:flex; justify-content:flex-end; gap:12px;">
-                                        <button class="btn btn-outline">Cancel</button>
+                                        <button class="btn btn-outline">Cancelar</button>
                                         <button class="btn btn-primary" onclick="irAlPaso(3)">
-                                            Next: Review
+                                            Siguiente: Revisión
                                         </button>
                                     </div>
                                 </div>
@@ -113,27 +113,27 @@
                                         <div class="step-line-sm active"></div>
                                         <div class="step-circle-sm step-active">2</div>
                                         <span style="margin-left:8px; font-size:14px; color:var(--text-muted);">
-                                            Step 2: Final Review
+                                            Paso 2: Revisión Final
                                         </span>
                                     </div>
 
                                     <div style="background:var(--surface-dim); border-radius:12px; padding:20px;">
-                                        <h4 style="font-weight:700; margin-bottom:12px;">Summary</h4>
+                                        <h4 style="font-weight:700; margin-bottom:12px;">Resumen</h4>
                                         <p style="font-size:14px; margin-bottom:8px;">
-                                            <strong>Type:</strong>
-                                            <span id="summary-type">Suspicious Activity</span>
+                                            <strong>Tipo:</strong>
+                                            <span id="summary-type">Actividad Sospechosa</span>
                                         </p>
                                         <p style="font-size:14px;">
-                                            <strong>Description:</strong>
+                                            <strong>Descripción:</strong>
                                             <span id="summary-desc">...</span>
                                         </p>
                                     </div>
 
                                     <div style="margin-top:24px; padding-top:24px; border-top:1px solid var(--border-light); display:flex; justify-content:flex-end; gap:12px;">
-                                        <button class="btn btn-outline" onclick="irAlPaso(1)">Back</button>
+                                        <button class="btn btn-outline" onclick="irAlPaso(1)">Atrás</button>
                                         <button class="btn btn-primary" id="btnSubmit" onclick="enviarReporte()"
                                             style="background:var(--tertiary);">
-                                            Submit Report
+                                            Enviar Informe
                                         </button>
                                     </div>
                                 </div>
@@ -145,13 +145,13 @@
                                 <div style="width:96px;height:96px;background:var(--green-bg);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 32px;">
                                     <span class="material-symbols-outlined icon-fill" style="font-size:72px; color:#2e7d32;">check_circle</span>
                                 </div>
-                                <h1 style="font-size:28px; font-weight:700; margin-bottom:12px;">Report Submitted Successfully</h1>
+                                <h1 style="font-size:28px; font-weight:700; margin-bottom:12px;">Informe Enviado Correctamente</h1>
                                 <div style="background:var(--bg);padding:12px 24px;border-radius:8px;display:inline-block;margin-bottom:32px;border:1px solid var(--border-light);">
-                                    <span style="font-size:12px; color:var(--text-muted); display:block;">Tracking Number</span>
+                                    <span style="font-size:12px; color:var(--text-muted); display:block;">Número de Seguimiento</span>
                                     <span style="font-size:18px; font-weight:700; color:var(--primary);" id="num-ticket">#SR-XXXXX</span>
                                 </div>
                                 <button class="btn btn-primary" style="width:100%; padding:16px; justify-content:center;" onclick="location.reload()">
-                                    Return to Security Center
+                                    Volver al Centro de Seguridad
                                 </button>
                             </div>
                         </div>
@@ -175,8 +175,9 @@
                     <div><p id="modal-nombre" style="font-weight:700;">...</p></div>
                 </div>
                 <div style="font-size:14px; color:var(--text-muted); display:grid; gap:12px;">
+                    <p><strong>Móvil:</strong> <span id="modal-movil">...</span></p>
                     <p><strong>Email:</strong> <span id="modal-email">...</span></p>
-                    <p><strong>ID:</strong> <span id="modal-id">...</span></p>
+                    <p><strong>Documento de identificación:</strong> <span id="modal-id">...</span></p>
                 </div>
                 <button class="btn btn-outline" onclick="cerrarSesion()"
                     style="color:var(--error); border-color:var(--error); width:100%; margin-top:20px; justify-content:center;">

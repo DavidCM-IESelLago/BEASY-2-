@@ -41,6 +41,8 @@ try {
         "nombre"    => $usuario->getNombre(),
         "apellidos" => $usuario->getApellidos(),
         "email"     => $usuario->getEmail(),
+        "dni"       => $usuario->getDni(),
+        "telefono"  => $usuario->getTelefono() ?? '',
         "iniciales" => mb_strtoupper(
             mb_substr($usuario->getNombre(), 0, 1) .
             mb_substr($usuario->getApellidos(), 0, 1)

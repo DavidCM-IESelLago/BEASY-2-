@@ -29,8 +29,9 @@ async function cargarPerfil() {
     document.getElementById('header-nombre').textContent = datos.nombre + ' ' + datos.apellidos.split(' ')[0] + '.';
     document.getElementById('modal-avatar').src          = `https://ui-avatars.com/api/?name=${encodeURIComponent(nombreCompleto)}&background=005bbf&color=fff`;
     document.getElementById('modal-nombre').textContent  = nombreCompleto;
+    document.getElementById('modal-movil').textContent   = datos.telefono || '—';
     document.getElementById('modal-email').textContent   = datos.email;
-    document.getElementById('modal-id').textContent      = '#' + String(datos.id).padStart(6, '0');
+    document.getElementById('modal-id').textContent      = datos.dni;
 }
 
 function toggleModal(show) {
@@ -73,7 +74,7 @@ async function cargarTarjetas() {
         spanEmpty.textContent = 'credit_card_off';
         const pEmpty = document.createElement('p');
         pEmpty.style.cssText = 'margin-top:12px;font-weight:600;';
-        pEmpty.textContent = 'No cards found';
+        pEmpty.textContent = 'No se encontraron tarjetas';
         divEmpty.appendChild(spanEmpty);
         divEmpty.appendChild(pEmpty);
         grid.appendChild(divEmpty);
@@ -112,7 +113,7 @@ async function cargarTarjetas() {
         const info = document.createElement('div');
         const pBalance = document.createElement('p');
         pBalance.style.cssText = 'font-size:11px;opacity:0.8;font-weight:600;text-transform:uppercase;';
-        pBalance.textContent = 'Available Balance';
+        pBalance.textContent = 'Saldo disponible';
         const h3 = document.createElement('h3');
         h3.style.cssText = 'font-size:26px;font-weight:700;margin:4px 0 10px;';
         h3.textContent = '$' + t.saldo;
@@ -150,7 +151,7 @@ function seleccionarTarjeta(t, el, clase) {
     visual.className = `card-visual ${clase}`;
 
     document.getElementById('panel-numero').textContent    = t.numero_oculto;
-    document.getElementById('panel-expiracion').textContent = 'Expires ' + t.expiracion;
+    document.getElementById('panel-expiracion').textContent = 'Vence ' + t.expiracion;
     document.getElementById('panel-numero-corto').textContent = t.numero_oculto;
     document.getElementById('panel-exp-dato').textContent  = t.expiracion;
 
@@ -180,12 +181,12 @@ function actualizarBotonesEstado(estado) {
         wrap.style.background = '#e8f0fe';
         wrap.style.color      = 'var(--primary)';
         icon.textContent      = 'lock_open';
-        label.textContent     = 'Unfreeze';
+        label.textContent     = 'Descongelar';
     } else {
         wrap.style.background = '#ffdad6';
         wrap.style.color      = 'var(--error)';
         icon.textContent      = 'block';
-        label.textContent     = 'Freeze';
+        label.textContent     = 'Congelar';
     }
 }
 
@@ -203,7 +204,7 @@ function abrirModalDatos() {
     const numeroFormateado = t.numero.replace(/\s+/g, '').replace(/(.{4})/g, '$1 ').trim();
 
     document.getElementById('modal-numero-completo').textContent = numeroFormateado;
-    document.getElementById('modal-expiracion').textContent      = 'Expires ' + t.expiracion;
+    document.getElementById('modal-expiracion').textContent      = 'Vence ' + t.expiracion;
     document.getElementById('modal-num').textContent             = numeroFormateado;
     document.getElementById('modal-cvv').textContent             = t.cvv;
     document.getElementById('modal-exp').textContent             = t.expiracion;

@@ -29,8 +29,9 @@ async function cargarPerfil() {
     document.getElementById('header-nombre').textContent = datos.nombre + ' ' + datos.apellidos.split(' ')[0] + '.';
     document.getElementById('modal-avatar').src          = `https://ui-avatars.com/api/?name=${encodeURIComponent(nombreCompleto)}&background=005bbf&color=fff`;
     document.getElementById('modal-nombre').textContent  = nombreCompleto;
+    document.getElementById('modal-movil').textContent   = datos.telefono || '—';
     document.getElementById('modal-email').textContent   = datos.email;
-    document.getElementById('modal-id').textContent      = '#' + String(datos.id).padStart(6, '0');
+    document.getElementById('modal-id').textContent      = datos.dni;
 }
 
 function toggleModal(show) {
