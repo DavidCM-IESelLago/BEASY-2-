@@ -35,7 +35,9 @@ async function cargarPerfil() {
 }
 
 function toggleModal(show) {
-    document.getElementById('modalUser').style.display = show ? 'flex' : 'none';
+    const modal = document.getElementById('modalUser');
+    modal.style.display = show ? 'flex' : 'none';
+    if (show) { setTimeout(() => _trapFocus(modal), 50); } else { _releaseFocus(modal); }
 }
 
 function cerrarSesion() {

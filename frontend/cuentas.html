@@ -11,7 +11,8 @@
 </head>
 <body style="display:none;">
 
-    
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
     <aside class="sidebar">
         <div class="logo-box">
             <div class="logo-icon"><span class="material-symbols-outlined icon-fill">account_balance</span></div>
@@ -19,7 +20,7 @@
         </div>
         <nav class="nav-lista">
             <a href="dashboard.html" class="nav-link"><span class="material-symbols-outlined">dashboard</span> Dashboard</a>
-            <a href="cuentas.html" class="nav-link activo"><span class="material-symbols-outlined icon-fill">account_balance</span> Cuentas</a>
+            <a href="cuentas.html" class="nav-link activo" aria-current="page"><span class="material-symbols-outlined icon-fill">account_balance</span> Cuentas</a>
             <a href="misTarjetas.html" class="nav-link"><span class="material-symbols-outlined">credit_card</span> Tarjetas</a>
             <a href="movimientos.html" class="nav-link"><span class="material-symbols-outlined">payments</span> Movimientos</a>
             <a href="seguridad.html" class="nav-link"><span class="material-symbols-outlined">verified_user</span> Seguridad</a>
@@ -32,19 +33,19 @@
         <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Abrir menú"><span class="material-symbols-outlined">menu</span></button>
             <div class="header-title">Gestión de Cuentas</div>
             <div class="header-actions">
-                <button id="btn-notificaciones" class="notif-btn" onclick="toggleNotificaciones(true)">
-                    <span class="material-symbols-outlined">notifications</span>
-                    <span id="badge-notificaciones" class="notif-badge">0</span>
+                <button id="btn-notificaciones" class="notif-btn" onclick="toggleNotificaciones(true)" aria-label="Ver notificaciones">
+                    <span class="material-symbols-outlined" aria-hidden="true">notifications</span>
+                    <span id="badge-notificaciones" class="notif-badge" aria-live="polite">0</span>
                 </button>
-                <div class="perfil-btn" onclick="toggleModal(true)">
-                    <img id="header-avatar" src="https://ui-avatars.com/api/?name=...&background=005bbf&color=fff" class="perfil-img">
+                <button class="perfil-btn" onclick="toggleModal(true)" aria-label="Ver perfil de usuario" aria-haspopup="dialog">
+                    <img id="header-avatar" src="https://ui-avatars.com/api/?name=...&background=005bbf&color=fff" class="perfil-img" alt="">
                     <span id="header-nombre" class="perfil-name">...</span>
-                    <span class="material-symbols-outlined">keyboard_arrow_down</span>
-                </div>
+                    <span class="material-symbols-outlined" aria-hidden="true">keyboard_arrow_down</span>
+                </button>
             </div>
         </header>
 
-        <div class="content">
+        <div class="content" id="main-content">
             <div class="page-inner">
 
                 
@@ -246,12 +247,12 @@
     </div>
 
     
-    <div class="modal-overlay" id="modal-cuenta">
+    <div class="modal-overlay" id="modal-cuenta" role="dialog" aria-modal="true" aria-labelledby="modal-cuenta-nombre">
         <div class="modal-box" style="width:100%; max-width:480px;">
             <div style="padding:20px 24px 0; display:flex; justify-content:space-between; align-items:center;">
                 <h3 id="modal-cuenta-nombre" style="font-size:18px; font-weight:700;">Cuenta Corriente</h3>
-                <button id="modal-close" style="width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--text-muted); transition:0.2s; background:none; border:none; cursor:pointer;">
-                    <span class="material-symbols-outlined">close</span>
+                <button id="modal-close" aria-label="Cerrar" style="width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--text-muted); transition:0.2s; background:none; border:none; cursor:pointer;">
+                    <span class="material-symbols-outlined" aria-hidden="true">close</span>
                 </button>
             </div>
             <div style="display:flex; align-items:center; gap:8px; padding:4px 24px 0;">
@@ -274,15 +275,17 @@
     </div>
 
     
-    <div id="modalUser" class="user-modal">
+    <div id="modalUser" class="user-modal" role="dialog" aria-modal="true" aria-labelledby="modalUser-titulo">
         <div class="user-modal-box">
             <div class="user-modal-header">
-                <h3 style="font-weight:700;">Detalles de cuenta</h3>
-                <span class="material-symbols-outlined" style="cursor:pointer; color:var(--text-muted);" onclick="toggleModal(false)">close</span>
+                <h3 id="modalUser-titulo" style="font-weight:700;">Detalles de cuenta</h3>
+                <button onclick="toggleModal(false)" aria-label="Cerrar" style="background:none; border:none; cursor:pointer; padding:4px; color:var(--text-muted); display:flex; align-items:center;">
+                    <span class="material-symbols-outlined" aria-hidden="true">close</span>
+                </button>
             </div>
             <div class="user-modal-body">
                 <div style="display:flex; gap:16px; align-items:center; margin-bottom:24px;">
-                    <img id="modal-avatar" src="https://ui-avatars.com/api/?name=...&background=005bbf&color=fff" style="width:50px; height:50px; border-radius:50%;">
+                    <img id="modal-avatar" src="https://ui-avatars.com/api/?name=...&background=005bbf&color=fff" style="width:50px; height:50px; border-radius:50%;" alt="">
                     <div><p id="modal-nombre" style="font-weight:700; font-size:16px;">...</p></div>
                 </div>
                 <div style="font-size:14px; color:var(--text-muted); display:grid; gap:12px;">
@@ -301,10 +304,12 @@
     </div>
 
     
-    <div id="notifPanel" class="notif-panel">
+    <div id="notifPanel" class="notif-panel" role="dialog" aria-modal="true" aria-labelledby="notifPanel-titulo">
         <div class="notif-panel-header">
-            <h3 style="font-weight:700; font-size:16px;">Notificaciones</h3>
-            <span class="material-symbols-outlined" style="cursor:pointer; color:var(--text-muted);" onclick="toggleNotificaciones(false)">close</span>
+            <h3 id="notifPanel-titulo" style="font-weight:700; font-size:16px;">Notificaciones</h3>
+            <button onclick="toggleNotificaciones(false)" aria-label="Cerrar notificaciones" style="background:none; border:none; cursor:pointer; padding:4px; color:var(--text-muted); display:flex; align-items:center;">
+                <span class="material-symbols-outlined" aria-hidden="true">close</span>
+            </button>
         </div>
         <div id="lista-notificaciones" class="notif-panel-body"></div>
     </div>

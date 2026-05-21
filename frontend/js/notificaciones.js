@@ -1,4 +1,29 @@
 
+function _trapFocus(el) {
+    const focusables = el.querySelectorAll(
+        'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    );
+    if (!focusables.length) return;
+    const first = focusables[0];
+    const last  = focusables[focusables.length - 1];
+    first.focus();
+    el._trapHandler = (e) => {
+        if (e.key !== 'Tab') return;
+        if (e.shiftKey) {
+            if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+        } else {
+            if (document.activeElement === last)  { e.preventDefault(); first.focus(); }
+        }
+    };
+    el.addEventListener('keydown', el._trapHandler);
+}
+
+function _releaseFocus(el) {
+    if (el && el._trapHandler) {
+        el.removeEventListener('keydown', el._trapHandler);
+        delete el._trapHandler;
+    }
+}
 
 let _notifPolling = null;
 
@@ -166,11 +191,15 @@ function toggleNotificaciones(show) {
     if (show) {
         panel.style.transform = 'translateX(0)';
         if (overlay) overlay.style.display = 'block';
-        cargarNotificaciones(); 
-        setTimeout(() => document.addEventListener('click', _cerrarNotifFuera), 50);
+        cargarNotificaciones();
+        setTimeout(() => {
+            _trapFocus(panel);
+            document.addEventListener('click', _cerrarNotifFuera);
+        }, 50);
     } else {
         panel.style.transform = 'translateX(100%)';
         if (overlay) overlay.style.display = 'none';
+        _releaseFocus(panel);
         document.removeEventListener('click', _cerrarNotifFuera);
     }
 }

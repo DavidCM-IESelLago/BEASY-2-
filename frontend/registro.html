@@ -14,7 +14,7 @@
     <div class="auth-card">
         <div id="form-content">
             <div class="auth-step-header">
-                <button class="btn-back" id="backBtn" onclick="changeStep(-1)">←</button>
+                <button class="btn-back" id="backBtn" onclick="changeStep(-1)" aria-label="Volver al paso anterior">←</button>
                 <span class="auth-step-counter" id="stepCounter">PASO 1 DE 3</span>
             </div>
 
@@ -24,24 +24,24 @@
                     <h1>Crea tu cuenta</h1>
                     <p class="auth-subtitle">Empecemos con tus datos básicos.</p>
                     <div class="form-group">
-                        <label>Nombre</label>
+                        <label for="input_nombre">Nombre</label>
                         <input type="text" id="input_nombre" placeholder="Tu nombre" required>
                     </div>
                     <div class="form-group">
-                        <label>Apellidos</label>
+                        <label for="input_apellidos">Apellidos</label>
                         <input type="text" id="input_apellidos" placeholder="Tus apellidos" required>
                     </div>
                     <div class="form-group">
-                        <label>DNI</label>
+                        <label for="input_dni">DNI</label>
                         <input type="text" id="input_dni" placeholder="12345678A" required>
                         <span id="error-dni" class="field-hint-dni"></span>
                     </div>
                     <div class="form-group">
-                        <label>Fecha de Nacimiento</label>
-                        <input type="date" required>
+                        <label for="input_fecha_nacimiento">Fecha de Nacimiento</label>
+                        <input type="date" id="input_fecha_nacimiento" required>
                     </div>
                     <div class="form-group">
-                        <label>Teléfono</label>
+                        <label for="input_telefono">Teléfono</label>
                         <div class="phone-input">
                             <span class="prefix">+34</span>
                             <input type="tel" id="input_telefono" placeholder="600 000 000" required>
@@ -54,18 +54,18 @@
                     <h1>Detalles de acceso</h1>
                     <p class="auth-subtitle">Configura tu correo y contraseña.</p>
                     <div class="form-group">
-                        <label>Correo</label>
+                        <label for="input_email">Correo</label>
                         <input type="email" id="input_email" placeholder="nombre@empresa.com" required>
                     </div>
                     <div class="form-group">
-                        <label>Contraseña</label>
+                        <label for="input_password">Contraseña</label>
                         <div class="password-wrapper">
                             <input type="password" id="input_password" required>
                             <span class="material-symbols-outlined toggle-password">visibility</span>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label>Confirmar Contraseña</label>
+                        <label for="confirm_password">Confirmar Contraseña</label>
                         <div class="password-wrapper">
                             <input type="password" id="confirm_password" required>
                             <span class="material-symbols-outlined toggle-password">visibility</span>
