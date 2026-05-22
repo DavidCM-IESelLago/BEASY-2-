@@ -95,7 +95,7 @@ CREATE TABLE notificaciones (
 CREATE TABLE incidencias (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT UNSIGNED NOT NULL,
-    tipo ENUM('Suspicious Account Activity', 'Phishing Attempt', 'Identity Theft') NOT NULL,
+    tipo ENUM('Actividad Sospechosa en la Cuenta', 'Intento de Phishing', 'Robo de Identidad') NOT NULL,
     descripcion TEXT NOT NULL,
     estado ENUM('abierta', 'resuelta') DEFAULT 'abierta',
     fecha_incidencia DATE NOT NULL DEFAULT (CURRENT_DATE),
