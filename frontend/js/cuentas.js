@@ -9,13 +9,13 @@ let ibanVisible     = false;
 
 document.addEventListener('DOMContentLoaded', async () => {
     const token = localStorage.getItem('jwt_token');
-    if (!token) { window.location.href = 'inicio_sesion.html'; return; }
+    if (!token) { window.location.href = 'inicio_sesion'; return; }
 
     try {
         const resp = await apiFetch('validate_helper.php');
         if (!resp || resp.status !== 'success') {
             localStorage.removeItem('jwt_token');
-            window.location.href = 'inicio_sesion.html';
+            window.location.href = 'inicio_sesion';
             return;
         }
         document.body.style.display = 'flex';
@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         pintarCuentas();
         _initEventListeners();
     } catch (e) {
-        window.location.href = 'inicio_sesion.html';
+        window.location.href = 'inicio_sesion';
     }
 });
 
@@ -51,7 +51,7 @@ function toggleModal(show) {
 
 function cerrarSesion() {
     localStorage.removeItem('jwt_token');
-    window.location.href = 'inicio_sesion.html';
+    window.location.href = 'inicio_sesion';
 }
 
 async function cargarCuentas() {

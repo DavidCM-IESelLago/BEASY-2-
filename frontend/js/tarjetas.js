@@ -5,12 +5,12 @@ let todasLasTarjetas    = [];
 
 document.addEventListener('DOMContentLoaded', async () => {
     const token = localStorage.getItem('jwt_token');
-    if (!token) { window.location.href = 'inicio_sesion.html'; return; }
+    if (!token) { window.location.href = 'inicio_sesion'; return; }
 
     const sesion = await apiFetch('validate_helper.php');
     if (!sesion || sesion.status !== 'success') {
         localStorage.removeItem('jwt_token');
-        window.location.href = 'inicio_sesion.html';
+        window.location.href = 'inicio_sesion';
         return;
     }
 
@@ -42,7 +42,7 @@ function toggleModal(show) {
 
 function cerrarSesion() {
     localStorage.removeItem('jwt_token');
-    window.location.href = 'inicio_sesion.html';
+    window.location.href = 'inicio_sesion';
 }
 
 function _crearLogo(clase) {

@@ -57,14 +57,15 @@ strong { font-weight: 600; color: var(--color-primario); }
     position: sticky;
     top: 0;
     z-index: 50;
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
     padding: 0 24px;
     border-bottom: 1px solid var(--color-borde);
 }
 
-.nav-izquierda, .nav-derecha { display: flex; align-items: center; gap: 16px; }
+.nav-izquierda { display: flex; align-items: center; gap: 16px; }
+.nav-derecha { display: flex; align-items: center; gap: 16px; justify-self: end; }
 
 .logo {
     font-size: 20px;

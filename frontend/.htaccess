@@ -1,0 +1,14 @@
+Options -Indexes
+Options +FollowSymLinks
+
+RewriteEngine On
+
+# Redirigir URLs con .html a la versión limpia (evitar contenido duplicado)
+RewriteCond %{THE_REQUEST} ^[A-Z]+\ /([^.]+)\.html[\ ?] [NC]
+RewriteRule ^ /%1 [R=301,L]
+
+# Servir archivos .html cuando se accede sin extensión
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^(.+?)/?$ $1.html [L]

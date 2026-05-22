@@ -27,9 +27,9 @@ document.getElementById('form-login').addEventListener('submit', async (e) => {
     
     setTimeout(() => {
         if (datos.rol === 'admin') {
-            window.location.href = 'admin.html';
+            window.location.href = 'admin';
         } else {
-            window.location.href = 'dashboard.html';
+            window.location.href = 'dashboard';
         }
     }, 800);
 });

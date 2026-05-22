@@ -4,18 +4,18 @@ let datosCargados = false;
 
 document.addEventListener('DOMContentLoaded', async () => {
     const token = localStorage.getItem('jwt_token');
-    if (!token) { window.location.href = 'inicio_sesion.html'; return; }
+    if (!token) { window.location.href = 'inicio_sesion'; return; }
 
     const perfil = await apiFetch('perfil.php');
     if (!perfil || perfil.status !== 'success') {
-        window.location.href = 'inicio_sesion.html';
+        window.location.href = 'inicio_sesion';
         return;
     }
 
     const check = await apiFetch('admin.php?accion=incidencias');
     if (!check) {
         localStorage.removeItem('jwt_token');
-        window.location.href = 'inicio_sesion.html';
+        window.location.href = 'inicio_sesion';
         return;
     }
 
@@ -42,7 +42,7 @@ function toggleModal(show) {
 
 function cerrarSesion() {
     localStorage.removeItem('jwt_token');
-    window.location.href = 'inicio_sesion.html';
+    window.location.href = 'inicio_sesion';
 }
 
 async function seleccionar(opcion) {

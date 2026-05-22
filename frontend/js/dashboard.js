@@ -6,7 +6,7 @@ let _timerIban        = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
     const token = localStorage.getItem('jwt_token');
-    if (!token) { window.location.href = 'inicio_sesion.html'; return; }
+    if (!token) { window.location.href = 'inicio_sesion'; return; }
 
     try {
         const respuesta = await apiFetch('validate_helper.php');
@@ -16,10 +16,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             await cargarDashboard();
         } else {
             localStorage.removeItem('jwt_token');
-            window.location.href = 'inicio_sesion.html';
+            window.location.href = 'inicio_sesion';
         }
     } catch (e) {
-        window.location.href = 'inicio_sesion.html';
+        window.location.href = 'inicio_sesion';
     }
 
     _initTransferForm();
@@ -57,7 +57,7 @@ function toggleModal(show) {
 
 function cerrarSesion() {
     localStorage.removeItem('jwt_token');
-    window.location.href = 'inicio_sesion.html';
+    window.location.href = 'inicio_sesion';
 }
 
 async function cargarDashboard() {

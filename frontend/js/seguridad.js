@@ -2,7 +2,7 @@
 
 document.addEventListener('DOMContentLoaded', async () => {
     const token = localStorage.getItem('jwt_token');
-    if (!token) { window.location.href = 'inicio_sesion.html'; return; }
+    if (!token) { window.location.href = 'inicio_sesion'; return; }
 
     try {
         const respuesta = await apiFetch('validate_helper.php');
@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             cargarPerfil();
         } else {
             localStorage.removeItem('jwt_token');
-            window.location.href = 'inicio_sesion.html';
+            window.location.href = 'inicio_sesion';
         }
     } catch (e) {
         document.body.style.display = 'flex';
@@ -42,7 +42,7 @@ function toggleModal(show) {
 
 function cerrarSesion() {
     localStorage.removeItem('jwt_token');
-    window.location.href = 'inicio_sesion.html';
+    window.location.href = 'inicio_sesion';
 }
 
 function irAlPaso(n) {
