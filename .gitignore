@@ -1,8 +1,8 @@
 # Variables de entorno
-# .env
+.env
 
 # Dependencias de Composer
-# backend/vendor/
+backend/vendor/
 
 # Artefactos de macOS
 .DS_Store
