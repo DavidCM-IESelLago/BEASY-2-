@@ -1,5 +1,11 @@
 FROM php:8.2-apache
 
+# Instalar dependencias del sistema necesarias para Composer
+RUN apt-get update && apt-get install -y unzip git && rm -rf /var/lib/apt/lists/*
+
+# Instalar Composer globalmente
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
 # Instalar extensiones PHP necesarias para conectar con MySQL
 RUN docker-php-ext-install pdo pdo_mysql mysqli
 
@@ -21,6 +27,10 @@ RUN a2dissite 000-default.conf && \
 
 # Suprimir advertencia de ServerName
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
+# Copiar e instalar dependencias de Composer durante el build
+COPY backend/composer.json backend/composer.lock /var/www/html/backend/
+RUN composer install --no-dev --optimize-autoloader --working-dir=/var/www/html/backend
 
 # Establecer permisos correctos para el servidor web
 RUN chown -R www-data:www-data /var/www/html
